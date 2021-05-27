@@ -11,7 +11,7 @@ export default StyleSheet.create({
     curveHeaderContainer: {
         height: responsiveHeight(17),
         width: responsiveWidth(100),
-        backgroundColor: "#f0f0f0"
+        backgroundColor: "#fff"
     },
     curveHeaderButtonsView: {
         flexDirection: "row",

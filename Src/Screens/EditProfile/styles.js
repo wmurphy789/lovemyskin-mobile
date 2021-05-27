@@ -29,6 +29,17 @@ export default StyleSheet.create({
         fontFamily: AppFonts.semiBold,
         color: AppColors.TitleGreen,
         textDecorationLine: 'underline',
-        marginBottom:responsiveHeight(4)
+        marginBottom: responsiveHeight(4)
+    },
+    editButton: {
+        position: "absolute",
+        bottom: -15,
+        right: responsiveWidth(25),
+        // backgroundColor: "#f11"
+    },
+    editImage: {
+        height: responsiveWidth(11),
+        width: responsiveWidth(11),
+
     }
 })
