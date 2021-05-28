@@ -44,6 +44,23 @@ export default AppConstants = {
             image: "https://images.wallpapersden.com/image/download/leaf-carved-background_Z2tmZmWUmZqaraWkpJRpbWWtbWVl.jpg",
             likes: 121,
             comments: 443
+        }, {
+            title: "How to Prevent your skin?",
+            image: "https://images.wallpaperscraft.com/image/leaves_green_closeup_121695_480x800.jpg",
+            likes: 12,
+            comments: 42
+        },
+        {
+            title: "How to Prevent your skin?",
+            image: "https://cdn.wallpapersafari.com/4/83/LXZDxM.jpg",
+            likes: 12,
+            comments: 44
+        },
+        {
+            title: "How to Prevent your skin?",
+            image: "https://images.wallpapersden.com/image/download/leaf-carved-background_Z2tmZmWUmZqaraWkpJRpbWWtbWVl.jpg",
+            likes: 121,
+            comments: 443
         },
 
     ],
@@ -108,6 +125,7 @@ export default AppConstants = {
     meditation: "Meditation",
     mindfulness: "Mindfulness",
     myAffirmation: "My Affirmation",
+    addMyOwnAffirmation: "Add my own Affirmation",
     createYourAffirmation: "Create your affirmation",
     typeYourAffirmationHere: "Type your affirmation here...",
     addMusicToYourAffirmation: "Add music to your affirmation",
@@ -120,7 +138,15 @@ export default AppConstants = {
     overcomingAnxiety: "Overcoming Anxiety",
     selfLove: "Self Love",
     thankfulGrateful: "Thankful & Grateful",
-    affirmations: "Affirmations"
+    affirmations: "Affirmations",
+    chooseACategory: "Choose A Category",
+    articles: "Articles",
+    videos: "Videos",
+    podcasts: "Podcasts",
+    stories: "Stories",
+    likes: "Likes",
+    comments: "Comments",
+    myTracker: "My Tracker"
 
 
 }

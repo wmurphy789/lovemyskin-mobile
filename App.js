@@ -9,10 +9,15 @@ import SkinDiagnosisReport from './Src/Screens/SkinDiagnosisReport'
 import SkinWellbeing from './Src/Screens/SkinWellbeing'
 import CreateAffirmation from './Src/Screens/CreateAffirmation'
 import AllAffirmations from './Src/Screens/AllAffirmations'
+import ViewAffirmation from './Src/Screens/ViewAffirmation'
+import AffirmationStack from './Src/Routes/AffirmationsStack'
+import MainTabNav from './Src/Routes/MainTab'
 const App = () => {
   useEffect(() => {
     StatusBar.setBarStyle('light-content')
     Platform.OS == "android" && StatusBar.setBackgroundColor(AppColors.main)
+    // Platform.OS == "android" && StatusBar.setTranslucent(true)
+    // Platform.OS == "android" && StatusBar.setBackgroundColor('rgba(1,1,1,0)')
     LogBox.ignoreAllLogs(true)
   }, [])
   return (
@@ -20,10 +25,10 @@ const App = () => {
       {/* <ProfileStack /> */}
       {/* <AuthStack/> */}
       {/* <SkinDiagnosisReport /> */}
-      <SkinDiagnosis />
+      {/* <SkinDiagnosis /> */}
       {/* <SkinWellbeing /> */}
-      {/* <CreateAffirmation/> */}
-      {/* <AllAffirmations/> */}
+      {/* <AffirmationStack/> */}
+      <MainTabNav/>
     </>
   )
 }

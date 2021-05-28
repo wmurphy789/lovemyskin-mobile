@@ -2,19 +2,102 @@ import React from 'react'
 import { View, Text, ScrollView, ImageBackground, FlatList, Image, TouchableOpacity } from 'react-native'
 import { AppColors } from '../../Theme/AppColors'
 import AppConstants from '../../Theme/AppConstants'
-import { AppFonts } from '../../Theme/AppFonts'
 import { AppImages } from '../../Theme/AppImages'
-import { responsiveFontSize, responsiveHeight, responsiveWidth } from '../../Theme/ResponsiveDimensions'
 import styles from './styles'
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { NavigationContainer } from '@react-navigation/native'
 
+const Tab = createMaterialTopTabNavigator();
 const SkinWellbeing = () => {
-    const _renderItem = ({ item, index }) => {
+    const _renderItem = ({ item, index }) => {          // render upper list
         return (
-            <View style={styles.itemView}>
-                <Image source={{ uri: item.image }} style={styles.itemImage} />
-                <Text style={styles.itemText}>{item.title}</Text>
+            <TouchableOpacity activeOpacity={0.8}>
+                <View style={styles.itemView}>
+                    <Image source={{ uri: item.image }} style={styles.itemImage} />
+                    <Text style={styles.itemText}>{item.title}</Text>
+                </View>
+            </TouchableOpacity>)
+    }
+    const __renderItem = ({ item, index }) => (        // render tabs data
+        <View style={styles.PillarItemView}>
+            <Image source={{ uri: item.image }}
+                style={styles.pillarImage} />
+            <View style={styles.pillarInfoView}>
+                <Text style={styles.pillerHeading}>{item.title}</Text>
+                <View style={styles.pillarStatusInfo}>
+                    <View style={styles.PillarlikeCommentView}>
+                        <TouchableOpacity>
+                            <Image source={AppImages.redHeartIcon} style={styles.PillarlikeCommentImage} />
+                        </TouchableOpacity>
+                        <Text style={styles.pillarLikesCount}>{item.likes}</Text>
+                        <Text style={styles.pillarLikes}>{AppConstants.likes}</Text>
+                    </View>
+                    <TouchableOpacity>
+                        <View style={styles.PillarlikeCommentView}>
+                            <Image source={AppImages.greenChatIcon} style={styles.PillarlikeCommentImage} />
+                            <Text style={styles.pillarComments}>{AppConstants.comments}</Text>
+                            <Text style={styles.pillarCommentsCount}>{item.comments}</Text>
+                        </View>
+                    </TouchableOpacity>
+                </View>
             </View>
-        )
+        </View>
+    )
+    const Articles = () => { return (renderPillars(AppConstants.dummydata)) }       // render Article Tab data
+    const Videos = () => { return (renderPillars(AppConstants.dummydata)) }         // render Videos Tab data
+    const Podcasts = () => { return (renderPillars(AppConstants.dummydata)) }       // render Podcasts Tab data
+    const Stories = () => { return (renderPillars(AppConstants.dummydata)) }        // render Stories Tab data
+
+    const MyTabs = () => {
+        return (
+                <Tab.Navigator tabBarOptions={{
+                    indicatorStyle: styles.indicator,
+                    pressColor: AppColors.main,
+                }}>
+                    <Tab.Screen
+                        options={{
+                            tabBarLabel: ({ focused }) =>
+                                focused
+                                    ? (<Text style={styles.selected}>{AppConstants.articles}</Text>)
+                                    : (<Text style={styles.notSelected}>{AppConstants.articles}</Text>)
+                        }}
+                        name="Articles"
+                        component={Articles} />
+                    <Tab.Screen
+                        options={{
+                            tabBarLabel: ({ focused }) =>
+                                focused
+                                    ? (<Text style={styles.selected}>{AppConstants.videos}</Text>)
+                                    : (<Text style={styles.notSelected}>{AppConstants.videos}</Text>)
+                        }}
+                        name="Videos"
+                        component={Videos} />
+                    <Tab.Screen
+                        options={{
+                            tabBarLabel: ({ focused }) =>
+                                focused
+                                    ? (<Text style={styles.selected}>{AppConstants.podcasts}</Text>)
+                                    : (<Text style={styles.notSelected}>{AppConstants.podcasts}</Text>)
+                        }}
+                        name="Podcasts"
+                        component={Podcasts} />
+                    <Tab.Screen
+                        options={{
+                            tabBarLabel: ({ focused }) =>
+                                focused
+                                    ? (<Text style={styles.selected}>{AppConstants.stories}</Text>)
+                                    : (<Text style={styles.notSelected}>{AppConstants.stories}</Text>)
+                        }}
+                        name="Stories"
+                        component={Stories} />
+                </Tab.Navigator>
+
+        );
+    }
+    const renderPillars = (data) => {                      // convert data to Tabs content 
+        return (<FlatList
+            data={data}
+            renderItem={__renderItem} />)
     }
 
     const mainView = () => {
@@ -37,43 +120,12 @@ const SkinWellbeing = () => {
                     horizontal
                     keyExtractor={(item, index) => index.toString()}
                 />
-                {renderPillars()}
+                <View style={styles.tabsContainer}>
+                    {MyTabs()}
+                </View>
             </View>
         )
     }
-
-    const renderPillars = (data = AppConstants.dummydata) => {                      // Pass your data here 
-        return (
-            <FlatList
-                data={data}
-                renderItem={({ item, index }) => (
-                    <View style={styles.PillarItemView}>
-                        <Image source={{ uri: item.image }}
-                            style={styles.pillarImage} />
-                        <View style={styles.pillarInfoView}>
-                            <Text style={styles.pillerHeading}>{item.title}</Text>
-                            <View style={styles.pillarStatusInfo}>
-                                <View style={styles.PillarlikeCommentView}>
-                                    <TouchableOpacity>
-                                        <Image source={AppImages.redHeartIcon} style={styles.PillarlikeCommentImage} />
-                                    </TouchableOpacity>
-                                    <Text style={styles.pillarLikesCount}>{item.likes}</Text>
-                                    <Text style={styles.pillarLikes}>Likes</Text>
-                                </View>
-                                <TouchableOpacity>
-                                    <View style={styles.PillarlikeCommentView}>
-                                        <Image source={AppImages.greenChatIcon} style={styles.PillarlikeCommentImage} />
-                                        <Text style={styles.pillarComments}>Comments</Text>
-                                        <Text style={styles.pillarCommentsCount}>{item.comments}</Text>
-                                    </View>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                    </View>
-                )} />
-        )
-    }
-
     return (
         <View style={styles.container}>
             {mainView()}

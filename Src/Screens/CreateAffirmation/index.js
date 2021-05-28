@@ -2,18 +2,21 @@ import React from 'react'
 import { View, Text, TextInput, TouchableOpacity, Image, FlatList, ScrollView } from 'react-native'
 import { FullButton } from '../../Components/Button'
 import { CurvedHeader } from '../../Components/Header'
+import Methods from '../../Support/Methods'
 import AppConstants from '../../Theme/AppConstants'
 import { AppImages } from '../../Theme/AppImages'
 import styles from './styles'
 
-const CreateAffirmation = () => {
-
+const CreateAffirmation = ({ navigation }) => {
+    function goBack() {
+        Methods.goBack(navigation)
+    }
     const mainView = () => (
         <View style={styles.container}>
             <CurvedHeader
                 title={AppConstants.myAffirmation}
                 leftIcon={AppImages.backIcon}
-                leftPress={() => { alert("goBack()") }} />
+                leftPress={() => {goBack()}} />
             <Text style={styles.infoText}>{AppConstants.createYourAffirmation}</Text>
             <TextInput
                 multiline

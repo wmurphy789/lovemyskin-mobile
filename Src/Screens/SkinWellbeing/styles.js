@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { Platform, StyleSheet } from "react-native";
 import { AppColors } from '../../Theme/AppColors'
 import { AppFonts } from '../../Theme/AppFonts'
 import { responsiveFontSize, responsiveHeight, responsiveWidth } from '../../Theme/ResponsiveDimensions'
@@ -104,6 +104,32 @@ export default StyleSheet.create({
     pillarCommentsCount: {
         fontSize: responsiveFontSize(1.4),
         fontFamily: AppFonts.light,
+
+    },
+    tabsContainer: {
+        width: responsiveWidth(100),
+        height: Platform.OS == 'ios' ? responsiveHeight(60) : responsiveHeight(63)
+    },
+    selected: {
+        color: AppColors.main,
+        fontFamily: AppFonts.regular,
+        width: responsiveWidth(15),
+        fontSize: responsiveFontSize(1.6),
+        textAlign: "center"
+    },
+    notSelected: {
+        color: AppColors.black,
+        fontFamily: AppFonts.light,
+        width: responsiveWidth(15),
+        fontSize: responsiveFontSize(1.6),
+        textAlign: "center"
+    },
+    indicator: {
+        height: responsiveHeight(0.3),
+        backgroundColor: '#00CDA9',
+        width: responsiveWidth(8),
+        marginLeft: responsiveWidth(9),
+        marginBottom: responsiveHeight(1.4)
 
     }
 

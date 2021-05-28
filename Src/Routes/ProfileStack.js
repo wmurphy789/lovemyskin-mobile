@@ -14,7 +14,6 @@ const Stack = createStackNavigator();
 
 const ProfileStack = () => {
     return (
-        <NavigationContainer> 
             <Stack.Navigator
                 screenOptions={{
                     gestureEnabled: false,
@@ -69,7 +68,6 @@ const ProfileStack = () => {
                         headerShown: false
                     }} />
             </Stack.Navigator>
-        </NavigationContainer>
     );
 }
 
