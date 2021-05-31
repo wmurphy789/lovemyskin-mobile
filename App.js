@@ -1,36 +1,23 @@
-import React from 'react'
-import { useEffect } from 'react'
-import { StatusBar, Platform, LogBox } from 'react-native'
-import { AppColors } from './Src/Theme/AppColors'
-import AuthStack from './Src/Routes/AuthStack'
-import ProfileStack from './Src/Routes/ProfileStack'
-import SkinDiagnosis from './Src/Screens/SkinDiagnosis'
-import SkinDiagnosisReport from './Src/Screens/SkinDiagnosisReport'
-import SkinWellbeing from './Src/Screens/SkinWellbeing'
-import CreateAffirmation from './Src/Screens/CreateAffirmation'
-import AllAffirmations from './Src/Screens/AllAffirmations'
-import ViewAffirmation from './Src/Screens/ViewAffirmation'
-import AffirmationStack from './Src/Routes/AffirmationsStack'
-import MainTabNav from './Src/Routes/MainTab'
+import React from "react";
+import { useEffect } from "react";
+import { StatusBar, Platform, LogBox } from "react-native";
+import SplashScreen from "react-native-splash-screen";
+import Setup from "./Src/Routes/Setup.js";
 const App = () => {
   useEffect(() => {
-    StatusBar.setBarStyle('light-content')
-    Platform.OS == "android" && StatusBar.setBackgroundColor(AppColors.main)
-    // Platform.OS == "android" && StatusBar.setTranslucent(true)
-    // Platform.OS == "android" && StatusBar.setBackgroundColor('rgba(1,1,1,0)')
-    LogBox.ignoreAllLogs(true)
-  }, [])
+    StatusBar.setBarStyle("dark-content");
+    Platform.OS == "android" && StatusBar.setTranslucent(true);
+    Platform.OS == "android" && StatusBar.setBackgroundColor("rgba(1,1,1,0)");
+    LogBox.ignoreAllLogs(true);
+    setTimeout(() => {
+      SplashScreen.hide();
+    }, 1000);
+  }, []);
   return (
     <>
-      {/* <ProfileStack /> */}
-      {/* <AuthStack/> */}
-      {/* <SkinDiagnosisReport /> */}
-      {/* <SkinDiagnosis /> */}
-      {/* <SkinWellbeing /> */}
-      {/* <AffirmationStack/> */}
-      <MainTabNav/>
+      <Setup />
     </>
-  )
-}
+  );
+};
 
-export default App
+export default App;

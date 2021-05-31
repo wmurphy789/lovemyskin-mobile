@@ -1,12 +1,12 @@
 import React from 'react'
-import { View, Text, ImageBackground, SafeAreaView, TouchableOpacity, Image, TouchableHighlight } from 'react-native'
+import { View, Text, ImageBackground, SafeAreaView, TouchableOpacity, Image, TouchableHighlight, Platform } from 'react-native'
 import { AppColors } from '../../Theme/AppColors'
 import { AppFonts } from '../../Theme/AppFonts'
 import { AppImages } from '../../Theme/AppImages'
 import { responsiveFontSize, responsiveHeight, responsiveWidth } from '../../Theme/ResponsiveDimensions'
 import styles from './styles'
 
-export const CurvedHeader = ({ title, leftIcon, leftPress, rightIcon, RightPress }) => {
+export const CurvedHeader = ({ title, leftIcon, leftPress, rightIcon, rightPress }) => {
     const HeaderButton = ({ image, onPress, underlayColor }) => (
         <TouchableHighlight style={styles.curveheaderButton}
             underlayColor={underlayColor}
@@ -18,28 +18,27 @@ export const CurvedHeader = ({ title, leftIcon, leftPress, rightIcon, RightPress
         </TouchableHighlight>
     )
     return (
-        <SafeAreaView style={{ backgroundColor: AppColors.main }}>
-            <View style={styles.curveHeaderContainer}>
-                <ImageBackground
-                    resizeMode="stretch"
-                    source={AppImages.curveSmallHeaderImage}
-                    style={styles.curveHeaderImage}>
+        // <SafeAreaView style={{ backgroundColor: AppColors.main }}>
+        <View style={styles.curveHeaderContainer}>
+            <ImageBackground
+                resizeMode="stretch"
+                source={AppImages.curveBigHeaderImage}
+                style={styles.curveHeaderImage}>
+                <View style={styles.curveHeaderButtonsView}>
+                    <HeaderButton               // right button
+                        image={leftIcon}
+                        underlayColor='rgba(33, 131, 129, 0.5)'
+                        onPress={leftPress} />
 
-                    <View style={styles.curveHeaderButtonsView}>
-                        <HeaderButton               // right button
-                            image={leftIcon}
-                            underlayColor='rgba(33, 131, 129, 0.5)'
-                            onPress={leftPress} />
-
-                        <HeaderButton               // left button for future improvements
-                            image={rightIcon}
-                            underlayColor='rgba(255,255,255, 0.5)'
-                            onPress={RightPress} />
-                    </View>
-                    <Text style={styles.title}>{title}</Text>
-                </ImageBackground>
-            </View>
-        </SafeAreaView>
+                    <HeaderButton               // left button for future improvements
+                        image={rightIcon}
+                        underlayColor='rgba(255,255,255, 0.5)'
+                        onPress={rightPress} />
+                </View>
+                <Text style={styles.title}>{title}</Text>
+            </ImageBackground>
+        </View>
+        // </SafeAreaView >
     )
 }
 

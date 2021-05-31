@@ -16,7 +16,7 @@ const PrivacyPolicy = ({ navigation }) => {
                 leftIcon={AppImages.backIcon}
                 leftPress={() => { Methods.goBack(navigation) }}
             />
-            <ScrollView keyboardShouldPersistTaps='always' >
+            <ScrollView showsVerticalScrollIndicator={false} >
                 <Text style={styles.paragraph}>{AppConstants.loremIpsum}</Text>
                 <Text style={styles.paragraph}>{AppConstants.loremIpsum}</Text>
                 <Text style={styles.paragraph}>{AppConstants.loremIpsum}</Text>
@@ -26,7 +26,7 @@ const PrivacyPolicy = ({ navigation }) => {
                 <Text style={styles.paragraph}>{AppConstants.loremIpsum}</Text>
                 <Text style={styles.paragraph}>{AppConstants.loremIpsum}</Text>
                 <Text style={styles.paragraph}>{AppConstants.loremIpsum}</Text>
-                <Text style={styles.paragraph}>{AppConstants.loremIpsum}</Text>
+                <Text style={[styles.paragraph, styles.customStyles]}>{AppConstants.loremIpsum}</Text>
             </ScrollView>
         </View >
     )

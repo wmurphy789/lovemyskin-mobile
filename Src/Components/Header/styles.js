@@ -5,16 +5,21 @@ import { responsiveFontSize, responsiveHeight, responsiveWidth } from '../../The
 export default StyleSheet.create({
     curveHeaderImage: {
         flex: 1,
-        paddingTop: responsiveHeight(5),
-        paddingHorizontal: responsiveWidth(5)
+        // paddingTop: responsiveHeight(5),
+        // paddingHorizontal: responsiveWidth(5),
+        paddingTop: 70,
+        paddingHorizontal: 15
     },
     curveHeaderContainer: {
-        height: responsiveHeight(17),
-        width: responsiveWidth(100),
-        backgroundColor: "#fff"
+        // height: responsiveHeight(17),
+        height: 185,
+        width: responsiveWidth(110),
+        backgroundColor: "#fff",
+        marginBottom: -20
     },
     curveHeaderButtonsView: {
         flexDirection: "row",
+        width: responsiveWidth(92),
         justifyContent: "space-between"
     },
     curveheaderButton: {
@@ -25,14 +30,18 @@ export default StyleSheet.create({
         borderRadius: 100,
     },
     curveHeaderIcon: {
-        height: responsiveWidth(5.5),
-        width: responsiveWidth(5.5)
+        // height: responsiveWidth(5.5),
+        // width: responsiveWidth(5.5)
+        height: 20,
+        width: 20
     },
     title: {
         color: AppColors.TitleGreen,
-        fontSize: responsiveFontSize(2.5),
+        // fontSize: responsiveFontSize(2.5),
+        fontSize: 18,
         fontFamily: AppFonts.semiBold,
-        marginTop: responsiveHeight(2),
-        marginLeft: responsiveWidth(1)
+        // marginTop: responsiveHeight(2),
+        marginTop: 10,
+        marginLeft: responsiveWidth(2)
     }
 })

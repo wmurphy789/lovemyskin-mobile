@@ -11,7 +11,7 @@ import styles from './styles'
 
 const demoImage = "https://img.webmd.com/dtmcms/live/webmd/consumer_assets/site_images/articles/health_tools/eye_color_and_shape_slideshow/493ss_thinkstock_rf_blue_eye.jpg?resize=375px:250px&output-quality=50"
 
-const SkinDiagnosisReport = ({ }) => {
+const SkinDiagnosisReport = ({ navigation }) => {
 
     const _renderItem = ({ item, index }) => (
         <View style={styles.listView}>
@@ -29,26 +29,38 @@ const SkinDiagnosisReport = ({ }) => {
     )
     const mainView = () => (
         <View style={styles.container}>
-            <CurvedHeader
+            {/* <CurvedHeader
                 title={AppConstants.skinDiagnosis}
                 leftIcon={AppImages.backIcon}
                 leftPress={() => { alert("Go back") }}
-            />
-            <Image
-                source={{ uri: demoImage }}
-                style={styles.imageContainer} />
-            <Text style={styles.infoText}>{AppConstants.topAnswersranked}</Text>
-            <FlatList
-                data={AppConstants.dummyAnswers}
-                keyExtractor={(item, index) => index.toString()}
-                renderItem={_renderItem}
-            />
+            /> */}
+            <ScrollView
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={styles.scrollViewContainer}>
+                <Image
+                    source={{ uri: demoImage }}
+                    style={styles.imageContainer} />
+                <Text style={styles.infoText}>{AppConstants.topAnswersranked}</Text>
+                <FlatList
+                    data={AppConstants.dummyAnswers}
+                    keyExtractor={(item, index) => index.toString()}
+                    renderItem={_renderItem}
+                />
+            </ScrollView>
         </View>
     )
     return (
-        <ScrollView bounces={false} keyboardShouldPersistTaps='always'>
+        // <ScrollView bounces={false} keyboardShouldPersistTaps='always'>
+        //     {mainView()}
+        // </ScrollView>
+        <View style={styles.container}>
+            <CurvedHeader
+                title={AppConstants.skinDiagnosis}
+                leftIcon={AppImages.backIcon}
+                leftPress={() => { Methods.goBack(navigation) }}
+            />
             {mainView()}
-        </ScrollView>
+        </View>
     )
 }
 

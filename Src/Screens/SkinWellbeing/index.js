@@ -43,92 +43,106 @@ const SkinWellbeing = () => {
             </View>
         </View>
     )
+    const renderPillars = (data) => {                      // convert data to Tabs content 
+        return (<FlatList
+            data={data}
+            bounces={false}
+            showsVerticalScrollIndicator={false}
+            keyExtractor={(item, index) => index.toString()}
+            contentContainerStyle={styles.tabsContentFlatlist}
+            renderItem={__renderItem} />)
+    }
+
+    // pages for material top tabnav
     const Articles = () => { return (renderPillars(AppConstants.dummydata)) }       // render Article Tab data
     const Videos = () => { return (renderPillars(AppConstants.dummydata)) }         // render Videos Tab data
     const Podcasts = () => { return (renderPillars(AppConstants.dummydata)) }       // render Podcasts Tab data
     const Stories = () => { return (renderPillars(AppConstants.dummydata)) }        // render Stories Tab data
 
-    const MyTabs = () => {
+    const MyTabs = () => {          // material Top tab nav
         return (
-                <Tab.Navigator tabBarOptions={{
-                    indicatorStyle: styles.indicator,
-                    pressColor: AppColors.main,
-                }}>
-                    <Tab.Screen
-                        options={{
-                            tabBarLabel: ({ focused }) =>
-                                focused
-                                    ? (<Text style={styles.selected}>{AppConstants.articles}</Text>)
-                                    : (<Text style={styles.notSelected}>{AppConstants.articles}</Text>)
-                        }}
-                        name="Articles"
-                        component={Articles} />
-                    <Tab.Screen
-                        options={{
-                            tabBarLabel: ({ focused }) =>
-                                focused
-                                    ? (<Text style={styles.selected}>{AppConstants.videos}</Text>)
-                                    : (<Text style={styles.notSelected}>{AppConstants.videos}</Text>)
-                        }}
-                        name="Videos"
-                        component={Videos} />
-                    <Tab.Screen
-                        options={{
-                            tabBarLabel: ({ focused }) =>
-                                focused
-                                    ? (<Text style={styles.selected}>{AppConstants.podcasts}</Text>)
-                                    : (<Text style={styles.notSelected}>{AppConstants.podcasts}</Text>)
-                        }}
-                        name="Podcasts"
-                        component={Podcasts} />
-                    <Tab.Screen
-                        options={{
-                            tabBarLabel: ({ focused }) =>
-                                focused
-                                    ? (<Text style={styles.selected}>{AppConstants.stories}</Text>)
-                                    : (<Text style={styles.notSelected}>{AppConstants.stories}</Text>)
-                        }}
-                        name="Stories"
-                        component={Stories} />
-                </Tab.Navigator>
+            <Tab.Navigator tabBarOptions={{
+                indicatorStyle: styles.indicator,
+                pressColor: AppColors.main,
+                style: {
+                    elevation: 0,
+                    shadowColor: "#ffffff",
+                    shadowOffset: { width: 0, height: 0 }, // change this for more shadow
+                    shadowOpacity: 0.4,
+                    shadowRadius: 6,
+                },
+            }}>
+                <Tab.Screen
+                    options={{
+                        tabBarLabel: ({ focused }) =>
+                            focused
+                                ? (<Text style={styles.selected}>{AppConstants.articles}</Text>)
+                                : (<Text style={styles.notSelected}>{AppConstants.articles}</Text>)
+                    }}
+                    name="Articles"
+                    component={Articles} />
+                <Tab.Screen
+                    options={{
+                        tabBarLabel: ({ focused }) =>
+                            focused
+                                ? (<Text style={styles.selected}>{AppConstants.videos}</Text>)
+                                : (<Text style={styles.notSelected}>{AppConstants.videos}</Text>)
+                    }}
+                    name="Videos"
+                    component={Videos} />
+                <Tab.Screen
+                    options={{
+                        tabBarLabel: ({ focused }) =>
+                            focused
+                                ? (<Text style={styles.selected}>{AppConstants.podcasts}</Text>)
+                                : (<Text style={styles.notSelected}>{AppConstants.podcasts}</Text>)
+                    }}
+                    name="Podcasts"
+                    component={Podcasts} />
+                <Tab.Screen
+                    options={{
+                        tabBarLabel: ({ focused }) =>
+                            focused
+                                ? (<Text style={styles.selected}>{AppConstants.stories}</Text>)
+                                : (<Text style={styles.notSelected}>{AppConstants.stories}</Text>)
+                    }}
+                    name="Stories"
+                    component={Stories} />
+            </Tab.Navigator>
 
         );
     }
-    const renderPillars = (data) => {                      // convert data to Tabs content 
-        return (<FlatList
-            data={data}
-            renderItem={__renderItem} />)
-    }
 
-    const mainView = () => {
-        return (
-            <View >
+
+
+    return (
+        <View style={styles.container}>
+            <View style={styles.container}>
                 <View style={styles.curveHeaderContainer}>
                     <ImageBackground
                         resizeMode="stretch"
-                        source={AppImages.curveSmallHeaderImage}
+                        source={AppImages.curveBigHeaderImage}
                         style={styles.curveHeaderImage}>
                         <Text style={styles.title}>{AppConstants.skinWellbeing}</Text>
                         <Text style={styles.infoText}>{AppConstants.chooseFromOurPillarsOfWellness}</Text>
                     </ImageBackground>
                 </View>
-                <FlatList
-                    data={AppConstants.wellNessPillars}
-                    renderItem={_renderItem}
-                    showsHorizontalScrollIndicator={false}
-                    contentContainerStyle={styles.pillarsFlatlistStyle}
-                    horizontal
-                    keyExtractor={(item, index) => index.toString()}
-                />
-                <View style={styles.tabsContainer}>
-                    {MyTabs()}
+                <View style={{ marginBottom: 20 }}>
+                    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                        <FlatList
+                            data={AppConstants.wellNessPillars}
+                            renderItem={_renderItem}
+                            showsHorizontalScrollIndicator={false}
+                            contentContainerStyle={styles.pillarsFlatlistStyle}
+                            horizontal
+                            keyExtractor={(item, index) => index.toString()}
+                        />
+                    </ScrollView>
                 </View>
+                {/* <View style={styles.tabsContainer}> */}
+                {MyTabs()}
+                {/* </View> */}
             </View>
-        )
-    }
-    return (
-        <View style={styles.container}>
-            {mainView()}
         </View>
     )
 }

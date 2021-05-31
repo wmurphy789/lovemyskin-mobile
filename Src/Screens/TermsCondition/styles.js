@@ -1,13 +1,25 @@
 import { StyleSheet } from "react-native";
-import { responsiveHeight, responsiveWidth } from '../../Theme/ResponsiveDimensions'
-import { AppColors } from '../../Theme/AppColors'
-import { AppFonts } from '../../Theme/AppFonts'
-import { AppImages } from '../../Theme/AppImages'
+import {
+  responsiveFontSize,
+  responsiveHeight,
+  responsiveWidth,
+} from "../../Theme/ResponsiveDimensions";
+import { AppColors } from "../../Theme/AppColors";
+import { AppFonts } from "../../Theme/AppFonts";
+import { AppImages } from "../../Theme/AppImages";
 export default StyleSheet.create({
-    container: { flex: 1 },
-    paragraph: {
-        lineHeight: 25,
-        marginHorizontal: responsiveWidth(5),
-        fontFamily: AppFonts.regular
-    }
-})
+  container: {
+    flex: 1,
+    backgroundColor: AppColors.white,
+  },
+  paragraph: {
+    lineHeight: 20,
+    marginHorizontal: 20,
+    fontFamily: AppFonts.light,
+    color: AppColors.darkGrey,
+    fontSize: responsiveFontSize(1.5),
+  },
+  customStyles: {
+    marginBottom: 50,
+  },
+});
