@@ -12,29 +12,32 @@ import {
 export default StyleSheet.create({
   container: {
     width: "100%",
+    flex: 1,
     backgroundColor: AppColors.white,
   },
   headerContainer: {
     width: responsiveWidth(100),
-    height: responsiveHeight(25),
+    height: 250,
     backgroundColor: AppColors.white,
   },
   headerImage: {
     width: responsiveWidth(100),
-    height: responsiveHeight(30),
+    height: 250,
+    justifyContent: "space-between",
+    paddingBottom: 50,
     backgroundColor: AppColors.white,
   },
   logoImage: {
-    height: responsiveWidth(15),
-    width: responsiveWidth(15),
+    height: responsiveWidth(18),
+    width: responsiveWidth(18),
     alignSelf: "center",
-    marginTop: responsiveHeight(7),
+    marginTop: responsiveHeight(6.5),
   },
   welcomeBackText: {
     marginLeft: responsiveWidth(5),
     fontFamily: AppFonts.regular,
     fontSize: responsiveFontSize(3),
-    marginTop: responsiveHeight(5),
+    marginTop: 60,
     color: AppColors.darkGrey,
   },
   introText: {
@@ -44,10 +47,11 @@ export default StyleSheet.create({
     width: responsiveWidth(90),
     // alignSelf: "center",
     lineHeight: 18,
-    marginVertical: responsiveHeight(2),
+    marginTop: -20,
+    marginBottom: responsiveHeight(3.2),
   },
   input: {
-    marginTop: responsiveHeight(1.2),
+    // marginTop: responsiveHeight(1.5),
   },
   forgotPasswordButton: {
     alignSelf: "flex-end",
@@ -92,11 +96,11 @@ export default StyleSheet.create({
     marginLeft: responsiveWidth(5),
     fontSize: responsiveFontSize(1.5),
   },
-  fullButton: { marginTop: responsiveHeight(4) },
+  fullButton: { marginTop: responsiveHeight(8) },
   socialLoginView: { marginTop: responsiveHeight(5), alignItems: "center" },
   socialLoginButtonsView: { marginVertical: responsiveHeight(2) },
   centerView: { flexDirection: "row", alignItems: "center" },
-  inputView: { marginTop: responsiveHeight(2) },
+  inputView: { marginTop: responsiveHeight(3) },
   mainView: {
     paddingHorizontal: responsiveWidth(5),
   },

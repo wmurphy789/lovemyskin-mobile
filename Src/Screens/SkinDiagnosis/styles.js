@@ -20,8 +20,9 @@ export default StyleSheet.create({
   },
 
   uploadImageContainer: {
-    // height: responsiveWidth(88),
-    height: responsiveWidth(65),
+    // height: 266,
+    // width: 339,
+    height: responsiveHeight(36),
     width: responsiveWidth(90),
     alignSelf: "center",
     borderRadius: 10,
@@ -50,23 +51,23 @@ export default StyleSheet.create({
     marginTop: 15,
   },
   button: {
-    marginTop: responsiveHeight(5),
+    marginTop: responsiveHeight(6),
   },
   feedbackButton: {
     backgroundColor: "#67C6AF",
     paddingHorizontal: responsiveWidth(15),
     borderRadius: responsiveWidth(1.5),
-    marginTop: responsiveHeight(6),
-    paddingVertical: responsiveHeight(0.3),
+    marginTop: responsiveHeight(7),
+    paddingVertical: responsiveHeight(0.5),
   },
   feedbacktext: {
-    fontFamily: AppFonts.regular,
+    fontFamily: AppFonts.semiBold,
     color: AppColors.white,
     fontSize: responsiveFontSize(1.5),
   },
   poweredbyAutoderm: {
     fontSize: responsiveFontSize(1.1),
-    marginTop: responsiveHeight(0.4),
+    marginTop: responsiveHeight(0.6),
     color: AppColors.mediumGrey,
     marginBottom: 70,
   },

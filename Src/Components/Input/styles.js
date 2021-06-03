@@ -1,17 +1,23 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
 import { AppColors } from "../../Theme/AppColors";
 import { AppFonts } from "../../Theme/AppFonts";
 import { AppImages } from "../../Theme/AppImages";
 import {
+  responsiveFontSize,
   responsiveHeight,
   responsiveWidth,
 } from "../../Theme/ResponsiveDimensions";
+
+const deviceHeight = Dimensions.get("window").height;
+const deviceWidth = Dimensions.get("window").width;
+
 export default StyleSheet.create({
   iconInputContainer: {
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    width: responsiveWidth(90),
+    alignSelf: "center",
+    // width: responsiveWidth(90),
     paddingHorizontal: responsiveWidth(2),
     borderBottomWidth: 1,
     borderBottomColor: AppColors.lightGrey,
@@ -22,24 +28,26 @@ export default StyleSheet.create({
     width: responsiveWidth(5),
   },
   iconInputField: {
-    width: responsiveWidth(82),
-    // height: responsiveHeight(5),
+    width: responsiveWidth(78),
+    // height: deviceHeight < 800 ? responsiveHeight(5.7) : responsiveHeight(5),
+    fontSize: responsiveFontSize(1.7),
     marginLeft: responsiveWidth(1.5),
-    fontFamily: AppFonts.regular,
+    fontFamily: AppFonts.light,
   },
   simpleInputContainer: {
     // alignItems: "center",
-    width: responsiveWidth(92),
+    // width: responsiveWidth(92),
     // backgroundColor: "#f11",
     height: 37,
     paddingHorizontal: responsiveWidth(2),
     borderBottomWidth: 1,
+    // alignItems: "center",
     borderBottomColor: AppColors.lightGrey,
   },
   simpleInputField: {
-    width: responsiveWidth(89),
-    // height: responsiveHeight(5),
-    fontSize: 12,
-    fontFamily: AppFonts.regular,
+    // width: responsiveWidth(89),
+    // height: deviceHeight < 800 ? responsiveHeight(5.7) : responsiveHeight(5),
+    fontSize: responsiveFontSize(1.6),
+    fontFamily: AppFonts.light,
   },
 });

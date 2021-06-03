@@ -8,6 +8,7 @@ import {
   Image,
   TouchableOpacity,
   Platform,
+  KeyboardAvoidingView,
 } from "react-native";
 import { FullButton } from "../../Components/Button";
 import { IconInput } from "../../Components/Input/Input";
@@ -39,57 +40,69 @@ const socialLoginData = [
 
 const SignIn = ({ navigation }) => {
   return (
-    <ScrollView
-      bounces={false}
-      keyboardShouldPersistTaps="always"
-      showsVerticalScrollIndicator={false}
-    >
-      <View style={styles.container}>
-        <View style={styles.headerContainer}>
-          <ImageBackground
-            resizeMode="stretch"
-            style={styles.headerImage}
-            source={AppImages.curveBigHeaderImage}
-          >
-            <Image source={AppImages.logoIcon} style={styles.logoImage} />
-            <Text style={styles.welcomeBackText}>
-              {AppConstants.welcomeBack}
-            </Text>
-          </ImageBackground>
-        </View>
-        <View style={styles.mainView}>
-          <Text style={styles.introText}>{AppConstants.loremIpsum}</Text>
-          <View style={styles.inputView}>
-            <IconInput
-              image={AppImages.greenMailIcon}
-              placeholder={AppConstants.enterYourEmailAddress}
-              customStyles={styles.input}
-            />
-            <IconInput
-              image={AppImages.greenLockSimpleIcon}
-              placeholder={AppConstants.enterYourPassword}
-              customStyles={styles.input}
-            />
+    // <KeyboardAvoidingView
+    //   style={{ flex: 1, backgroundColor: "#fff" }}
+    //   behavior="padding"
+    // >
+    <View style={{ flex: 1, backgroundColor: "#fff" }}>
+
+
+      <ScrollView
+        bounces={false}
+        keyboardShouldPersistTaps="always"
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ backgroundColor: "#fff" }}
+      >
+        <View style={styles.container}>
+          <View style={styles.headerContainer}>
+            <ImageBackground
+              resizeMode="stretch"
+              style={styles.headerImage}
+              source={AppImages.curveBigHeaderImage}
+            >
+              <Image source={AppImages.logoIcon} style={styles.logoImage} />
+              <Text style={styles.welcomeBackText}>
+                {AppConstants.welcomeBack}
+              </Text>
+            </ImageBackground>
           </View>
-          <TouchableOpacity
-            onPress={() => {
-              Methods.navigate(navigation, "ForgotPassword");
-            }}
-            style={styles.forgotPasswordButton}
-          >
-            <Text style={styles.forgotPasswordText}>
-              {AppConstants.forgotPassword}
-            </Text>
-          </TouchableOpacity>
-          <View style={styles.fullButton}>
-            <FullButton
-              title={AppConstants.signIn}
-              onPress={() => Methods.navigate(navigation, "Tabs")}
-            />
+          <View style={styles.mainView}>
+            <Text style={styles.introText}>{AppConstants.loremIpsum}</Text>
+            <View style={styles.inputView}>
+              <IconInput
+                type={true}
+                image={AppImages.greenMailIcon}
+                placeholder={AppConstants.enterYourEmailAddress}
+                customStyles={styles.input}
+              />
+            </View>
+            <View style={styles.inputView}>
+              <IconInput
+                secureInput={true}
+                image={AppImages.greenLockSimpleIcon}
+                placeholder={AppConstants.enterYourPassword}
+                customStyles={styles.input}
+              />
+            </View>
+            <TouchableOpacity
+              onPress={() => {
+                Methods.navigate(navigation, "ForgotPassword");
+              }}
+              style={styles.forgotPasswordButton}
+            >
+              <Text style={styles.forgotPasswordText}>
+                {AppConstants.forgotPassword}
+              </Text>
+            </TouchableOpacity>
+            <View style={styles.fullButton}>
+              <FullButton
+                title={AppConstants.signIn}
+                onPress={() => Methods.navigate(navigation, "Tabs")}
+              />
+            </View>
           </View>
-        </View>
-        <View style={styles.socialLoginView}>
-          <Text style={styles.orText}>OR</Text>
+          <View style={styles.socialLoginView}>
+            {/* <Text style={styles.orText}>OR</Text>
           <View style={styles.socialLoginButtonsView}>
             {socialLoginData.map((item) => (
               <TouchableOpacity
@@ -114,19 +127,23 @@ const SignIn = ({ navigation }) => {
               </TouchableOpacity>
             ))}
           </View>
+         */}
+          </View>
+
+          <TouchableOpacity
+            onPress={() => {
+              Methods.navigate(navigation, "SignUp");
+            }}
+            style={styles.dontHaveAccountButton}
+          >
+            <Text style={styles.dontHaveAccountText}>
+              {AppConstants.dontHaveAnAccount}
+            </Text>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          onPress={() => {
-            Methods.navigate(navigation, "SignUp");
-          }}
-          style={styles.dontHaveAccountButton}
-        >
-          <Text style={styles.dontHaveAccountText}>
-            {AppConstants.dontHaveAnAccount}
-          </Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </View>
+    // </KeyboardAvoidingView>
   );
 };
 

@@ -7,6 +7,7 @@ import {
   ImageBackground,
   Image,
   TouchableOpacity,
+  KeyboardAvoidingView,
 } from "react-native";
 import { FullButton } from "../../Components/Button";
 import { IconInput } from "../../Components/Input/Input";
@@ -36,50 +37,63 @@ const socialLoginData = [
 ];
 const SignUp = ({ navigation }) => {
   return (
-    <ScrollView
-      bounces={false}
-      keyboardShouldPersistTaps="always"
-      showsVerticalScrollIndicator={false}
-    >
-      <View style={styles.container}>
-        <View style={styles.headerContainer}>
-          <ImageBackground
-            resizeMode="stretch"
-            style={styles.headerImage}
-            source={AppImages.curveBigHeaderImage}
-          >
-            <Image source={AppImages.logoIcon} style={styles.logoImage} />
-            <Text style={styles.welcomeBackText}>{AppConstants.welcome}</Text>
-          </ImageBackground>
-        </View>
-        <View style={styles.mainView}>
-          <Text style={styles.introText}>{AppConstants.loremIpsum}</Text>
-          <View style={styles.inputView}>
-            <IconInput
-              image={AppImages.greenMailIcon}
-              placeholder={AppConstants.enterYourEmailAddress}
-              customStyles={styles.input}
-            />
-            <IconInput
-              image={AppImages.greenLockSimpleIcon}
-              placeholder={AppConstants.enterYourPassword}
-              customStyles={styles.input}
-            />
-            <IconInput
-              image={AppImages.greenLockSimpleIcon}
-              placeholder={AppConstants.confirmYourPassword}
-              customStyles={styles.input}
-            />
+    // <KeyboardAvoidingView
+    //   style={{ flex: 1, backgroundColor: "#fff" }}
+    //   behavior="padding"
+    // >
+    <View style={{ flex: 1, backgroundColor: "#fff" }}>
+      <ScrollView
+        bounces={false}
+        keyboardShouldPersistTaps="always"
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ backgroundColor: "#fff" }}
+      >
+        <View style={styles.container}>
+          <View style={styles.headerContainer}>
+            <ImageBackground
+              resizeMode="stretch"
+              style={styles.headerImage}
+              source={AppImages.curveBigHeaderImage}
+            >
+              <Image source={AppImages.logoIcon} style={styles.logoImage} />
+              <Text style={styles.welcomeBackText}>{AppConstants.welcome}</Text>
+            </ImageBackground>
           </View>
-          <View style={styles.fullButton}>
-            <FullButton
-              title={AppConstants.signUp}
-              onPress={() => Methods.navigate(navigation, "SkinPriorities")}
-            />
+          <View style={styles.mainView}>
+            <Text style={styles.introText}>{AppConstants.loremIpsum}</Text>
+            <View style={styles.inputView}>
+              <IconInput
+                type={true}
+                image={AppImages.greenMailIcon}
+                placeholder={AppConstants.enterYourEmailAddress}
+                customStyles={styles.input}
+              />
+            </View>
+            <View style={styles.inputView}>
+              <IconInput
+                image={AppImages.greenLockSimpleIcon}
+                secureInput={true}
+                placeholder={AppConstants.enterYourPassword}
+                customStyles={styles.input}
+              />
+            </View>
+            <View style={styles.inputView}>
+              <IconInput
+                image={AppImages.greenLockSimpleIcon}
+                secureInput={true}
+                placeholder={AppConstants.confirmYourPassword}
+                customStyles={styles.input}
+              />
+            </View>
+            <View style={styles.fullButton}>
+              <FullButton
+                title={AppConstants.signUp}
+                onPress={() => Methods.navigate(navigation, "SkinPriorities")}
+              />
+            </View>
           </View>
-        </View>
-        <View style={styles.socialLoginView}>
-          <Text style={styles.orText}>OR</Text>
+          <View style={styles.socialLoginView}>
+            {/* <Text style={styles.orText}>OR</Text>
           <View style={styles.socialLoginButtonsView}>
             {socialLoginData.map((item) => (
               <TouchableOpacity
@@ -104,19 +118,22 @@ const SignUp = ({ navigation }) => {
               </TouchableOpacity>
             ))}
           </View>
+        */}
+          </View>
+          <TouchableOpacity
+            onPress={() => {
+              Methods.goBack(navigation);
+            }}
+            style={styles.dontHaveAccountButton}
+          >
+            <Text style={styles.dontHaveAccountText}>
+              {AppConstants.haveAnAccount}
+            </Text>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          onPress={() => {
-            Methods.goBack(navigation);
-          }}
-          style={styles.dontHaveAccountButton}
-        >
-          <Text style={styles.dontHaveAccountText}>
-            {AppConstants.haveAnAccount}
-          </Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </View>
+    // </KeyboardAvoidingView>
   );
 };
 

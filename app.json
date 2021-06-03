@@ -1,4 +1,44 @@
 {
-  "name": "LoveMySkin",
-  "displayName": "LoveMySkin"
+  "expo": {
+    "name": "Love My Skin",
+    "slug": "lovemyskin",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#218381"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.lovemyskin",
+      "buildNumber": "1.0.0"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#218381"
+      },
+      "userInterfaceStyle": "light",
+      "package": "com.lovemyskin",
+      "versionCode": 1,
+      "softwareKeyboardLayoutMode": "resize"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "developmentClient": {
+      "silentLaunch": true
+    },
+    "androidStatusBar": {
+      "backgroundColor": "#218381",
+      "barStyle": "light-content",
+      "translucent": false
+    }
+  }
 }

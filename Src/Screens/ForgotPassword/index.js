@@ -12,6 +12,8 @@ import AppConstants from "../../Theme/AppConstants";
 import { AppImages } from "../../Theme/AppImages";
 import styles from "./styles";
 import Methods from "../../Support/Methods";
+import { responsiveHeight } from "../../Theme/ResponsiveDimensions";
+import { AppColors } from "../../Theme/AppColors";
 
 const ForgotPassword = ({ navigation }) => {
   return (
@@ -19,6 +21,7 @@ const ForgotPassword = ({ navigation }) => {
       bounces={false}
       keyboardShouldPersistTaps="always"
       showsVerticalScrollIndicator={false}
+      style={{ backgroundColor: AppColors.white }}
     >
       <View style={styles.container}>
         <TouchableHighlight
@@ -27,17 +30,31 @@ const ForgotPassword = ({ navigation }) => {
           activeOpacity={1}
           onPress={() => {
             Methods.goBack(navigation);
+            // alert("jnhnjk");
           }}
         >
-          <Image source={AppImages.backIcon} style={styles.backIcon} />
+          <Image
+            source={AppImages.backIcon}
+            style={styles.backIcon}
+            resizeMode="contain"
+          />
         </TouchableHighlight>
         <Text style={styles.ForgotPasswordText}>
-          {AppConstants.forgotPassword}
+          {AppConstants.forgotPassword_1}
         </Text>
-        <IconInput
-          image={AppImages.greenMailIcon}
-          placeholder={AppConstants.enterYourEmailAddress}
-        />
+        <View
+          style={{
+            marginTop: responsiveHeight(3),
+          }}
+        >
+          <IconInput
+            type={true}
+            // customStyles={styles.input}
+            image={AppImages.greenMailIcon}
+            placeholder={AppConstants.enterYourEmailAddress}
+          />
+        </View>
+
         <FullButton
           customStyles={styles.button}
           title={AppConstants.submit}

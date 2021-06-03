@@ -92,12 +92,14 @@ const SkinPriorities = ({ navigation }) => {
               {AppConstants.iDontWantToAnswerThis}
             </Text>
           </TouchableOpacity>
-          <FullButton
-            title={AppConstants.continue}
-            onPress={() => {
-              Methods.navigate(navigation, "Tabs");
-            }}
-          />
+          <View style={{ marginBottom: responsiveHeight(5) }}>
+            <FullButton
+              title={AppConstants.continue}
+              onPress={() => {
+                Methods.navigate(navigation, "Tabs");
+              }}
+            />
+          </View>
         </View>
       </ScrollView>
     </View>

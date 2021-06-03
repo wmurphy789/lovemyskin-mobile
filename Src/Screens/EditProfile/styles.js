@@ -13,23 +13,24 @@ export default StyleSheet.create({
   profileImageContainer: {
     width: responsiveWidth(100),
     alignItems: "center",
-    marginTop: -15,
+    marginTop: -20,
   },
   profileImage: {
-    height: responsiveWidth(40),
-    width: responsiveWidth(40),
+    height: responsiveWidth(42),
+    width: responsiveWidth(42),
     borderRadius: responsiveWidth(10),
     alignSelf: "center",
-    marginBottom: responsiveHeight(1),
+    marginBottom: responsiveHeight(2),
   },
   input: {
     alignSelf: "center",
+    width: responsiveWidth(85),
     // marginTop: responsiveHeight(2),
-    marginTop: 15,
+    marginTop: responsiveHeight(2),
   },
   changePasswordButton: {
     alignSelf: "flex-start",
-    marginLeft: responsiveWidth(4),
+    marginLeft: responsiveWidth(7.5),
     marginVertical: responsiveHeight(4),
     marginBottom: responsiveHeight(5),
   },
@@ -41,7 +42,7 @@ export default StyleSheet.create({
   },
   editButton: {
     position: "absolute",
-    bottom: -7,
+    bottom: -1,
     right: responsiveWidth(25.5),
     // backgroundColor: "#f11"
   },

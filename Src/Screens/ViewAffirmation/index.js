@@ -96,7 +96,7 @@ const ViewAffirmation = ({ navigation, route }) => {
       >
         <ImageBackground
           style={styles.addMyAffirmation}
-          source={AppImages.gradientButtonImage}
+          source={AppImages.GradientButtonTransparent}
         >
           <Image
             source={AppImages.editWhiteIcon}
@@ -128,7 +128,7 @@ const ViewAffirmation = ({ navigation, route }) => {
         styles.ItemView,
         {
           backgroundColor: screenColor,
-          marginBottom: index == screenData.length - 1 ? 0 : 15,
+          marginBottom: index == screenData.length - 1 ? 0 : 12,
         },
       ]}
     >
@@ -149,7 +149,7 @@ const ViewAffirmation = ({ navigation, route }) => {
         styles.ItemView,
         {
           backgroundColor: screenColor,
-          marginBottom: index == screenData.length - 1 ? 0 : 20,
+          marginBottom: index == screenData.length - 1 ? 0 : 12,
         },
       ]}
     >

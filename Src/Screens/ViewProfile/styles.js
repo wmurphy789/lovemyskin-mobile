@@ -14,31 +14,32 @@ export default StyleSheet.create({
   },
   profileContainer: {
     // height: responsiveHeight(35),
-    height: 300,
+    height: 310,
     width: responsiveWidth(100),
     backgroundColor: AppColors.main,
     alignItems: "center",
     // justifyContent: 'center',
     justifyContent: "flex-end",
-    paddingBottom: 20,
+    paddingBottom: 15,
   },
   menuContainer: {
     flex: 1,
   },
   profileImage: {
-    height: responsiveWidth(40),
-    width: responsiveWidth(40),
+    height: responsiveWidth(42),
+    width: responsiveWidth(42),
     borderRadius: responsiveWidth(10),
   },
   profileName: {
     color: AppColors.white,
     fontFamily: AppFonts.semiBold,
     fontSize: responsiveFontSize(2.2),
-    marginTop: responsiveHeight(1),
+    marginTop: responsiveHeight(1.8),
   },
   profileId: {
     color: AppColors.white,
     fontFamily: AppFonts.regular,
+    marginTop: responsiveHeight(0.5),
   },
   menuItem: {
     flexDirection: "row",
@@ -51,11 +52,8 @@ export default StyleSheet.create({
     marginLeft: responsiveWidth(7),
     marginRight: responsiveWidth(5),
   },
-  menuItemTitle: {
-    fontFamily: AppFonts.light,
-  },
   scrollContainer: {
     backgroundColor: AppColors.white,
-    paddingTop: 50,
+    // paddingTop: 50,
   },
 });

@@ -18,12 +18,13 @@ export default StyleSheet.create({
   mainGreenTab: {
     height: responsiveWidth(19),
     width: responsiveWidth(19),
-    bottom: responsiveHeight(4.8),
+    bottom: 28,
+    bottom: responsiveHeight(4.05),
     left: 1,
     borderRadius: responsiveWidth(100),
     backgroundColor: "#00CDA9",
     alignSelf: "center",
-    elevation: 1,
+    // elevation: 8,
     alignItems: "center",
     justifyContent: "center",
     zIndex: 99999,
@@ -35,6 +36,10 @@ export default StyleSheet.create({
   centerTab: {
     height: 50,
     width: 50,
+  },
+  myTrackerImage: {
+    height: 17,
+    width: 35,
   },
   normalTabs: {
     width: responsiveWidth(19),
@@ -49,16 +54,26 @@ export default StyleSheet.create({
     color: AppColors.black,
   },
   backgroundImage: {
-    height: responsiveHeight(8),
-    // height: 70,
+    height: 100,
+    // height: 63,
     width: responsiveWidth(100),
     // backgroundColor: "transparent",
-    backgroundColor: "transparent",
-    alignItems: "center",
+    // backgroundColor: "#0000",
+    // alignItems: "center",
     justifyContent: "center",
     borderRadius: responsiveWidth(5),
     position: "absolute",
+    bottom: -20,
     // left: 0,
-    bottom: responsiveHeight(0),
+    // bottom: responsiveHeight(0),
+  },
+  backgroundImage_1: {
+    // position: "absolute",
+    shadowOffset: { width: -1, height: -1 },
+    shadowColor: "#ccc",
+    shadowOpacity: 1,
+    // elevation: 3,
+    // background color must be set
+    backgroundColor: "#0000",
   },
 });

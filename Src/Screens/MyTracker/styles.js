@@ -17,7 +17,7 @@ export default StyleSheet.create({
     backgroundColor: AppColors.main,
     // height: responsiveHeight(50),
     width: responsiveWidth(100),
-    paddingHorizontal: responsiveWidth(5),
+    paddingHorizontal: responsiveWidth(3),
   },
   lowerContainer: {
     backgroundColor: AppColors.main,
@@ -41,7 +41,7 @@ export default StyleSheet.create({
     marginBottom: responsiveHeight(2),
     color: AppColors.white,
     fontFamily: AppFonts.regular,
-    marginLeft: responsiveWidth(2.5),
+    marginLeft: responsiveWidth(2.8),
     fontSize: responsiveFontSize(3),
   },
   addMyAffirmation: {
@@ -49,18 +49,20 @@ export default StyleSheet.create({
     height: responsiveHeight(20),
     alignSelf: "center",
     borderRadius: 10,
+    // opacity: 0.9,
+    overflow: "hidden",
     alignItems: "center",
     justifyContent: "center",
   },
   upArrowImage: {
-    width: responsiveWidth(4),
+    width: responsiveWidth(7),
     height: responsiveWidth(6),
     marginLeft: responsiveWidth(3),
   },
   editEntryImage: {
-    width: responsiveWidth(8),
-    height: responsiveWidth(9),
-    marginRight: responsiveWidth(3),
+    width: responsiveWidth(7.8),
+    height: responsiveWidth(8.5),
+    marginRight: responsiveWidth(3.5),
   },
   optionView: {
     alignItems: "center",
@@ -90,6 +92,7 @@ export default StyleSheet.create({
     // height: responsiveHeight(90),
     paddingVertical: responsiveHeight(1.3),
     paddingBottom: responsiveHeight(15),
+    paddingTop: 30,
     // overflow: "hidden",
   },
   tileView: {
@@ -125,22 +128,37 @@ export default StyleSheet.create({
   },
   percantageText: {
     color: AppColors.white,
-    fontFamily: AppFonts.regular,
+    fontFamily: AppFonts.semiBold,
     fontSize: responsiveFontSize(4),
-    fontWeight: "bold",
   },
-  percantageView: { flexDirection: "row", alignItems: "center" },
+  percantageView: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
   percentageEntryView: {
     flexDirection: "row",
     alignItems: "center",
-    width: responsiveWidth(40),
+    justifyContent: "center",
+    // width: responsiveWidth(43),
     marginTop: responsiveHeight(2),
   },
   percentageEntryText: {
     color: AppColors.white,
-    fontSize: responsiveFontSize(2.2),
+    fontSize: responsiveFontSize(1.9),
     textAlign: "center",
-    fontFamily: AppFonts.light,
+    marginLeft: -responsiveWidth(7.5),
+    // alignSelf: "center",
+    // height: responsiveWidth(8.5),
+
+    fontFamily: AppFonts.regular,
+    width: responsiveWidth(40),
+  },
+  percentageEntryTextView: {
+    // height: responsiveWidth(8.5),
+
+    // position: "absolute",
+    // marginLeft: -responsiveWidth(10),
+    width: responsiveWidth(40),
   },
   dateViewStyle: {
     flexDirection: "row",
@@ -183,7 +201,7 @@ export default StyleSheet.create({
   calenderDateUpper: {
     marginLeft: responsiveWidth(2),
     color: AppColors.white,
-    fontFamily: AppFonts.light,
+    fontFamily: AppFonts.regular,
   },
   smileImage: {
     height: responsiveWidth(9),
@@ -193,6 +211,7 @@ export default StyleSheet.create({
     height: responsiveWidth(3),
     width: responsiveWidth(2),
     marginLeft: responsiveWidth(2),
+    // marginTop: responsiveHeight(1),
   },
   simpleDownArrowImage: {
     height: responsiveWidth(2),
@@ -201,12 +220,10 @@ export default StyleSheet.create({
   },
   calendarLsitMain: {
     flexDirection: "row",
-    flex: 1,
     justifyContent: "space-around",
-    marginVertical: responsiveHeight(2),
   },
   calendarLsitViewDate: {
-    height: responsiveHeight(15),
+    height: responsiveHeight(14),
     // flex: 1,
     borderRadius: responsiveWidth(100),
     backgroundColor: AppColors.main,
@@ -217,7 +234,7 @@ export default StyleSheet.create({
     height: 8,
     width: 8,
     borderRadius: 4,
-    backgroundColor: AppColors.main,
+    backgroundColor: "#65C7AF",
     marginTop: responsiveHeight(1),
     alignSelf: "center",
   },
@@ -239,8 +256,9 @@ export default StyleSheet.create({
     marginTop: responsiveHeight(1),
   },
   calendarLsitViewContent: {
-    minHeight: responsiveHeight(13),
+    minHeight: responsiveHeight(10),
     flex: 5,
+    // marginTop: responsiveHeight(1),
     borderRadius: 10,
     padding: responsiveWidth(2),
     paddingHorizontal: responsiveWidth(3),
@@ -251,7 +269,7 @@ export default StyleSheet.create({
     height: responsiveWidth(2),
   },
   calendarLsitViewContentTextView: {
-    marginTop: responsiveHeight(1),
+    // marginTop: responsiveHeight(1.3),
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",

@@ -16,6 +16,10 @@ import moment from "moment";
 import { AppImages } from "../../Theme/AppImages";
 import { AppColors } from "../../Theme/AppColors";
 import { AppFonts } from "../../Theme/AppFonts";
+import {
+  responsiveFontSize,
+  responsiveWidth,
+} from "../../Theme/ResponsiveDimensions";
 
 const width = Dimensions.get("window").width;
 const ITEM_LENGTH = width / 7;
@@ -40,7 +44,9 @@ class DateItem extends PureComponent {
           <View
             style={[
               styles.itemView,
-              { backgroundColor: highlight ? highlightBgColor : normalBgColor },
+              {
+                backgroundColor: highlight ? highlightBgColor : normalBgColor,
+              },
             ]}
           >
             <Text
@@ -249,11 +255,14 @@ class CalendarStrip extends Component {
         <View style={{ marginRight: 5 }}>
           <View style={styles.calenderViewDateUpper}>
             <TouchableOpacity onPress={() => changeMonth(-1)}>
-              <Text style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: 18 }}>
-                {"<"}
-              </Text>
+              <Image
+                resizeMode="contain"
+                source={AppImages.simpleLeftArrowdark}
+                style={styles.simpleLeftArrowdarkImage}
+              />
             </TouchableOpacity>
             <Image
+              resizeMode="contain"
               source={AppImages.calenderDark}
               style={styles.calendarImage}
             />
@@ -262,9 +271,11 @@ class CalendarStrip extends Component {
               {new Date(this.state.monthChangedDate).getFullYear()}
             </Text>
             <TouchableOpacity onPress={() => changeMonth(1)}>
-              <Text style={{ color: "rgba(0, 0, 0, 0.6)", fontSize: 18 }}>
-                {">"}
-              </Text>
+              <Image
+                resizeMode="contain"
+                source={AppImages.simpleRightArrowdark}
+                style={styles.simpleLeftArrowdarkImage}
+              />
             </TouchableOpacity>
           </View>
         </View>
@@ -326,9 +337,9 @@ class CalendarStrip extends Component {
             bounces={false}
             horizontal
             pagingEnabled
-            initialScrollIndex={
-              7 * (moment(this.props.selectedDate).get("D") / 6)
-            }
+            // initialScrollIndex={
+            //   7 * (moment(this.props.selectedDate).get("D") / 6)
+            // }
             showsHorizontalScrollIndicator={false}
             scrollEventThrottle={500}
             getItemLayout={(data, index) => ({
@@ -350,18 +361,20 @@ class CalendarStrip extends Component {
           <View
             style={{
               alignItems: "center",
-              paddingVertical: 10,
+              paddingVertical: 3,
               borderBottomWidth: 1,
+              marginHorizontal: 15,
               borderColor: "#ccc",
             }}
           >
             <Image
+              resizeMode="contain"
               source={
                 this.state.expand
                   ? AppImages.simpleUpArrowDark
                   : AppImages.simpleDownArrowDark
               }
-              style={{ height: 6.2, width: 10 }}
+              style={{ height: 8, width: 16 }}
             />
           </View>
         </TouchableOpacity>
@@ -399,6 +412,7 @@ const styles = StyleSheet.create({
     height: 30,
     flexDirection: "row",
     marginHorizontal: 20,
+    marginTop: 5,
     backgroundColor: AppColors.white,
     alignItems: "center",
     justifyContent: "space-between",
@@ -406,8 +420,8 @@ const styles = StyleSheet.create({
   },
   headerDate: {
     color: "#000",
-    fontSize: 18,
-    fontWeight: "bold",
+    fontSize: responsiveFontSize(2),
+    fontFamily: AppFonts.regular,
   },
   headerDateWeek: {
     color: "#3D6DCF",
@@ -446,9 +460,11 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
+    // marginLeft: responsiveWidth(5),
   },
   itemDateText: {
     fontSize: 15,
+    fontFamily: AppFonts.regular,
     lineHeight: Platform.OS === "ios" ? 19 : 15,
   },
   itemLunarText: {
@@ -463,9 +479,14 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   calendarImage: {
-    width: 14,
-    height: 13,
+    width: 17,
+    height: 16,
     marginLeft: 5,
+  },
+  simpleLeftArrowdarkImage: {
+    width: 10,
+    height: 9,
+    // marginLeft: 5,
   },
   calenderDateUpper: {
     marginLeft: 3,

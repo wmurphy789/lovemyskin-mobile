@@ -14,7 +14,7 @@ const TermsCondition = ({ navigation }) => {
                 leftIcon={AppImages.backIcon}
                 leftPress={() => { Methods.goBack(navigation) }}
             />
-            <ScrollView showsVerticalScrollIndicator={false} >
+            <ScrollView contentContainerStyle={{paddingHorizontal:25}} showsVerticalScrollIndicator={false} >
                 <Text style={styles.paragraph}>{AppConstants.loremIpsum}</Text>
                 <Text style={styles.paragraph}>{AppConstants.loremIpsum}</Text>
                 <Text style={styles.paragraph}>{AppConstants.loremIpsum}</Text>

@@ -27,11 +27,13 @@ const SkinDiagnosis = ({ navigation }) => {
       <CurvedHeader
         title={AppConstants.skinDiagnosis}
         leftIcon={AppImages.backIcon}
-        leftPress={() => {}}
+        leftPress={() => {
+          Methods.navigate(navigation, "AllAffirmations");
+        }}
       />
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: responsiveHeight(10) }}
+        contentContainerStyle={{ paddingBottom: responsiveHeight(8) }}
       >
         <View style={styles.scrollViewContainer}>
           <Text style={styles.infoText}>

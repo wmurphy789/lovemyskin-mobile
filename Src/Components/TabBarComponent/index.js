@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -6,8 +6,10 @@ import {
   TouchableOpacity,
   Image,
   TouchableHighlight,
+  Keyboard,
 } from "react-native";
 import { AppColors } from "../../Theme/AppColors";
+import { AppFonts } from "../../Theme/AppFonts";
 import { AppImages } from "../../Theme/AppImages";
 import {
   responsiveHeight,
@@ -16,6 +18,7 @@ import {
 import styles from "./styles";
 
 const TabBarComponent = (props) => {
+  const [KeyBoardVisible, setKeyBoardVisible] = useState(false);
   let navigation = props.navigation;
   const Tintcolor = props.activeTintColor,
     activeIndex = props?.state?.index;
@@ -51,11 +54,27 @@ const TabBarComponent = (props) => {
       navigation: "ProfileStack",
     },
   ];
-  return (
+  useEffect(() => {
+    Keyboard.addListener("keyboardDidShow", keyboardWillShow);
+    Keyboard.addListener("keyboardDidHide", keyboardWillHide);
+    // return () => {
+    //   keyboardWillShowSub.remove();
+    //   keyboardWillHideSub.remove();
+    // };
+  }, []);
+  const keyboardWillShow = (event) => {
+    setKeyBoardVisible(true);
+  };
+
+  const keyboardWillHide = (event) => {
+    setKeyBoardVisible(false);
+  };
+  return KeyBoardVisible ? null : (
     <ImageBackground
       // resizeMode='contain'
       source={AppImages.bottomTab}
       style={styles.backgroundImage}
+      resizeMode="contain"
     >
       <View style={styles.container}>
         {tabs.map((item, index) => {
@@ -73,9 +92,14 @@ const TabBarComponent = (props) => {
                   <Image
                     resizeMode="contain"
                     source={item.focusedImage}
-                    style={styles.tabIcon}
+                    style={styles.myTrackerImage}
                   />
-                  <Text style={[styles.tabsTitle, { color: AppColors.white }]}>
+                  <Text
+                    style={[
+                      styles.tabsTitle,
+                      { color: AppColors.white, fontFamily: AppFonts.semiBold },
+                    ]}
+                  >
                     {item.title}
                   </Text>
                 </View>

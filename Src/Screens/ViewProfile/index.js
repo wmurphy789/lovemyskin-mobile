@@ -8,9 +8,14 @@ import {
   TouchableOpacity,
 } from "react-native";
 import Methods from "../../Support/Methods";
+import { AppColors } from "../../Theme/AppColors";
 import AppConstants from "../../Theme/AppConstants";
+import { AppFonts } from "../../Theme/AppFonts";
 import { AppImages } from "../../Theme/AppImages";
-import { responsiveHeight } from "../../Theme/ResponsiveDimensions";
+import {
+  responsiveFontSize,
+  responsiveHeight,
+} from "../../Theme/ResponsiveDimensions";
 import styles from "./styles";
 const demoImage =
   "https://s3.amazonaws.com/rentalutions-assets/marketing/personas/Character-Mark.jpg";
@@ -32,7 +37,7 @@ const options = [
   },
   {
     image: AppImages.greenLockIcon,
-    title: AppConstants.termsAndConditions,
+    title: "Terms & Conditions",
     navigate: "TermsCondition",
   },
   {
@@ -55,7 +60,9 @@ const ViewProfile = ({ navigation }) => {
           bounces={false}
           style={styles.scrollContainer}
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: responsiveHeight(10) }}
+          contentContainerStyle={{
+            paddingVertical: 30,
+          }}
         >
           {options.map((item, index) => (
             <TouchableOpacity
@@ -69,13 +76,27 @@ const ViewProfile = ({ navigation }) => {
                 style={[
                   styles.menuItem,
                   {
-                    marginBottom: index == options.length - 1 ? 100 : 30,
+                    marginBottom: index == options.length - 1 ? 90 : 30,
                   },
                 ]}
                 key={index}
               >
                 <Image source={item.image} style={styles.menuItemIcon} />
-                <Text style={styles.menuItemTitle}>{item.title}</Text>
+                <Text
+                  style={{
+                    fontSize: responsiveFontSize(1.9),
+                    color:
+                      index == options.length - 1
+                        ? AppColors.red
+                        : AppColors.black,
+                    fontFamily:
+                      index == options.length - 1
+                        ? AppFonts.regular
+                        : AppFonts.light,
+                  }}
+                >
+                  {item.title}
+                </Text>
               </View>
             </TouchableOpacity>
           ))}

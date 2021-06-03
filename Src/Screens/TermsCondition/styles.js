@@ -14,10 +14,9 @@ export default StyleSheet.create({
   },
   paragraph: {
     lineHeight: 20,
-    marginHorizontal: 20,
     fontFamily: AppFonts.light,
-    color: AppColors.darkGrey,
-    fontSize: responsiveFontSize(1.5),
+    color: "rgba(63, 63, 63, 0.6)",
+    fontSize: responsiveFontSize(1.8),
   },
   customStyles: {
     marginBottom: 50,

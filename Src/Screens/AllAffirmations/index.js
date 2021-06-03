@@ -50,7 +50,7 @@ const AllAffirmations = ({ navigation }) => {
       tileName: AppConstants.thankfulGrateful,
       tileImage: AppImages.thankfulIcon,
       tileCount: 20,
-      tileColor: "#606CAD",
+      tileColor: "#707BB5",
     },
   ];
 
@@ -89,7 +89,10 @@ const AllAffirmations = ({ navigation }) => {
     <ScrollView
       bounces={false}
       showsVerticalScrollIndicator={false}
-      contentContainerStyle={{ paddingBottom: responsiveHeight(5) }}
+      contentContainerStyle={{
+        paddingBottom: responsiveHeight(10),
+        backgroundColor: "#ffffff",
+      }}
     >
       <View style={styles.container}>
         <View style={styles.upperContainer}>
@@ -102,7 +105,7 @@ const AllAffirmations = ({ navigation }) => {
             onPress={() => createAffirmation()}
           >
             <ImageBackground
-              source={AppImages.gradientButtonImage}
+              source={AppImages.GradientButtonTransparent}
               style={styles.addMyAffirmation}
             >
               <Image

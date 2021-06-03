@@ -27,8 +27,8 @@ export default AppConstants = {
       title: "How to Prevent your skin?",
       image:
         "https://images.wallpaperscraft.com/image/leaves_green_closeup_121695_480x800.jpg",
-      likes: 12,
-      comments: 42,
+      likes: "20K",
+      comments: "2.1K",
     },
     {
       title: "How to Prevent your skin?",
@@ -49,19 +49,6 @@ export default AppConstants = {
         "https://images.wallpaperscraft.com/image/leaves_green_closeup_121695_480x800.jpg",
       likes: 12,
       comments: 42,
-    },
-    {
-      title: "How to Prevent your skin?",
-      image: "https://cdn.wallpapersafari.com/4/83/LXZDxM.jpg",
-      likes: 12,
-      comments: 44,
-    },
-    {
-      title: "How to Prevent your skin?",
-      image:
-        "https://images.wallpapersden.com/image/download/leaf-carved-background_Z2tmZmWUmZqaraWkpJRpbWWtbWVl.jpg",
-      likes: 121,
-      comments: 443,
     },
   ],
 
@@ -112,8 +99,9 @@ export default AppConstants = {
   enterYourPassword: "Enter your password",
   confirmYourPassword: "Confirm your password",
   forgotPassword: "Forgot Password?",
-  dontHaveAnAccount: "Dont Have an Account? Sign Up",
-  haveAnAccount: "Have an Account? Sign In",
+  forgotPassword_1: "Forgot Password!",
+  dontHaveAnAccount: "Don't Have an account? Sign Up",
+  haveAnAccount: "Have an account? Sign In",
   submit: "Submit",
   whatisthebiggestPriority:
     "What is the biggest priority when it comes to your skin?",
@@ -138,7 +126,7 @@ export default AppConstants = {
   selectPhoto: "Select a Photo",
   feedback: "Feedback",
   poweredbyAutoderm: "Powered by Autoderm",
-  topAnswersranked: "5 Top answers ranked in order of prabability",
+  topAnswersranked: "5 Top answers ranked in order of Probability",
   readMore: "Read More",
   skinWellbeing: "Skin Wellbeing",
   chooseFromOurPillarsOfWellness: "Choose From Our Pillars of Wellness",
@@ -146,10 +134,10 @@ export default AppConstants = {
   meditation: "Meditation",
   mindfulness: "Mindfulness",
   myAffirmation: "My Affirmation",
-  addMyOwnAffirmation: "Add my own Affirmation",
+  addMyOwnAffirmation: "Add My Own Affirmation",
   createYourAffirmation: "Create your affirmation",
   typeYourAffirmationHere: "Type your affirmation here...",
-  addMusicToYourAffirmation: "Add music to your affirmation",
+  addMusicToYourAffirmation: "Add Music To Your Affirmation",
   useThisAudio: "Use This Audio",
   createAffirmation: "Create Affirmation",
   myAffirmations: "My Affirmations",
@@ -173,4 +161,5 @@ export default AppConstants = {
   typeYourJournalEntryHere:
     "Tell us about your day and how things are going with your skin condition....",
   uploadTakePhoto: "Upload or Take a Photo",
+  addYourCommenthere: "Add Your Comment Here......",
 };

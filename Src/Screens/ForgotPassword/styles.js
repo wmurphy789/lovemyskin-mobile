@@ -17,16 +17,16 @@ export default StyleSheet.create({
     paddingHorizontal: responsiveWidth(5),
   },
   backbutton: {
-    height: responsiveWidth(9),
-    width: responsiveWidth(9),
+    height: 35,
+    width: 35,
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 100,
-    marginTop: responsiveHeight(10),
+    marginTop: responsiveHeight(8),
   },
   backIcon: {
-    height: responsiveWidth(5.5),
-    width: responsiveWidth(5.5),
+    height: 20,
+    width: 20,
   },
   ForgotPasswordText: {
     fontFamily: AppFonts.regular,
@@ -36,10 +36,13 @@ export default StyleSheet.create({
     marginBottom: responsiveHeight(3),
   },
   button: {
-    marginTop: responsiveHeight(8),
+    marginTop: responsiveHeight(12),
   },
   input: {
-    marginTop: responsiveHeight(1),
+    alignSelf: "center",
+    width: responsiveWidth(88),
+    // marginTop: responsiveHeight(2),
+    marginTop: responsiveHeight(2),
   },
   dontHaveAccountButton: {
     alignSelf: "center",

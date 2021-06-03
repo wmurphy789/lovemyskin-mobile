@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -22,6 +22,7 @@ import {
 import styles from "./styles";
 
 const CreateJournalEntry = (props) => {
+  const [isFocused, setIsFocused] = useState(false);
   const mainView = () => (
     <View style={styles.container}>
       <Text style={styles.infoText}>{AppConstants.HowFeelingToday}</Text>
@@ -42,11 +43,11 @@ const CreateJournalEntry = (props) => {
           placeholder={AppConstants.typeYourJournalEntryHere}
           style={styles.input}
         />
-        <Image
+        {/* <Image
           source={AppImages.mike}
           style={styles.mikeImage}
           resizeMode="contain"
-        />
+        /> */}
       </View>
       <View style={styles.uploadImageContainer}>
         <TouchableOpacity style={styles.cameraButton}>
@@ -58,6 +59,7 @@ const CreateJournalEntry = (props) => {
       <FullButton
         title={AppConstants.createAffirmation}
         customStyles={styles.button}
+        onPress={() => props.navigation.navigate("MyTracker")}
       />
     </View>
   );

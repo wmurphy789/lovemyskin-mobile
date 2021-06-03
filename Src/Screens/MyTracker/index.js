@@ -19,7 +19,8 @@ import {
 } from "../../Theme/ResponsiveDimensions";
 import { AppColors } from "../../Theme/AppColors";
 import { AppFonts } from "../../Theme/AppFonts";
-
+const dummyImage =
+  "https://media.istockphoto.com/photos/woman-touching-face-looking-at-skin-in-mirror-at-bathroom-picture-id1178909320?k=6&m=1178909320&s=612x612&w=0&h=XcsN4pWw7el_VcD3sUwG5E5_M5R0zHeF92IcukhjkyI=";
 const options = [
   {
     date: new Date(),
@@ -39,7 +40,7 @@ const options = [
   },
   {
     date: new Date(),
-    text: "ok",
+    text: "Ok",
     smile: 2,
     subText:
       "Tell us about your day and how things are going with your skin condition....",
@@ -70,26 +71,21 @@ const options = [
   },
   {
     date: new Date(),
-    text: "ok",
+    text: "Ok",
     smile: 2,
     subText:
       "Tell us about your day and how things are going with your skin condition....",
     image: AppImages.dummyImage,
   },
-  {
-    date: new Date(),
-    text: null,
-    smile: 3,
-    subText: null,
-    image: null,
-  },
 ];
 
 const MyTracker = (props) => {
   const [viewType, setViewType] = useState(1);
-  const [expandIndex, setExpandIndex] = useState(null);
+  const [expandIndex, setExpandIndex] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showPopUp, setShowPopUp] = useState(false);
+  const [showPopUpListView, setShowPopUpListView] = useState(false);
+  const [popupIndex, setPopupIndex] = useState([]);
   const getDayInWord = (day) => {
     const weekNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     const text = weekNames[day];
@@ -104,14 +100,42 @@ const MyTracker = (props) => {
     // Return the function to unsubscribe from the event so it gets removed on unmount
     return unsubscribe;
   }, []);
+  const setExpandedView = (index) => {
+    let arr = expandIndex;
+    if (!arr.includes(index)) {
+      //checking weather array contain the id
+      arr.push(index); //adding to array because value doesnt exists
+    } else {
+      arr.splice(arr.indexOf(index), 1); //deleting
+    }
+    setExpandIndex([...arr]);
+  };
+  const setPopUpIndexView = async (index) => {
+    let arr = [...popupIndex];
+    if (!arr.includes(index)) {
+      //checking weather array contain the id
+      arr.length = 0;
+      arr[0] = index; //adding to array because value doesnt exists
+    } else {
+      arr.splice(arr.indexOf(index), 1); //deleting
+    }
+    setPopupIndex([...arr]);
+    setShowPopUpListView(!showPopUpListView);
+  };
   const renderCalendarListView = (item, index) => {
     return (
-      <View style={styles.calendarLsitMain} key={index}>
-        <View
-          style={{
-            flex: 1,
-          }}
-        >
+      <View
+        style={[
+          styles.calendarLsitMain,
+          {
+            marginBottom: expandIndex.includes(index)
+              ? responsiveHeight(5)
+              : responsiveHeight(1.8),
+          },
+        ]}
+        key={index}
+      >
+        <View style={{ flex: 1 }}>
           <View style={styles.calendarLsitViewDate}>
             <Text style={styles.calendarLsitViewDateText}>
               {getDayInWord(new Date(item.date).getDay())}
@@ -128,6 +152,9 @@ const MyTracker = (props) => {
           style={[
             styles.calendarLsitViewContent,
             {
+              height: !expandIndex.includes(index)
+                ? responsiveHeight(13)
+                : "auto",
               backgroundColor:
                 item.smile == 0
                   ? "#4BCEA6"
@@ -136,59 +163,154 @@ const MyTracker = (props) => {
                   : item.smile == 2
                   ? "#5DB1CC"
                   : "#fff",
-              elevation: 2,
+              elevation: 20,
+              shadowColor: "#000000",
+              shadowOffset: { width: 0, height: 10 }, // change this for more shadow
+              shadowOpacity: 0.4,
+              shadowRadius: 6,
+              // borderBottomWidth: 0.2,
+              // borderRightWidth: 0.2,
+              // borderBottomColor: AppColors.lightGrey,
             },
           ]}
         >
           {item.smile != 3 && (
-            <Image
-              source={AppImages.dots}
-              style={styles.dotsImage}
-              resizeMode="contain"
-            />
-          )}
-          <TouchableOpacity
-            onPress={() => (item.smile != 3 ? setExpandIndex(index) : null)}
-          >
-            <View style={styles.calendarLsitViewContentTextView}>
-              <Text
-                style={
-                  item.smile == 3
-                    ? styles.calendarLsitViewContentText_1
-                    : styles.calendarLsitViewContentText
-                }
+            <View>
+              <TouchableOpacity
+                // style={{ padding: responsiveWidth(2) }}
+                onPress={() => {
+                  setPopUpIndexView(index);
+                }}
               >
-                {item?.text ? item?.text : "No Entry on this Day"}
-              </Text>
-              {item.smile != 3 && (
-                <View style={styles.smileView}>
-                  <Image
-                    source={
-                      item.smile == 0
-                        ? AppImages.goodSmile
-                        : item.smile == 1
-                        ? AppImages.badSmile
-                        : AppImages.okSmile
-                    }
-                    style={styles.smileImage}
-                  />
-                  <Image
-                    source={
-                      expandIndex == index
-                        ? AppImages.simpleDownArrow
-                        : AppImages.simpleRightArrow
-                    }
-                    style={
-                      expandIndex == index
-                        ? styles.simpleDownArrowImage
-                        : styles.simpleArrowImage
-                    }
-                  />
+                <Image
+                  source={AppImages.ThreedotsWhite}
+                  style={styles.dotsImage}
+                  resizeMode="contain"
+                />
+              </TouchableOpacity>
+
+              {popupIndex.includes(index) && (
+                <View
+                  style={{
+                    position: "absolute",
+                    backgroundColor: "#F0F9F7",
+                    top: responsiveHeight(2),
+                    left: responsiveWidth(0),
+                    width: responsiveWidth(24),
+                    borderRadius: responsiveWidth(2),
+                    zIndex: 9999,
+                  }}
+                >
+                  <TouchableOpacity
+                    style={{
+                      paddingHorizontal: responsiveWidth(4),
+                      paddingVertical: responsiveHeight(1.5),
+                    }}
+                    onPress={() => {
+                      setShowPopUpListView(false);
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: responsiveFontSize(2),
+                        fontFamily: AppFonts.regular,
+                      }}
+                    >
+                      Edit
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={{
+                      paddingHorizontal: responsiveWidth(4),
+                      paddingTop: responsiveHeight(0.5),
+                      paddingVertical: responsiveHeight(2),
+                    }}
+                    onPress={() => {
+                      setShowPopUpListView(false);
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: responsiveFontSize(2),
+                        fontFamily: AppFonts.regular,
+                      }}
+                    >
+                      Delete
+                    </Text>
+                  </TouchableOpacity>
                 </View>
               )}
             </View>
-          </TouchableOpacity>
-          <View style={{ display: expandIndex == index ? "flex" : "none" }}>
+          )}
+          <View
+            style={{
+              // flex: 1,
+              justifyContent: "center",
+              height: responsiveHeight(9),
+              marginBottom: responsiveHeight(0.6),
+            }}
+          >
+            <TouchableOpacity
+              onPress={() => (item.smile != 3 ? setExpandedView(index) : null)}
+            >
+              <View style={styles.calendarLsitViewContentTextView}>
+                <Text
+                  style={
+                    item.smile == 3
+                      ? styles.calendarLsitViewContentText_1
+                      : styles.calendarLsitViewContentText
+                  }
+                >
+                  {item?.text ? item?.text : "No Entry on this Day"}
+                </Text>
+                {item.smile != 3 && (
+                  <View style={styles.smileView}>
+                    <Image
+                      source={
+                        item.smile == 0
+                          ? AppImages.goodSmile
+                          : item.smile == 1
+                          ? AppImages.badSmile
+                          : AppImages.okSmile
+                      }
+                      style={styles.smileImage}
+                      resizeMode="contain"
+                    />
+                    <Image
+                      source={
+                        expandIndex.includes(index)
+                          ? AppImages.simpleDownArrow
+                          : AppImages.simpleRightArrow
+                      }
+                      style={
+                        expandIndex.includes(index)
+                          ? styles.simpleDownArrowImage
+                          : styles.simpleArrowImage
+                      }
+                      resizeMode="contain"
+                    />
+                  </View>
+                )}
+              </View>
+            </TouchableOpacity>
+          </View>
+          {item.smile == 3 && (
+            <View
+              style={{
+                alignItems: "center",
+                marginTop: responsiveHeight(0.5),
+              }}
+            >
+              <Image
+                resizeMode="contain"
+                source={AppImages.simpleDownArrowDark}
+                style={{ height: 6.2, width: 10 }}
+              />
+            </View>
+          )}
+          <View
+            style={{ display: expandIndex.includes(index) ? "flex" : "none" }}
+          >
             <View style={styles.calendarLsitViewContentTextView}>
               <Text style={styles.calendarLsitViewContentSubText}>
                 {item.subText}
@@ -213,7 +335,7 @@ const MyTracker = (props) => {
           }}
           markedDate={[]}
         />
-        <View style={{ padding: responsiveWidth(3) }}>
+        <View style={{ padding: responsiveWidth(3), paddingTop: 4 }}>
           <View
             style={{
               alignItems: "flex-end",
@@ -239,20 +361,23 @@ const MyTracker = (props) => {
                   backgroundColor: "#F0F9F7",
                   top: responsiveHeight(3),
                   right: responsiveWidth(1),
-                  width: responsiveWidth(25),
+                  width: responsiveWidth(24),
                   borderRadius: responsiveWidth(2),
                   zIndex: 9999,
                 }}
               >
                 <TouchableOpacity
-                  style={{ padding: responsiveWidth(2) }}
+                  style={{
+                    paddingHorizontal: responsiveWidth(4),
+                    paddingVertical: responsiveHeight(1.5),
+                  }}
                   onPress={() => {
                     setShowPopUp(false);
                   }}
                 >
                   <Text
                     style={{
-                      fontSize: responsiveFontSize(1.8),
+                      fontSize: responsiveFontSize(2),
                       fontFamily: AppFonts.regular,
                     }}
                   >
@@ -260,14 +385,18 @@ const MyTracker = (props) => {
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={{ padding: responsiveWidth(2) }}
+                  style={{
+                    paddingHorizontal: responsiveWidth(4),
+                    paddingTop: responsiveHeight(0.5),
+                    paddingVertical: responsiveHeight(2),
+                  }}
                   onPress={() => {
                     setShowPopUp(false);
                   }}
                 >
                   <Text
                     style={{
-                      fontSize: responsiveFontSize(1.8),
+                      fontSize: responsiveFontSize(2),
                       fontFamily: AppFonts.regular,
                     }}
                   >
@@ -283,9 +412,11 @@ const MyTracker = (props) => {
               marginTop: responsiveHeight(1),
               flexDirection: "row",
               justifyContent: "space-between",
-              paddingHorizontal: responsiveWidth(10),
+              // paddingHorizontal: responsiveWidth(10),
+              paddingLeft: responsiveWidth(5),
+              paddingRight: responsiveWidth(7),
               paddingTop: responsiveHeight(4),
-              paddingBottom: responsiveHeight(2),
+              paddingBottom: responsiveHeight(0.5),
               margin: responsiveWidth(2),
               borderTopRightRadius: responsiveWidth(5),
               borderBottomLeftRadius: responsiveWidth(5),
@@ -319,9 +450,9 @@ const MyTracker = (props) => {
               <Text
                 style={{
                   color: "#fff",
-                  fontSize: responsiveFontSize(2),
-                  marginTop: responsiveHeight(0.5),
-                  fontFamily: AppFonts.regular,
+                  fontSize: responsiveFontSize(1.6),
+                  marginVertical: responsiveHeight(0.6),
+                  fontFamily: AppFonts.semiBold,
                 }}
               >
                 Good
@@ -332,7 +463,7 @@ const MyTracker = (props) => {
             style={{
               backgroundColor: "rgba(173, 161, 161, 0.08)",
               borderRadius: responsiveWidth(5),
-              padding: responsiveWidth(3),
+              paddingHorizontal: responsiveWidth(3),
               marginBottom: responsiveHeight(15),
             }}
           >
@@ -341,7 +472,7 @@ const MyTracker = (props) => {
                 color: AppColors.main,
                 fontSize: responsiveFontSize(2.3),
                 fontFamily: AppFonts.regular,
-                marginTop: responsiveHeight(1),
+                marginTop: responsiveHeight(2.5),
               }}
             >
               Journal Entry
@@ -360,12 +491,12 @@ const MyTracker = (props) => {
               going with your skin condition....
             </Text>
             <Image
-              source={AppImages.dummyImage}
+              source={{ uri: dummyImage }}
               style={{
-                marginTop: responsiveHeight(3),
-                height: responsiveHeight(25),
+                marginTop: responsiveHeight(2),
+                height: responsiveHeight(30),
                 width: responsiveWidth(90),
-                borderRadius: responsiveWidth(5),
+                borderRadius: 10,
                 alignSelf: "center",
               }}
               resizeMode="contain"
@@ -419,18 +550,33 @@ const MyTracker = (props) => {
               source={AppImages.bigRectangleRound}
               style={styles.addMyAffirmation}
             >
-              <View style={styles.percantageView}>
-                <Text style={styles.percantageText}>35.2%</Text>
-                <Image source={AppImages.upArrow} style={styles.upArrowImage} />
-              </View>
-              <View style={styles.percentageEntryView}>
-                <Image
-                  source={AppImages.editEntry}
-                  style={styles.editEntryImage}
-                />
-                <Text style={styles.percentageEntryText}>
-                  29 Entries this month
-                </Text>
+              <View
+                style={{
+                  flex: 1,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <View style={styles.percantageView}>
+                  <Text style={styles.percantageText}>35.2%</Text>
+                  <Image
+                    source={AppImages.upArrow}
+                    resizeMode="contain"
+                    style={styles.upArrowImage}
+                  />
+                </View>
+                <View style={styles.percentageEntryView}>
+                  <Image
+                    source={AppImages.editEntry}
+                    style={styles.editEntryImage}
+                    resizeMode="contain"
+                  />
+                  <View style={styles.percentageEntryTextView}>
+                    <Text style={styles.percentageEntryText}>
+                      29 Entries this month
+                    </Text>
+                  </View>
+                </View>
               </View>
             </ImageBackground>
           </TouchableOpacity>

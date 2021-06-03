@@ -15,9 +15,9 @@ export default StyleSheet.create({
     backgroundColor: "#fff",
   },
   imageContainer: {
-    height: responsiveWidth(55),
-    // height: ,
-    width: responsiveWidth(88),
+    // height: responsiveHeight(47),
+    height: 280,
+    width: responsiveWidth(93),
     alignSelf: "center",
     borderRadius: responsiveWidth(3),
     marginTop: responsiveHeight(4),
@@ -35,9 +35,16 @@ export default StyleSheet.create({
     fontFamily: AppFonts.regular,
     color: "#807C7C",
     alignSelf: "center",
-    textDecorationLine: "underline",
+    // textDecorationLine: "underline",
+    // marginTop: responsiveHeight(3),
+    // marginBottom: responsiveHeight(4),
+  },
+  topAnswersrankedView: {
+    borderBottomWidth: 0.8,
     marginTop: responsiveHeight(3),
     marginBottom: responsiveHeight(4),
+    alignSelf: "center",
+    borderBottomColor: "#807C7C",
   },
   readMoreButton: {
     backgroundColor: "#F0F9F7",
@@ -52,13 +59,13 @@ export default StyleSheet.create({
   listView: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginHorizontal: responsiveWidth(8),
+    marginHorizontal: responsiveWidth(5),
     alignItems: "center",
     // marginVertical: responsiveHeight(1),
     marginVertical: 12,
   },
   scrollViewContainer: {
-    paddingBottom: responsiveHeight(20),
+    paddingBottom: responsiveHeight(15),
     backgroundColor: AppColors.white,
   },
 });

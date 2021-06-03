@@ -6,6 +6,7 @@ import {
   ScrollView,
   Image,
   TouchableOpacity,
+  KeyboardAvoidingView,
 } from "react-native";
 import { FullButton } from "../../Components/Button";
 import { CurvedHeader } from "../../Components/Header";
@@ -32,45 +33,64 @@ const EditProfile = ({ navigation }) => {
         }}
       />
       <View style={styles.container}>
-        <ScrollView
-          bounces={false}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingTop: 20, paddingBottom: 50 }}
+        <KeyboardAvoidingView
+          style={{ flex: 1, backgroundColor: "#fff" }}
+          behavior="padding"
         >
-          <View style={styles.profileImageContainer}>
-            <Image source={{ uri: demoImage }} style={styles.profileImage} />
-            <TouchableOpacity
-              style={styles.editButton}
-              onPress={() => {
-                alert("open imagepicker");
-              }}
-            >
-              <Image
-                source={AppImages.darkGreenEditIcon}
-                style={styles.editImage}
-              />
-            </TouchableOpacity>
-          </View>
-          <SimpleInput
-            placeholder="First Name"
-            customStyles={{ alignSelf: "center" }}
-          />
-          <SimpleInput placeholder="Last Name" customStyles={styles.input} />
-          <SimpleInput placeholder="User Name" customStyles={styles.input} />
-          <SimpleInput
-            placeholder="Email Address"
-            customStyles={styles.input}
-          />
-          <TouchableOpacity
-            onPress={() => Methods.navigate(navigation, "ChangePassword")}
-            style={styles.changePasswordButton}
+          <ScrollView
+            bounces={false}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ paddingTop: 20, paddingBottom: 50 }}
           >
-            <Text style={styles.changePasswordText}>
-              {AppConstants.changePassword}
-            </Text>
-          </TouchableOpacity>
-          <FullButton title={AppConstants.saveChanges} />
-        </ScrollView>
+            <View style={styles.profileImageContainer}>
+              <Image source={{ uri: demoImage }} style={styles.profileImage} />
+              <TouchableOpacity
+                style={styles.editButton}
+                onPress={() => {
+                  // alert("open imagepicker");
+                }}
+              >
+                <Image
+                  source={AppImages.darkGreenEditIcon}
+                  style={styles.editImage}
+                />
+              </TouchableOpacity>
+            </View>
+            <SimpleInput
+              defaultValue="Andrew"
+              placeholder="First Name"
+              customStyles={styles.input}
+            />
+            <SimpleInput
+              defaultValue="Philip"
+              placeholder="Last Name"
+              customStyles={styles.input}
+            />
+            <SimpleInput
+              defaultValue="@andrew"
+              placeholder="Username"
+              customStyles={styles.input}
+            />
+            <SimpleInput
+              defaultValue="Andrew@gmail.com"
+              placeholder="Email Address"
+              type={true}
+              customStyles={styles.input}
+            />
+            <TouchableOpacity
+              onPress={() => Methods.navigate(navigation, "ChangePassword")}
+              style={styles.changePasswordButton}
+            >
+              <Text style={styles.changePasswordText}>
+                {AppConstants.changePassword}
+              </Text>
+            </TouchableOpacity>
+            <FullButton
+              title={AppConstants.saveChanges}
+              onPress={() => Methods.goBack(navigation)}
+            />
+          </ScrollView>
+        </KeyboardAvoidingView>
       </View>
     </View>
   );

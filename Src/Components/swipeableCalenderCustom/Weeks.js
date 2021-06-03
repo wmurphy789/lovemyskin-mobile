@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, Dimensions } from "react-native";
+import { AppFonts } from "../../Theme/AppFonts";
 const width = Dimensions.get("window").width;
 const WEEK_en = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 export default ({ isChinese, weekStartsOn }) => {
@@ -29,8 +30,10 @@ export default ({ isChinese, weekStartsOn }) => {
         >
           <Text
             style={{
-              color: "gray",
+              color: "rgba(63, 63, 63, 0.2)",
               fontSize: 12,
+              fontWeight: "600",
+              fontFamily: AppFonts.regular,
             }}
           >
             {day}
