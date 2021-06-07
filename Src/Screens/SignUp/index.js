@@ -1,4 +1,5 @@
 import React from "react";
+import { useState } from "react";
 import {
   View,
   Text,
@@ -9,9 +10,14 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
 } from "react-native";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { FullButton } from "../../Components/Button";
 import { IconInput } from "../../Components/Input/Input";
+import Loader from "../../Components/Loader";
+import { signupAction } from "../../Redux/Actions/AuthActions";
 import Methods from "../../Support/Methods";
+import { formikValidation } from "../../Support/Validations";
 import AppConstants from "../../Theme/AppConstants";
 import { AppImages } from "../../Theme/AppImages";
 import styles from "./styles";
@@ -36,12 +42,20 @@ const socialLoginData = [
   },
 ];
 const SignUp = ({ navigation }) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const dispatch = useDispatch();
+  const authState = useSelector((state) => state.AuthReducer);
+  const signUp = () => {
+    const validate = formikValidation(email, password, confirmPassword);
+    if (validate) {
+      dispatch(signupAction({ email, password, confirmPassword }, navigation));
+    }
+  };
   return (
-    // <KeyboardAvoidingView
-    //   style={{ flex: 1, backgroundColor: "#fff" }}
-    //   behavior="padding"
-    // >
     <View style={{ flex: 1, backgroundColor: "#fff" }}>
+      <Loader load={authState.onLoad} />
       <ScrollView
         bounces={false}
         keyboardShouldPersistTaps="always"
@@ -67,6 +81,7 @@ const SignUp = ({ navigation }) => {
                 image={AppImages.greenMailIcon}
                 placeholder={AppConstants.enterYourEmailAddress}
                 customStyles={styles.input}
+                onChangeText={(text) => setEmail(text)}
               />
             </View>
             <View style={styles.inputView}>
@@ -75,6 +90,7 @@ const SignUp = ({ navigation }) => {
                 secureInput={true}
                 placeholder={AppConstants.enterYourPassword}
                 customStyles={styles.input}
+                onChangeText={(text) => setPassword(text)}
               />
             </View>
             <View style={styles.inputView}>
@@ -83,12 +99,15 @@ const SignUp = ({ navigation }) => {
                 secureInput={true}
                 placeholder={AppConstants.confirmYourPassword}
                 customStyles={styles.input}
+                onChangeText={(text) => setConfirmPassword(text)}
               />
             </View>
             <View style={styles.fullButton}>
               <FullButton
+                disabled={authState.isDisable}
                 title={AppConstants.signUp}
-                onPress={() => Methods.navigate(navigation, "SkinPriorities")}
+                onPress={() => signUp()}
+                // onPress={() => Methods.navigate(navigation, "SkinPriorities")}
               />
             </View>
           </View>

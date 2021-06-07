@@ -112,7 +112,7 @@ export default StyleSheet.create({
     alignSelf: "flex-end",
   },
   pillarStatusInfoCustom: {
-    width: responsiveWidth(52),
+    width: responsiveWidth(55),
     alignSelf: "flex-end",
     marginTop: 10,
   },

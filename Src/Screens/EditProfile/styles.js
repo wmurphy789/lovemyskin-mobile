@@ -26,7 +26,7 @@ export default StyleSheet.create({
     alignSelf: "center",
     width: responsiveWidth(85),
     // marginTop: responsiveHeight(2),
-    marginTop: responsiveHeight(2),
+    // marginTop: responsiveHeight(2),
   },
   changePasswordButton: {
     alignSelf: "flex-start",

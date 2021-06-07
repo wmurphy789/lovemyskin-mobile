@@ -72,6 +72,7 @@ export default StyleSheet.create({
     // height: responsiveHeight(60),
     minHeight: 400,
     width: responsiveWidth(100),
+    // flex: 1,
     // paddingHorizontal: responsiveWidth(5),
     // paddingVertical: responsiveHeight(2),
     paddingHorizontal: 30,

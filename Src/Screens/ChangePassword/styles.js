@@ -13,7 +13,7 @@ export default StyleSheet.create({
     alignSelf: "center",
     width: responsiveWidth(88),
     // marginTop: responsiveHeight(2),
-    marginTop: responsiveHeight(2),
+    // marginTop: responsiveHeight(2),
   },
   button: {
     alignSelf: "center",

@@ -7,6 +7,7 @@ import {
   FlatList,
   ImageBackground,
   ScrollView,
+  Alert,
 } from "react-native";
 import AppConstants from "../../Theme/AppConstants";
 import { AppImages } from "../../Theme/AppImages";
@@ -19,87 +20,106 @@ import {
 } from "../../Theme/ResponsiveDimensions";
 import { AppColors } from "../../Theme/AppColors";
 import { AppFonts } from "../../Theme/AppFonts";
-const dummyImage =
-  "https://media.istockphoto.com/photos/woman-touching-face-looking-at-skin-in-mirror-at-bathroom-picture-id1178909320?k=6&m=1178909320&s=612x612&w=0&h=XcsN4pWw7el_VcD3sUwG5E5_M5R0zHeF92IcukhjkyI=";
-const options = [
-  {
-    date: new Date(),
-    text: "Good",
-    smile: 0,
-    subText:
-      "Tell us about your day and how things are going with your skin condition....",
-    image: AppImages.dummyImage,
-  },
-  {
-    date: new Date(),
-    text: "Bad",
-    smile: 1,
-    subText:
-      "Tell us about your day and how things are going with your skin condition....",
-    image: AppImages.dummyImage,
-  },
-  {
-    date: new Date(),
-    text: "Ok",
-    smile: 2,
-    subText:
-      "Tell us about your day and how things are going with your skin condition....",
-    image: AppImages.dummyImage,
-  },
-  {
-    date: new Date(),
-    text: null,
-    smile: 3,
-    subText: null,
-    image: null,
-  },
-  {
-    date: new Date(),
-    text: "Good",
-    smile: 0,
-    subText:
-      "Tell us about your day and how things are going with your skin condition....",
-    image: AppImages.dummyImage,
-  },
-  {
-    date: new Date(),
-    text: "Bad",
-    smile: 1,
-    subText:
-      "Tell us about your day and how things are going with your skin condition....",
-    image: AppImages.dummyImage,
-  },
-  {
-    date: new Date(),
-    text: "Ok",
-    smile: 2,
-    subText:
-      "Tell us about your day and how things are going with your skin condition....",
-    image: AppImages.dummyImage,
-  },
-];
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import {
+  deleteTrackerEntryAction,
+  editTrackerEntryAction,
+  getTrackerALLEntryAction,
+  getTrackerEntryAction,
+} from "../../Redux/Actions/TrackerActions";
+import moment from "moment";
+import Loader from "../../Components/Loader";
 
 const MyTracker = (props) => {
   const [viewType, setViewType] = useState(1);
   const [expandIndex, setExpandIndex] = useState([]);
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState();
   const [showPopUp, setShowPopUp] = useState(false);
   const [showPopUpListView, setShowPopUpListView] = useState(false);
   const [popupIndex, setPopupIndex] = useState([]);
+  const dispatch = useDispatch();
+  const TrackerState = useSelector((state) => state.TrackerReducer);
   const getDayInWord = (day) => {
     const weekNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     const text = weekNames[day];
     return text;
   };
+  const getMonthInWord = (month) => {
+    const monthNames = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+    const text = monthNames[month];
+    return text;
+  };
+  const changeMonth = (value) => {
+    var selected_Date = new Date(selectedDate);
+    var changedDate = selected_Date.setMonth(selected_Date.getMonth() + value);
+    setSelectedDate(moment(changedDate));
+  };
   useEffect(() => {
     const unsubscribe = props.navigation.addListener("focus", () => {
       setViewType(1);
-      setSelectedDate(new Date());
+      setSelectedDate(moment());
+      setPopupIndex([]);
+      setShowPopUpListView(false);
+      setShowPopUp(false);
+      setExpandIndex([]);
     });
 
     // Return the function to unsubscribe from the event so it gets removed on unmount
     return unsubscribe;
   }, []);
+  useEffect(() => {
+    ApiHit();
+  }, [selectedDate]);
+  const ApiHit = () => {
+    const selectedDateMonth = moment(selectedDate).get("M") + 1;
+    const selectedDateYear = moment(selectedDate).get("Y");
+    const NoOfdaysInSelectedMonth = moment(selectedDate).daysInMonth();
+    const startDate = moment(
+      selectedDateMonth + "/" + "01/" + selectedDateYear
+    );
+    const endDate = moment(
+      selectedDateMonth + "/" + NoOfdaysInSelectedMonth + "/" + selectedDateYear
+    );
+    dispatch(
+      getTrackerALLEntryAction(
+        {
+          startDate: moment(startDate).format("YYYY-MM-DD"),
+          endDate: moment(endDate).format("YYYY-MM-DD"),
+          selectedDate: selectedDate,
+        },
+        props.navigation
+      )
+    );
+  };
+  const deleteEntry = (item, index) => {
+    setPopUpIndexView(index);
+    setShowPopUp(false);
+    dispatch(
+      deleteTrackerEntryAction(
+        { id: item.id, selectedDate: selectedDate },
+        props.navigation
+      )
+    );
+  };
+  const editEntry = (item, index) => {
+    setPopUpIndexView(index);
+    props.navigation.navigate("CreateJournalEntry", { item: item });
+  };
+
   const setExpandedView = (index) => {
     let arr = expandIndex;
     if (!arr.includes(index)) {
@@ -121,6 +141,13 @@ const MyTracker = (props) => {
     }
     setPopupIndex([...arr]);
     setShowPopUpListView(!showPopUpListView);
+  };
+  const onTabPress = (index) => {
+    setViewType(index);
+    setPopupIndex([]);
+    setShowPopUpListView(false);
+    setShowPopUp(false);
+    setExpandIndex([]);
   };
   const renderCalendarListView = (item, index) => {
     return (
@@ -163,7 +190,7 @@ const MyTracker = (props) => {
                   : item.smile == 2
                   ? "#5DB1CC"
                   : "#fff",
-              elevation: 20,
+              elevation: 2,
               shadowColor: "#000000",
               shadowOffset: { width: 0, height: 10 }, // change this for more shadow
               shadowOpacity: 0.4,
@@ -207,7 +234,7 @@ const MyTracker = (props) => {
                       paddingVertical: responsiveHeight(1.5),
                     }}
                     onPress={() => {
-                      setShowPopUpListView(false);
+                      editEntry(item, index);
                     }}
                   >
                     <Text
@@ -226,7 +253,21 @@ const MyTracker = (props) => {
                       paddingVertical: responsiveHeight(2),
                     }}
                     onPress={() => {
-                      setShowPopUpListView(false);
+                      Alert.alert(
+                        "",
+                        "Are you sure you want to delete this entry.",
+                        [
+                          {
+                            text: "No",
+                            onPress: () => setPopUpIndexView(index),
+                            style: "cancel",
+                          },
+                          {
+                            text: "Yes",
+                            onPress: () => deleteEntry(item, index),
+                          },
+                        ]
+                      );
                     }}
                   >
                     <Text
@@ -261,7 +302,7 @@ const MyTracker = (props) => {
                       : styles.calendarLsitViewContentText
                   }
                 >
-                  {item?.text ? item?.text : "No Entry on this Day"}
+                  {item?.text || "No Entry on this Day"}
                 </Text>
                 {item.smile != 3 && (
                   <View style={styles.smileView}>
@@ -313,12 +354,18 @@ const MyTracker = (props) => {
           >
             <View style={styles.calendarLsitViewContentTextView}>
               <Text style={styles.calendarLsitViewContentSubText}>
-                {item.subText}
+                {item?.subText}
               </Text>
             </View>
-            <View style={styles.calendarLsitImageView}>
-              <Image source={item.image} style={styles.calendarLsitImage} />
-            </View>
+            {item?.image && (
+              <View style={styles.calendarLsitImageView}>
+                <Image
+                  source={{ uri: item?.image }}
+                  style={styles.calendarLsitImage}
+                  resizeMode="stretch"
+                />
+              </View>
+            )}
           </View>
         </View>
       </View>
@@ -331,178 +378,221 @@ const MyTracker = (props) => {
         <CalendarStrip
           selectedDate={selectedDate}
           onPressDate={(date) => {
-            setSelectedDate(date);
+            setSelectedDate(moment(date));
           }}
           markedDate={[]}
         />
-        <View style={{ padding: responsiveWidth(3), paddingTop: 4 }}>
-          <View
-            style={{
-              alignItems: "flex-end",
-              justifyContent: "center",
-            }}
-          >
-            <TouchableOpacity
-              style={{ padding: responsiveWidth(2) }}
-              onPress={() => {
-                setShowPopUp(!showPopUp);
+        {TrackerState?.entry?.id ? (
+          <View style={{ padding: responsiveWidth(3), paddingTop: 4 }}>
+            <View
+              style={{
+                alignItems: "flex-end",
+                justifyContent: "center",
               }}
             >
-              <Image
-                source={AppImages.dots}
-                style={styles.dotsImage}
-                resizeMode="contain"
-              />
-            </TouchableOpacity>
-            {showPopUp && (
-              <View
-                style={{
-                  position: "absolute",
-                  backgroundColor: "#F0F9F7",
-                  top: responsiveHeight(3),
-                  right: responsiveWidth(1),
-                  width: responsiveWidth(24),
-                  borderRadius: responsiveWidth(2),
-                  zIndex: 9999,
+              <TouchableOpacity
+                style={{ padding: responsiveWidth(2) }}
+                onPress={() => {
+                  setShowPopUp(!showPopUp);
                 }}
               >
-                <TouchableOpacity
+                <Image
+                  source={AppImages.dots}
+                  style={styles.dotsImage}
+                  resizeMode="contain"
+                />
+              </TouchableOpacity>
+              {showPopUp && (
+                <View
                   style={{
-                    paddingHorizontal: responsiveWidth(4),
-                    paddingVertical: responsiveHeight(1.5),
-                  }}
-                  onPress={() => {
-                    setShowPopUp(false);
+                    position: "absolute",
+                    backgroundColor: "#F0F9F7",
+                    top: responsiveHeight(3),
+                    right: responsiveWidth(1),
+                    width: responsiveWidth(24),
+                    borderRadius: responsiveWidth(2),
+                    zIndex: 9999,
                   }}
                 >
-                  <Text
+                  <TouchableOpacity
                     style={{
-                      fontSize: responsiveFontSize(2),
-                      fontFamily: AppFonts.regular,
+                      paddingHorizontal: responsiveWidth(4),
+                      paddingVertical: responsiveHeight(1.5),
+                    }}
+                    onPress={() => {
+                      editEntry(TrackerState?.entry, 0);
                     }}
                   >
-                    Edit
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={{
-                    paddingHorizontal: responsiveWidth(4),
-                    paddingTop: responsiveHeight(0.5),
-                    paddingVertical: responsiveHeight(2),
-                  }}
-                  onPress={() => {
-                    setShowPopUp(false);
-                  }}
-                >
-                  <Text
+                    <Text
+                      style={{
+                        fontSize: responsiveFontSize(2),
+                        fontFamily: AppFonts.regular,
+                      }}
+                    >
+                      Edit
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
                     style={{
-                      fontSize: responsiveFontSize(2),
-                      fontFamily: AppFonts.regular,
+                      paddingHorizontal: responsiveWidth(4),
+                      paddingTop: responsiveHeight(0.5),
+                      paddingVertical: responsiveHeight(2),
+                    }}
+                    onPress={() => {
+                      Alert.alert(
+                        "",
+                        "Are you sure you want to delete this entry.",
+                        [
+                          {
+                            text: "No",
+                            onPress: () => setShowPopUp(false),
+                            style: "cancel",
+                          },
+                          {
+                            text: "Yes",
+                            onPress: () =>
+                              deleteEntry({ id: TrackerState?.entry?.id }, 0),
+                          },
+                        ]
+                      );
                     }}
                   >
-                    Delete
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            )}
-          </View>
-          <View
-            style={{
-              backgroundColor: "#48CDA5",
-              marginTop: responsiveHeight(1),
-              flexDirection: "row",
-              justifyContent: "space-between",
-              // paddingHorizontal: responsiveWidth(10),
-              paddingLeft: responsiveWidth(5),
-              paddingRight: responsiveWidth(7),
-              paddingTop: responsiveHeight(4),
-              paddingBottom: responsiveHeight(0.5),
-              margin: responsiveWidth(2),
-              borderTopRightRadius: responsiveWidth(5),
-              borderBottomLeftRadius: responsiveWidth(5),
-            }}
-          >
-            <View style={{ flex: 1 }}>
-              <Text
-                style={{
-                  color: "#fff",
-                  fontSize: responsiveFontSize(2.5),
-                  fontFamily: AppFonts.regular,
-                }}
-              >
-                How were you feeling on this day?
-              </Text>
+                    <Text
+                      style={{
+                        fontSize: responsiveFontSize(2),
+                        fontFamily: AppFonts.regular,
+                      }}
+                    >
+                      Delete
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              )}
             </View>
             <View
               style={{
-                flex: 0.3,
-                marginLeft: responsiveWidth(2),
-                alignItems: "center",
-                justifyContent: "center",
-                marginTop: responsiveHeight(2),
+                backgroundColor: "#48CDA5",
+                marginTop: responsiveHeight(1),
+                flexDirection: "row",
+                justifyContent: "space-between",
+                // paddingHorizontal: responsiveWidth(10),
+                paddingLeft: responsiveWidth(5),
+                paddingRight: responsiveWidth(7),
+                paddingTop: responsiveHeight(4),
+                paddingBottom: responsiveHeight(0.5),
+                margin: responsiveWidth(2),
+                borderTopRightRadius: responsiveWidth(5),
+                borderBottomLeftRadius: responsiveWidth(5),
               }}
             >
-              <Image
-                source={AppImages.goodSmile}
-                style={styles.smileImage}
-                resizeMode="contain"
-              />
-              <Text
+              <View style={{ flex: 1 }}>
+                <Text
+                  style={{
+                    color: "#fff",
+                    fontSize: responsiveFontSize(2.5),
+                    fontFamily: AppFonts.regular,
+                  }}
+                >
+                  How were you feeling on this day?
+                </Text>
+              </View>
+              <View
                 style={{
-                  color: "#fff",
-                  fontSize: responsiveFontSize(1.6),
-                  marginVertical: responsiveHeight(0.6),
-                  fontFamily: AppFonts.semiBold,
+                  flex: 0.3,
+                  marginLeft: responsiveWidth(2),
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginTop: responsiveHeight(2),
                 }}
               >
-                Good
-              </Text>
+                <Image
+                  source={
+                    TrackerState?.entry?.attributes?.feeling == "good"
+                      ? AppImages.goodSmile
+                      : TrackerState?.entry?.attributes?.feeling == "bad"
+                      ? AppImages.badSmile
+                      : AppImages.okSmile
+                  }
+                  style={styles.smileImage}
+                  resizeMode="contain"
+                />
+                <Text
+                  style={{
+                    color: "#fff",
+                    fontSize: responsiveFontSize(1.6),
+                    marginVertical: responsiveHeight(0.6),
+                    fontFamily: AppFonts.semiBold,
+                  }}
+                >
+                  {TrackerState?.entry?.attributes?.feeling}
+                </Text>
+              </View>
             </View>
-          </View>
-          <View
-            style={{
-              backgroundColor: "rgba(173, 161, 161, 0.08)",
-              borderRadius: responsiveWidth(5),
-              paddingHorizontal: responsiveWidth(3),
-              marginBottom: responsiveHeight(15),
-            }}
-          >
-            <Text
+            <View
               style={{
-                color: AppColors.main,
-                fontSize: responsiveFontSize(2.3),
-                fontFamily: AppFonts.regular,
-                marginTop: responsiveHeight(2.5),
+                backgroundColor: "rgba(173, 161, 161, 0.08)",
+                borderRadius: responsiveWidth(5),
+                paddingHorizontal: responsiveWidth(3),
+                marginBottom: responsiveHeight(15),
               }}
             >
-              Journal Entry
-            </Text>
+              <Text
+                style={{
+                  color: AppColors.main,
+                  fontSize: responsiveFontSize(2.3),
+                  fontFamily: AppFonts.regular,
+                  marginTop: responsiveHeight(2.5),
+                }}
+              >
+                Journal Entry
+              </Text>
+              <Text
+                style={{
+                  color: AppColors.main,
+                  fontSize: responsiveFontSize(1.7),
+                  fontFamily: AppFonts.light,
+                  marginTop: responsiveHeight(1.5),
+                }}
+              >
+                {TrackerState?.entry?.attributes?.description}
+              </Text>
+              {TrackerState?.entry?.attributes?.image && (
+                <Image
+                  source={{ uri: TrackerState?.entry?.attributes?.image }}
+                  style={{
+                    marginTop: responsiveHeight(2),
+                    height: responsiveHeight(30),
+                    width: responsiveWidth(90),
+                    borderRadius: 10,
+                    alignSelf: "center",
+                  }}
+                  resizeMode="contain"
+                />
+              )}
+            </View>
+          </View>
+        ) : (
+          <View
+            style={{
+              flex: 1,
+              height: responsiveHeight(40),
+              marginBottom: responsiveHeight(10),
+              // backgroundColor: "red",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
             <Text
               style={{
                 color: AppColors.main,
                 fontSize: responsiveFontSize(1.7),
                 fontFamily: AppFonts.light,
-                marginTop: responsiveHeight(1.5),
               }}
             >
-              Tell us about your day and how things are going with your skin
-              condition....Tell us about your day and how things are going with
-              your skin condition....Tell us about your day and how things are
-              going with your skin condition....
+              No entry found
             </Text>
-            <Image
-              source={{ uri: dummyImage }}
-              style={{
-                marginTop: responsiveHeight(2),
-                height: responsiveHeight(30),
-                width: responsiveWidth(90),
-                borderRadius: 10,
-                alignSelf: "center",
-              }}
-              resizeMode="contain"
-            />
           </View>
-        </View>
+        )}
       </>
     );
   };
@@ -513,12 +603,12 @@ const MyTracker = (props) => {
         <View style={styles.lowerInnerContainer}>
           {viewType == 2 && (
             <FlatList
-              data={options}
+              data={TrackerState?.allEntry}
               keyExtractor={(item, index) => index.toString()}
               showsVerticalScrollIndicator={false}
               // numColumns={1}
               // horizontal
-              extraData={options}
+              extraData={TrackerState?.allEntry}
               style={[
                 styles.flatListView,
                 { display: viewType == 2 ? "flex" : "none" },
@@ -537,6 +627,7 @@ const MyTracker = (props) => {
   };
   return (
     <View style={styles.container}>
+      <Loader load={TrackerState.onLoad} />
       <ScrollView
         bounces={false}
         keyboardShouldPersistTaps="always"
@@ -573,7 +664,7 @@ const MyTracker = (props) => {
                   />
                   <View style={styles.percentageEntryTextView}>
                     <Text style={styles.percentageEntryText}>
-                      29 Entries this month
+                      {TrackerState?.totalEntry} Entries this month
                     </Text>
                   </View>
                 </View>
@@ -589,16 +680,10 @@ const MyTracker = (props) => {
             >
               <Image source={AppImages.edit} style={styles.optionsImage} />
             </TouchableOpacity>
-            <TouchableOpacity
-              activeOpacity={0.8}
-              onPress={() => setViewType(1)}
-            >
+            <TouchableOpacity activeOpacity={0.8} onPress={() => onTabPress(1)}>
               <Image source={AppImages.calender} style={styles.optionsImage} />
             </TouchableOpacity>
-            <TouchableOpacity
-              activeOpacity={0.8}
-              onPress={() => setViewType(2)}
-            >
+            <TouchableOpacity activeOpacity={0.8} onPress={() => onTabPress(2)}>
               <Image source={AppImages.toggle} style={styles.optionsImage} />
             </TouchableOpacity>
           </View>
@@ -609,7 +694,10 @@ const MyTracker = (props) => {
             ]}
           >
             <View>
-              <TouchableOpacity activeOpacity={0.8}>
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={() => changeMonth(-1)}
+              >
                 <Image
                   source={AppImages.leftArrow}
                   style={styles.leftRightArrowImage}
@@ -621,10 +709,16 @@ const MyTracker = (props) => {
                 source={AppImages.calenderWhite}
                 style={styles.calendarImage}
               />
-              <Text style={styles.calenderDateUpper}>May 2021</Text>
+              <Text style={styles.calenderDateUpper}>
+                {getMonthInWord(new Date(selectedDate).getMonth())}{" "}
+                {new Date(selectedDate).getFullYear()}
+              </Text>
             </View>
             <View>
-              <TouchableOpacity activeOpacity={0.8}>
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={() => changeMonth(1)}
+              >
                 <Image
                   source={AppImages.rightArrow}
                   style={styles.leftRightArrowImage}

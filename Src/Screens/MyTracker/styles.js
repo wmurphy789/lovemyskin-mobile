@@ -10,7 +10,7 @@ import {
 
 export default StyleSheet.create({
   container: {
-    // flex: 1,
+    flex: 1,
     backgroundColor: "#fff",
   },
   upperContainer: {
@@ -62,7 +62,7 @@ export default StyleSheet.create({
   editEntryImage: {
     width: responsiveWidth(7.8),
     height: responsiveWidth(8.5),
-    marginRight: responsiveWidth(3.5),
+    marginRight: responsiveWidth(5),
   },
   optionView: {
     alignItems: "center",
@@ -151,7 +151,7 @@ export default StyleSheet.create({
     // height: responsiveWidth(8.5),
 
     fontFamily: AppFonts.regular,
-    width: responsiveWidth(40),
+    width: responsiveWidth(35),
   },
   percentageEntryTextView: {
     // height: responsiveWidth(8.5),

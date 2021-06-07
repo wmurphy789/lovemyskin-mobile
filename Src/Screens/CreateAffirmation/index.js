@@ -1,4 +1,6 @@
 import React from "react";
+import { useState } from "react";
+import { useEffect } from "react";
 import {
   View,
   Text,
@@ -10,9 +12,14 @@ import {
   ImageBackground,
   TouchableHighlight,
 } from "react-native";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { FullButton } from "../../Components/Button";
 import { CurvedHeader } from "../../Components/Header";
+import Loader from "../../Components/Loader";
+import { createAffirmationAction } from "../../Redux/Actions/AffirmationAction";
 import Methods from "../../Support/Methods";
+import { showmessage } from "../../Support/Validations";
 import AppConstants from "../../Theme/AppConstants";
 import { AppImages } from "../../Theme/AppImages";
 import {
@@ -22,11 +29,24 @@ import {
 import styles from "./styles";
 
 const CreateAffirmation = ({ navigation }) => {
+  const [description, setDescription] = useState("");
+  const dispatch = useDispatch();
+  const AffirmationState = useSelector((state) => state.AffirmationReducer);
+  const createAffirmation = () => {
+    if (description.length > 0)
+      dispatch(
+        createAffirmationAction({ description: description }, navigation)
+      );
+    else {
+      showmessage("Please enter your affirmation");
+    }
+  };
   function goBack() {
     Methods.goBack(navigation);
   }
   return (
     <View style={styles.container}>
+      <Loader load={AffirmationState.onLoad} />
       {/* <CurvedHeader
         title={AppConstants.myAffirmation}
         leftIcon={AppImages.backIcon}
@@ -83,6 +103,7 @@ const CreateAffirmation = ({ navigation }) => {
           maxLength={500}
           placeholder={AppConstants.typeYourAffirmationHere}
           style={styles.input}
+          onChangeText={(text) => setDescription(text)}
         />
         <View style={styles.addMusicView}>
           {/* <Text style={styles.addMusicText}>{}</Text> */}
@@ -137,7 +158,7 @@ const CreateAffirmation = ({ navigation }) => {
         <FullButton
           title={AppConstants.createAffirmation}
           customStyles={styles.button}
-          onPress={() => Methods.navigate(navigation, "AffirmationStack")}
+          onPress={() => createAffirmation()}
         />
       </ScrollView>
       {/* </View> */}

@@ -237,10 +237,11 @@ class CalendarStrip extends Component {
       return text;
     };
     const changeMonth = (value) => {
-      var selectedDate = new Date(this.state.monthChangedDate);
+      var selectedDate = new Date(this.props.selectedDate);
       var changedDate = selectedDate.setMonth(selectedDate.getMonth() + value);
       this.setState({ monthChangedDate: changedDate });
       this.getInitialDates(changedDate);
+      this.props.onPressDate && this.props.onPressDate(changedDate);
       // onMonthChange(changedDate);
     };
     return (
@@ -267,8 +268,8 @@ class CalendarStrip extends Component {
               style={styles.calendarImage}
             />
             <Text style={styles.calenderDateUpper}>
-              {getMonthInWord(new Date(this.state.monthChangedDate).getMonth())}{" "}
-              {new Date(this.state.monthChangedDate).getFullYear()}
+              {getMonthInWord(new Date(this.props.selectedDate).getMonth())}{" "}
+              {new Date(this.props.selectedDate).getFullYear()}
             </Text>
             <TouchableOpacity onPress={() => changeMonth(1)}>
               <Image
@@ -287,9 +288,10 @@ class CalendarStrip extends Component {
     return (
       <DateItem
         item={item}
-        onItemPress={(date) =>
-          this.props.onPressDate && this.props.onPressDate(item?.date)
-        }
+        onItemPress={(date) => {
+          this.props.onPressDate && this.props.onPressDate(item?.date);
+          this.setState({ expand: false });
+        }}
         highlight={
           moment(this.props.selectedDate).isSame(item?.date, "day") &&
           moment(this.props.selectedDate).isSame(item?.date, "month") &&
@@ -337,9 +339,7 @@ class CalendarStrip extends Component {
             bounces={false}
             horizontal
             pagingEnabled
-            // initialScrollIndex={
-            //   7 * (moment(this.props.selectedDate).get("D") / 6)
-            // }
+            // initialScrollIndex={moment(this.props.selectedDate).get("D") / 7}
             showsHorizontalScrollIndicator={false}
             scrollEventThrottle={500}
             getItemLayout={(data, index) => ({

@@ -1,4 +1,5 @@
 export default AppConstants = {
+  SERVER_URL: "https://lovemyskin-dev.herokuapp.com/api/v1/",
   dummyAnswers: [
     "Lentigo",
     "Seborrhoeic Keratosis",

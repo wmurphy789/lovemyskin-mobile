@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -16,6 +16,12 @@ import AppConstants from "../../Theme/AppConstants";
 import { AppImages } from "../../Theme/AppImages";
 import Methods from "../../Support/Methods";
 import styles from "./styles";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { formikValidation } from "../../Support/Validations";
+import { showMessage } from "react-native-flash-message";
+import { loginAction } from "../../Redux/Actions/AuthActions";
+import Loader from "../../Components/Loader";
 
 const socialLoginData = [
   {
@@ -39,14 +45,22 @@ const socialLoginData = [
 ];
 
 const SignIn = ({ navigation }) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
+  const authState = useSelector((state) => state.AuthReducer);
+  const signIn = () => {
+    // const validate = formikValidation(email, password);
+    // if (validate) {
+    const email = "testing6@gmail.com";
+    const password = "Abc@1234";
+    dispatch(loginAction({ email, password }, navigation));
+    // }
+  };
+
   return (
-    // <KeyboardAvoidingView
-    //   style={{ flex: 1, backgroundColor: "#fff" }}
-    //   behavior="padding"
-    // >
     <View style={{ flex: 1, backgroundColor: "#fff" }}>
-
-
+      <Loader load={authState.onLoad} />
       <ScrollView
         bounces={false}
         keyboardShouldPersistTaps="always"
@@ -74,6 +88,7 @@ const SignIn = ({ navigation }) => {
                 image={AppImages.greenMailIcon}
                 placeholder={AppConstants.enterYourEmailAddress}
                 customStyles={styles.input}
+                onChangeText={(text) => setEmail(text)}
               />
             </View>
             <View style={styles.inputView}>
@@ -82,6 +97,7 @@ const SignIn = ({ navigation }) => {
                 image={AppImages.greenLockSimpleIcon}
                 placeholder={AppConstants.enterYourPassword}
                 customStyles={styles.input}
+                onChangeText={(text) => setPassword(text)}
               />
             </View>
             <TouchableOpacity
@@ -97,7 +113,7 @@ const SignIn = ({ navigation }) => {
             <View style={styles.fullButton}>
               <FullButton
                 title={AppConstants.signIn}
-                onPress={() => Methods.navigate(navigation, "Tabs")}
+                onPress={() => signIn()}
               />
             </View>
           </View>
@@ -131,6 +147,7 @@ const SignIn = ({ navigation }) => {
           </View>
 
           <TouchableOpacity
+            disabled={authState.isDisable}
             onPress={() => {
               Methods.navigate(navigation, "SignUp");
             }}
@@ -143,7 +160,6 @@ const SignIn = ({ navigation }) => {
         </View>
       </ScrollView>
     </View>
-    // </KeyboardAvoidingView>
   );
 };
 

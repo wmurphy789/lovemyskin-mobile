@@ -21,6 +21,7 @@ export default StyleSheet.create({
     paddingHorizontal: responsiveWidth(2),
     borderBottomWidth: 1,
     borderBottomColor: AppColors.lightGrey,
+    paddingVertical:3
     // alignSelf: "center",
   },
   iconInputIcon: {
@@ -38,7 +39,7 @@ export default StyleSheet.create({
     // alignItems: "center",
     // width: responsiveWidth(92),
     // backgroundColor: "#f11",
-    height: 37,
+    // height: 33,
     paddingHorizontal: responsiveWidth(2),
     borderBottomWidth: 1,
     // alignItems: "center",
@@ -47,7 +48,8 @@ export default StyleSheet.create({
   simpleInputField: {
     // width: responsiveWidth(89),
     // height: deviceHeight < 800 ? responsiveHeight(5.7) : responsiveHeight(5),
-    fontSize: responsiveFontSize(1.6),
+    fontSize: responsiveFontSize(1.7),
     fontFamily: AppFonts.light,
+    paddingVertical:3
   },
 });

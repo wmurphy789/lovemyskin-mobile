@@ -33,64 +33,66 @@ const EditProfile = ({ navigation }) => {
         }}
       />
       <View style={styles.container}>
-        <KeyboardAvoidingView
+        {/* <KeyboardAvoidingView
           style={{ flex: 1, backgroundColor: "#fff" }}
           behavior="padding"
+        > */}
+        <View style={{ flex: 1, backgroundColor: "#fff" }}>
+        <ScrollView
+          bounces={false}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingTop: 20, paddingBottom: 50 }}
         >
-          <ScrollView
-            bounces={false}
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{ paddingTop: 20, paddingBottom: 50 }}
-          >
-            <View style={styles.profileImageContainer}>
-              <Image source={{ uri: demoImage }} style={styles.profileImage} />
-              <TouchableOpacity
-                style={styles.editButton}
-                onPress={() => {
-                  // alert("open imagepicker");
-                }}
-              >
-                <Image
-                  source={AppImages.darkGreenEditIcon}
-                  style={styles.editImage}
-                />
-              </TouchableOpacity>
-            </View>
-            <SimpleInput
-              defaultValue="Andrew"
-              placeholder="First Name"
-              customStyles={styles.input}
-            />
-            <SimpleInput
-              defaultValue="Philip"
-              placeholder="Last Name"
-              customStyles={styles.input}
-            />
-            <SimpleInput
-              defaultValue="@andrew"
-              placeholder="Username"
-              customStyles={styles.input}
-            />
-            <SimpleInput
-              defaultValue="Andrew@gmail.com"
-              placeholder="Email Address"
-              type={true}
-              customStyles={styles.input}
-            />
+          <View style={styles.profileImageContainer}>
+            <Image source={{ uri: demoImage }} style={styles.profileImage} />
             <TouchableOpacity
-              onPress={() => Methods.navigate(navigation, "ChangePassword")}
-              style={styles.changePasswordButton}
+              style={styles.editButton}
+              onPress={() => {
+                // alert("open imagepicker");
+              }}
             >
-              <Text style={styles.changePasswordText}>
-                {AppConstants.changePassword}
-              </Text>
+              <Image
+                source={AppImages.darkGreenEditIcon}
+                style={styles.editImage}
+              />
             </TouchableOpacity>
-            <FullButton
-              title={AppConstants.saveChanges}
-              onPress={() => Methods.goBack(navigation)}
-            />
-          </ScrollView>
-        </KeyboardAvoidingView>
+          </View>
+          <SimpleInput
+            defaultValue="Andrew"
+            placeholder="First Name"
+            customStyles={styles.input}
+          />
+          <SimpleInput
+            defaultValue="Philip"
+            placeholder="Last Name"
+            customStyles={styles.input}
+          />
+          <SimpleInput
+            defaultValue="@andrew"
+            placeholder="Username"
+            customStyles={styles.input}
+          />
+          <SimpleInput
+            defaultValue="Andrew@gmail.com"
+            placeholder="Email Address"
+            type={true}
+            customStyles={styles.input}
+          />
+          <TouchableOpacity
+            onPress={() => Methods.navigate(navigation, "ChangePassword")}
+            style={styles.changePasswordButton}
+          >
+            <Text style={styles.changePasswordText}>
+              {AppConstants.changePassword}
+            </Text>
+          </TouchableOpacity>
+          <FullButton
+            title={AppConstants.saveChanges}
+            onPress={() => Methods.goBack(navigation)}
+          />
+        </ScrollView>
+        </View>
+        {/* </KeyboardAvoidingView> */}
       </View>
     </View>
   );

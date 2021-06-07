@@ -8,6 +8,9 @@ import {
   FlatList,
   TouchableHighlight,
 } from "react-native";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { getAffirmationByIdAction } from "../../Redux/Actions/AffirmationAction";
 import Methods from "../../Support/Methods";
 import AppConstants from "../../Theme/AppConstants";
 import { AppImages } from "../../Theme/AppImages";
@@ -15,30 +18,16 @@ import { responsiveHeight } from "../../Theme/ResponsiveDimensions";
 import styles from "./styles";
 
 const ViewAffirmation = ({ navigation, route }) => {
-  const [screenTitle, setScreenTitle] = useState(route?.params?.screenTitle); // will be recieved from routes params
+  const [id, setscreenTitle] = useState(route?.params?.id); // will be recieved from routes params
   const [screenColor, setScreenColor] = useState(route?.params?.screenColor); // same as above
   const [isPlaying, setisPlaying] = useState(false);
   const [timeElapsed, settimeElapsed] = useState("0:54");
   const [timeRemaining, setTimeRemaining] = useState("2:34");
   // create dummy data just for UI purpose
-  const [screenData, setScreenData] = useState([]); // before removing this check flatlist itemstyle (USED TO MAINTAIN CHECK)
-  const [myAffirmationData, setMyAffirmationData] = useState([]);
+  const dispatch = useDispatch();
+  const AffirmationState = useSelector((state) => state.AffirmationReducer);
   useEffect(() => {
-    let TEMP = [],
-      TEMP2 = [];
-    for (let i = 0; i < 12; i++) {
-      TEMP.push({
-        title: screenTitle,
-        content: AppConstants.loremIpsum,
-      });
-      TEMP2.push({
-        title: screenTitle,
-        content: AppConstants.loremIpsum,
-        containsMusic: i == 0 ? true : false,
-      });
-    }
-    setMyAffirmationData(TEMP2);
-    setScreenData(TEMP);
+    dispatch(getAffirmationByIdAction({ id }, navigation));
   }, []);
   const DummyMusicBar = () => (
     // dummy UI of Music SeekBar
@@ -128,12 +117,17 @@ const ViewAffirmation = ({ navigation, route }) => {
         styles.ItemView,
         {
           backgroundColor: screenColor,
-          marginBottom: index == screenData.length - 1 ? 0 : 12,
+          marginBottom:
+            index == AffirmationState.dataDetails.length - 1 ? 0 : 12,
         },
       ]}
     >
-      <Text style={styles.itemTitle}>{item.title}</Text>
-      <Text style={styles.itemtext}>{item.content}</Text>
+      <Text style={styles.itemTitle}>
+        {AffirmationState.dataDetails?.attributes?.category_name}
+      </Text>
+      <Text style={styles.itemtext}>
+        {AffirmationState.dataDetails?.attributes?.description}
+      </Text>
       <CustomIconButton
         icon={AppImages.shareBlackIcon}
         // onPress={() => {
@@ -143,19 +137,29 @@ const ViewAffirmation = ({ navigation, route }) => {
     </View>
   );
   //render my affirmations    #note : created seprately because myaffirmations may containe music
-  const _renderMyAffirmations = ({ item, index }) => (
+  const _renderMyAffirmations = () => (
     <View
       style={[
         styles.ItemView,
         {
           backgroundColor: screenColor,
-          marginBottom: index == screenData.length - 1 ? 0 : 12,
+          marginBottom: 12,
         },
       ]}
     >
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-        <Text style={styles.itemTitle}>{item.title}</Text>
-        <View>
+        <Text style={styles.itemTitle}>
+          {AffirmationState?.dataDetails?.attributes?.category_name}
+        </Text>
+        <View
+          style={{
+            display:
+              AffirmationState?.dataDetails?.attributes?.category_name ==
+              "My Affirmations"
+                ? "flex"
+                : "none",
+          }}
+        >
           <CustomIconButton icon={AppImages.editBlackIcon} />
           <CustomIconButton
             icon={AppImages.deleteBlackIcon}
@@ -164,8 +168,10 @@ const ViewAffirmation = ({ navigation, route }) => {
         </View>
       </View>
       <View>
-        <Text style={styles.itemtext}>{item.content}</Text>
-        {item.containsMusic && (
+        <Text style={styles.itemtext}>
+          {AffirmationState?.dataDetails?.attributes?.description}
+        </Text>
+        {AffirmationState?.dataDetails?.attributes?.song_id && (
           <View>
             <DummyMusicBar />
             <View style={styles.playerTimerView}>
@@ -193,34 +199,44 @@ const ViewAffirmation = ({ navigation, route }) => {
   );
 
   const mainView = () => {
-    if (screenTitle == AppConstants.myAffirmations) {
-      return (
-        <FlatList
-          data={myAffirmationData}
-          bounces={false}
-          stickyHeaderIndices={[0]}
-          showsVerticalScrollIndicator={false}
-          ListHeaderComponent={() => <Header />}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={_renderMyAffirmations}
-        />
-      );
-    } else {
-      return (
-        <FlatList
-          data={screenData}
-          bounces={false}
-          showsVerticalScrollIndicator={false}
-          stickyHeaderIndices={[0]}
-          ListHeaderComponent={() => <Header />}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={_renderAffirmations}
-        />
-      );
-    }
+    // if (screenTitle == AppConstants.myAffirmations) {
+    //   return (
+    //     <FlatList
+    //       data={myAffirmationData}
+    //       bounces={false}
+    //       stickyHeaderIndices={[0]}
+    //       showsVerticalScrollIndicator={false}
+    //       ListHeaderComponent={() => <Header />}
+    //       keyExtractor={(item, index) => index.toString()}
+    //       renderItem={_renderMyAffirmations}
+    //     />
+    //   );
+    // } else {
+    return (
+      // <FlatList
+      //   data={AffirmationState.dataDetails}
+      //   bounces={false}
+      //   showsVerticalScrollIndicator={false}
+      //   stickyHeaderIndices={[0]}
+      //   // ListHeaderComponent={() => <Header />}
+      //   keyExtractor={(item, index) => index.toString()}
+      //   renderItem={_renderAffirmations}
+      // />
+      <>
+        <Header />
+        {_renderMyAffirmations()}
+        {/* {_renderMyAffirmations()} */}
+      </>
+    );
+    // }
   };
 
-  return <View style={{ flex: 1 }}>{mainView()}</View>;
+  return (
+    <View style={{ flex: 1 }}>
+      {mainView()}
+      {/* <Header /> */}
+    </View>
+  );
 };
 
 export default ViewAffirmation;

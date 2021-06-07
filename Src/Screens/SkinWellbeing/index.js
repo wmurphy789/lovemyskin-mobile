@@ -40,7 +40,7 @@ const dummyComments = [
   },
 ];
 const Tab = createMaterialTopTabNavigator();
-const SkinWellbeing = () => {
+const SkinWellbeing = ({ navigation }) => {
   const [commentIndex, setCommentIndex] = useState(-1);
   const [expandedComments, setExpandedComments] = useState([]);
   const [KeyBoardVisible, setKeyBoardVisible] = useState(false);
@@ -59,14 +59,20 @@ const SkinWellbeing = () => {
   const __renderItem = (
     { item, index } // render tabs data
   ) => (
-    <View>
+    <View
+      style={{
+        marginBottom: AppConstants.dummydata.length - 1 == index ? 100 : 0,
+      }}
+    >
       <View
         style={[
           styles.PillarItemView,
           {
             borderBottomRightRadius: expandedComments.includes(index) ? 0 : 10,
             borderBottomLeftRadius: expandedComments.includes(index) ? 0 : 10,
-            marginBottom: expandedComments.includes(index) ? 0 : responsiveHeight(2),
+            marginBottom: expandedComments.includes(index)
+              ? responsiveHeight(0)
+              : responsiveHeight(2),
           },
         ]}
       >
@@ -116,15 +122,16 @@ const SkinWellbeing = () => {
             <TextInput
               placeholder={AppConstants.addYourCommenthere}
               style={styles.commentInput}
-              autoFocus={KeyBoardVisible ? true : false}
+              editable={false}
+              //   autoFocus={KeyBoardVisible ? true : false}
               //   onFocus={() => setKeyBoardVisible(true)}
               onSubmitEditing={() => setKeyBoardVisible(false)}
             />
             <TouchableOpacity
               style={{
                 position: "absolute",
-                right: 0,
-                top: -1
+                right: -1,
+                top: -1,
               }}
               onPress={() => {
                 setKeyBoardVisible(false);
@@ -136,7 +143,7 @@ const SkinWellbeing = () => {
               {/* send button Image */}
               <Image
                 source={AppImages.sendButton}
-                resizeMode='contain'
+                resizeMode="contain"
                 style={styles.sendButtonIcon}
               />
             </TouchableOpacity>
@@ -144,7 +151,13 @@ const SkinWellbeing = () => {
           {dummyComments.map((item, index) => (
             // dummy comments View
             <View key={index}>
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  marginBottom: AppConstants.dummydata.length == index ? 20 : 0,
+                }}
+              >
                 <Image
                   source={{ uri: item.image }}
                   style={styles.commentProfile}
@@ -194,13 +207,14 @@ const SkinWellbeing = () => {
       <FlatList
         data={data}
         bounces={false}
-        keyboardShouldPersistTaps='always'
+        onscroll
         showsVerticalScrollIndicator={false}
         keyExtractor={(item, index) => index.toString()}
         contentContainerStyle={[
           styles.tabsContentFlatlist,
           {
-            paddingBottom: !KeyBoardVisible ? responsiveHeight(15) : "auto",
+            // paddingBottom: !KeyBoardVisible ? responsiveHeight(15) : "auto",
+            // paddingBottom: expandedComments.length * responsiveHeight(6)
           },
         ]}
         renderItem={__renderItem}
@@ -251,6 +265,13 @@ const SkinWellbeing = () => {
           }}
           name="Articles"
           component={Articles}
+          listeners={{
+            focus: (e) => {
+              Keyboard.dismiss();
+              setExpandedComments([]);
+              setKeyBoardVisible(false);
+            },
+          }}
         />
         <Tab.Screen
           options={{
@@ -263,6 +284,13 @@ const SkinWellbeing = () => {
           }}
           name="Videos"
           component={Videos}
+          listeners={{
+            focus: (e) => {
+              Keyboard.dismiss();
+              setExpandedComments([]);
+              setKeyBoardVisible(false);
+            },
+          }}
         />
         <Tab.Screen
           options={{
@@ -275,6 +303,13 @@ const SkinWellbeing = () => {
           }}
           name="Podcasts"
           component={Podcasts}
+          listeners={{
+            focus: (e) => {
+              Keyboard.dismiss();
+              setExpandedComments([]);
+              setKeyBoardVisible(false);
+            },
+          }}
         />
         <Tab.Screen
           options={{
@@ -287,6 +322,13 @@ const SkinWellbeing = () => {
           }}
           name="Stories"
           component={Stories}
+          listeners={{
+            focus: (e) => {
+              Keyboard.dismiss();
+              setExpandedComments([]);
+              setKeyBoardVisible(false);
+            },
+          }}
         />
       </Tab.Navigator>
     );
@@ -301,14 +343,14 @@ const SkinWellbeing = () => {
       </View>
     );
   };
-  //   useEffect(() => {
-  //     Keyboard.addListener("keyboardDidShow", keyboardWillShow);
-  //     Keyboard.addListener("keyboardDidHide", keyboardWillHide);
-  //     // return () => {
-  //     //   keyboardWillShowSub.remove();
-  //     //   keyboardWillHideSub.remove();
-  //     // };
-  //   }, []);
+  useEffect(() => {
+    // Keyboard.addListener("keyboardDidShow", keyboardWillShow);
+    Keyboard.addListener("keyboardDidHide", keyboardWillHide);
+    // return () => {
+    //   keyboardWillShowSub.remove();
+    //   keyboardWillHideSub.remove();
+    // };
+  }, []);
   const keyboardWillShow = (event) => {
     setKeyBoardVisible(true);
   };

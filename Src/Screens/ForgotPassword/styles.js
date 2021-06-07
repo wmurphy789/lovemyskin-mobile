@@ -13,8 +13,9 @@ export default StyleSheet.create({
   container: {
     // width: "100%",
     flex: 1,
-    backgroundColor: AppColors.white,
-    paddingHorizontal: responsiveWidth(5),
+    // backgroundColor: AppColors.white,
+    marginHorizontal: responsiveWidth(5),
+
   },
   backbutton: {
     height: 35,
@@ -23,6 +24,7 @@ export default StyleSheet.create({
     justifyContent: "center",
     borderRadius: 100,
     marginTop: responsiveHeight(8),
+    marginLeft: -responsiveWidth(1.5)
   },
   backIcon: {
     height: 20,

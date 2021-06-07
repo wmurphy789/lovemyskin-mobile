@@ -43,6 +43,7 @@ export const SimpleInput = ({
   secureInput,
   defaultValue,
   type,
+  image,
 }) => {
   const inputRef = useRef(null);
   useEffect(() => {
@@ -51,6 +52,7 @@ export const SimpleInput = ({
 
   return (
     <View style={[styles.simpleInputContainer, customStyles]}>
+      <Image source={image} resizeMode="contain" style={styles.iconInputIcon} />
       <TextInput
         secureTextEntry={secureInput}
         value={text}

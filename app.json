@@ -27,7 +27,7 @@
       "userInterfaceStyle": "light",
       "package": "com.lovemyskin",
       "versionCode": 1,
-      "softwareKeyboardLayoutMode": "resize"
+      "softwareKeyboardLayoutMode": "pan"
     },
     "web": {
       "favicon": "./assets/favicon.png"
