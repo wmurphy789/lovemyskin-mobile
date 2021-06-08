@@ -34,11 +34,13 @@ export default StyleSheet.create({
     color: AppColors.white,
     fontFamily: AppFonts.semiBold,
     fontSize: responsiveFontSize(2.2),
+    textAlign: "center",
     marginTop: responsiveHeight(1.8),
   },
   profileId: {
     color: AppColors.white,
     fontFamily: AppFonts.regular,
+    textAlign: "center",
     marginTop: responsiveHeight(0.5),
   },
   menuItem: {

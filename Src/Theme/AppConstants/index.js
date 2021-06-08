@@ -52,7 +52,177 @@ export default AppConstants = {
       comments: 42,
     },
   ],
-
+  WellbeingDummyData: {
+    Articles: [
+      {
+        postId: 0,
+        title: "How to Prevent your skin?",
+        image:
+          "https://i.pinimg.com/originals/44/d3/82/44d3827121668c975fc7cd75ab2ec6a2.png",
+        likes: "20K",
+        comments: "2.1K",
+      },
+      {
+        postId: 1,
+        title: "How to Prevent your skin?",
+        image: "https://digitalblasphemy.com/graphics/640x480/leaftemplenight1640.jpg",
+        likes: 12,
+        comments: 44,
+      },
+      {
+        postId: 2,
+        title: "How to Prevent your skin?",
+        image:
+          "https://images.wallpapersden.com/image/download/leaf-carved-background_Z2tmZmWUmZqaraWkpJRpbWWtbWVl.jpg",
+        likes: 121,
+        comments: 443,
+      },
+    ],
+    Videos: [
+      {
+        postId: 3,
+        title: "How to Prevent your skin?",
+        image:
+          "https://images.wallpaperscraft.com/image/leaves_green_closeup_121695_480x800.jpg",
+        likes: "20K",
+        comments: "2.1K",
+      },
+      {
+        postId: 4,
+        title: "How to Prevent your skin?",
+        image: "https://i.pinimg.com/originals/44/d3/82/44d3827121668c975fc7cd75ab2ec6a2.png",
+        likes: 12,
+        comments: 44,
+      },
+      {
+        postId: 5,
+        title: "How to Prevent your skin?",
+        image:
+          "https://digitalblasphemy.com/graphics/640x480/leaftemplenight1640.jpg",
+        likes: 121,
+        comments: 443,
+      },
+      {
+        postId: 6,
+        title: "How to Prevent your skin?",
+        image:
+          "https://images.wallpaperscraft.com/image/leaves_green_closeup_121695_480x800.jpg",
+        likes: "20K",
+        comments: "2.1K",
+      },
+      {
+        postId: 7,
+        title: "How to Prevent your skin?",
+        image: "https://i.pinimg.com/originals/44/d3/82/44d3827121668c975fc7cd75ab2ec6a2.png",
+        likes: 12,
+        comments: 44,
+      },
+      {
+        postId: 8,
+        title: "How to Prevent your skin?",
+        image:
+          "https://digitalblasphemy.com/graphics/640x480/leaftemplenight1640.jpg",
+        likes: 121,
+        comments: 443,
+      },
+      {
+        postId: 9,
+        title: "How to Prevent your skin?",
+        image:
+          "https://images.wallpaperscraft.com/image/leaves_green_closeup_121695_480x800.jpg",
+        likes: "20K",
+        comments: "2.1K",
+      },
+      {
+        postId: 10,
+        title: "How to Prevent your skin?",
+        image: "https://i.pinimg.com/originals/44/d3/82/44d3827121668c975fc7cd75ab2ec6a2.png",
+        likes: 12,
+        comments: 44,
+      },
+      {
+        postId: 11,
+        title: "How to Prevent your skin?",
+        image:
+          "https://digitalblasphemy.com/graphics/640x480/leaftemplenight1640.jpg",
+        likes: 121,
+        comments: 443,
+      },
+      {
+        postId: 12,
+        title: "How to Prevent your skin?",
+        image:
+          "https://images.wallpaperscraft.com/image/leaves_green_closeup_121695_480x800.jpg",
+        likes: "20K",
+        comments: "2.1K",
+      },
+      {
+        postId: 13,
+        title: "How to Prevent your skin?",
+        image: "https://i.pinimg.com/originals/44/d3/82/44d3827121668c975fc7cd75ab2ec6a2.png",
+        likes: 12,
+        comments: 44,
+      },
+      {
+        postId: 14,
+        title: "How to Prevent your skin?",
+        image:
+          "https://digitalblasphemy.com/graphics/640x480/leaftemplenight1640.jpg",
+        likes: 121,
+        comments: 443,
+      },
+    ],
+    Podcasts: [
+      {
+        postId: 6,
+        title: "How to Prevent your skin?",
+        image:
+          "https://images.wallpaperscraft.com/image/leaves_green_closeup_121695_480x800.jpg",
+        likes: "20K",
+        comments: "2.1K",
+      },
+      {
+        postId: 7,
+        title: "How to Prevent your skin?",
+        image: "https://cdn.wallpapersafari.com/4/83/LXZDxM.jpg",
+        likes: 12,
+        comments: 44,
+      },
+      {
+        postId: 8,
+        title: "How to Prevent your skin?",
+        image:
+          "https://images.wallpapersden.com/image/download/leaf-carved-background_Z2tmZmWUmZqaraWkpJRpbWWtbWVl.jpg",
+        likes: 121,
+        comments: 443,
+      },
+    ],
+    Stories: [
+      {
+        postId: 9,
+        title: "How to Prevent your skin?",
+        image:
+          "https://digitalblasphemy.com/graphics/640x480/leaftemplenight1640.jpg",
+        likes: "20K",
+        comments: "2.1K",
+      },
+      {
+        postId: 10,
+        title: "How to Prevent your skin?",
+        image: "https://i.pinimg.com/originals/44/d3/82/44d3827121668c975fc7cd75ab2ec6a2.png",
+        likes: 12,
+        comments: 44,
+      },
+      {
+        postId: 11,
+        title: "How to Prevent your skin?",
+        image:
+          "https://images.wallpapersden.com/image/download/leaf-carved-background_Z2tmZmWUmZqaraWkpJRpbWWtbWVl.jpg",
+        likes: 121,
+        comments: 443,
+      },
+    ]
+  },
   priorities: [
     "I already know my skin condition and want to learn more about how to live in my own skin",
     "I want a skin condition diagnosis and want to use the loveMySkin skin diagnosis tool",

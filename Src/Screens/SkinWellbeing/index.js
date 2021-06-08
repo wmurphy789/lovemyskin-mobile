@@ -1,26 +1,13 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  ScrollView,
-  ImageBackground,
-  FlatList,
-  Image,
-  TouchableOpacity,
-  Dimensions,
-  TextInput,
-  Keyboard,
-} from "react-native";
+import { View, Text, ScrollView, ImageBackground, FlatList, Image, TouchableOpacity, Dimensions, TextInput, Keyboard, ActivityIndicator, } from "react-native";
 import { AppColors } from "../../Theme/AppColors";
 import AppConstants from "../../Theme/AppConstants";
 import { AppImages } from "../../Theme/AppImages";
 import styles from "./styles";
-import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { NavigationContainer } from "@react-navigation/native";
-import {
-  responsiveHeight,
-  responsiveWidth,
-} from "../../Theme/ResponsiveDimensions";
+import { responsiveHeight, responsiveWidth, } from "../../Theme/ResponsiveDimensions";
+import WellbeingTabs from "../../Components/WellbeingTopTab";
+import { useDispatch, useSelector } from "react-redux";
+import { getWellbeingCategories } from "../../Redux/Actions/WellbeingActions";
 const dummyComments = [
   {
     userName: "Lisa Ray",
@@ -39,302 +26,225 @@ const dummyComments = [
     comments: "1K",
   },
 ];
-const Tab = createMaterialTopTabNavigator();
-const SkinWellbeing = ({ navigation }) => {
-  const [commentIndex, setCommentIndex] = useState(-1);
-  const [expandedComments, setExpandedComments] = useState([]);
-  const [KeyBoardVisible, setKeyBoardVisible] = useState(false);
-
-  const _renderItem = ({ item, index }) => {
-    // render upper list
-    return (
-      <TouchableOpacity activeOpacity={0.8}>
-        <View style={styles.itemView}>
-          <Image source={{ uri: item.image }} style={styles.itemImage} />
-          <Text style={styles.itemText}>{item.title}</Text>
-        </View>
-      </TouchableOpacity>
-    );
-  };
-  const __renderItem = (
-    { item, index } // render tabs data
-  ) => (
-    <View
-      style={{
-        marginBottom: AppConstants.dummydata.length - 1 == index ? 100 : 0,
-      }}
+const HeaderComponent = () => (                             // Header Component View
+  <View style={styles.curveHeaderContainer}>
+    <ImageBackground
+      resizeMode="stretch"
+      source={AppImages.curveBigHeaderImage}
+      style={styles.curveHeaderImage}
     >
-      <View
-        style={[
-          styles.PillarItemView,
-          {
-            borderBottomRightRadius: expandedComments.includes(index) ? 0 : 10,
-            borderBottomLeftRadius: expandedComments.includes(index) ? 0 : 10,
-            marginBottom: expandedComments.includes(index)
-              ? responsiveHeight(0)
-              : responsiveHeight(2),
-          },
-        ]}
-      >
-        <Image source={{ uri: item.image }} style={styles.pillarImage} />
-        <View style={styles.pillarInfoView}>
-          <Text style={styles.pillerHeading}>{item.title}</Text>
-          <View style={styles.pillarStatusInfo}>
-            <View style={styles.PillarlikeCommentView}>
-              <TouchableOpacity>
-                <Image
-                  source={AppImages.redHeartIcon}
-                  style={styles.PillarlikeCommentImage}
-                />
-              </TouchableOpacity>
-              <Text style={styles.pillarLikesCount}>{item.likes}</Text>
-              <Text style={styles.pillarLikes}>{AppConstants.likes}</Text>
-            </View>
-            <TouchableOpacity
-              onPress={() => {
-                // comment press
-                // setCommentIndex(index)
-                setKeyBoardVisible(true);
-                let TEMP = [...expandedComments];
-                TEMP.push(index);
-                setExpandedComments(TEMP);
-              }}
-            >
-              <View style={styles.PillarlikeCommentView}>
-                <Image
-                  source={AppImages.greenChatIcon}
-                  style={styles.PillarlikeCommentImage}
-                />
-                <Text style={styles.pillarComments}>
-                  {AppConstants.comments}
-                </Text>
-                <Text style={styles.pillarCommentsCount}>{item.comments}</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-        </View>
+      <Text style={styles.title}>{AppConstants.skinWellbeing}</Text>
+      <Text style={styles.infoText}>
+        {AppConstants.chooseFromOurPillarsOfWellness}
+      </Text>
+    </ImageBackground>
+  </View>
+)
+let LineHiderComponent = null
+const WellbeingCategories = ({ data }) => (                 // Wellbeing Component View  
+  <View style={{ marginBottom: 20, }}  >
+    <FlatList
+      data={data}
+      extraData={data}
+      renderItem={renderWellbeingCategories}
+      showsHorizontalScrollIndicator={false}
+      contentContainerStyle={styles.pillarsFlatlistStyle}
+      horizontal
+      keyExtractor={(item, index) => index.toString()}
+    />
+  </View>
+)
+const noImage = 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1200px-No-Image-Placeholder.svg.png'
+const renderWellbeingCategories = ({ item, index }) => {    // renderItem of Wellbeing Component View
+  return (
+    <TouchableOpacity activeOpacity={0.8}>
+      <View style={styles.itemView}>
+        <Image source={{ uri: item?.image == '' || item.image == null ? noImage : item.image }} style={styles.itemImage} />
+        <Text style={styles.itemText}>{item?.attributes?.description}</Text>
       </View>
-
-      {expandedComments.includes(index) && (
-        <View style={styles.pillarItemCommentsContainer}>
-          {/* Add comment View */}
-          <View style={styles.commentFieldView}>
-            <TextInput
-              placeholder={AppConstants.addYourCommenthere}
-              style={styles.commentInput}
-              editable={false}
-              //   autoFocus={KeyBoardVisible ? true : false}
-              //   onFocus={() => setKeyBoardVisible(true)}
-              onSubmitEditing={() => setKeyBoardVisible(false)}
-            />
-            <TouchableOpacity
-              style={{
-                position: "absolute",
-                right: -1,
-                top: -1,
-              }}
-              onPress={() => {
-                setKeyBoardVisible(false);
-                let TEMP = [...expandedComments];
-                TEMP.splice(TEMP.indexOf(index), 1);
-                setExpandedComments(TEMP);
-              }}
-            >
-              {/* send button Image */}
-              <Image
-                source={AppImages.sendButton}
-                resizeMode="contain"
-                style={styles.sendButtonIcon}
-              />
-            </TouchableOpacity>
-          </View>
-          {dummyComments.map((item, index) => (
-            // dummy comments View
-            <View key={index}>
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  marginBottom: AppConstants.dummydata.length == index ? 20 : 0,
-                }}
-              >
-                <Image
-                  source={{ uri: item.image }}
-                  style={styles.commentProfile}
-                />
-                <Text style={styles.commentProfileUserName}>
-                  {item.userName}
-                </Text>
-              </View>
-              <Text style={styles.commentStyle}>{item.comment}</Text>
-              <View
-                style={[styles.pillarStatusInfo, styles.pillarStatusInfoCustom]}
-              >
-                <View style={styles.PillarlikeCommentView}>
-                  <TouchableOpacity>
-                    <Image
-                      source={AppImages.greenHeartIcon}
-                      style={styles.PillarlikeCommentImage}
-                    />
-                  </TouchableOpacity>
-                  <Text style={styles.pillarLikesCount}>{item.likes}</Text>
-                  <Text style={styles.pillarLikes}>{AppConstants.likes}</Text>
-                </View>
-                <TouchableOpacity>
-                  <View style={styles.PillarlikeCommentView}>
-                    <Image
-                      source={AppImages.greenChatIcon}
-                      style={styles.PillarlikeCommentImage}
-                    />
-                    <Text style={styles.pillarComments}>
-                      {AppConstants.comments}
-                    </Text>
-                    <Text style={styles.pillarCommentsCount}>
-                      {item.comments}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
-            </View>
-          ))}
-        </View>
-      )}
-    </View>
+    </TouchableOpacity>
   );
-  const renderPillars = (data) => {
-    // convert data to Tabs content
-    return (
-      <FlatList
-        data={data}
-        bounces={false}
-        onscroll
-        showsVerticalScrollIndicator={false}
-        keyExtractor={(item, index) => index.toString()}
-        contentContainerStyle={[
-          styles.tabsContentFlatlist,
-          {
-            // paddingBottom: !KeyBoardVisible ? responsiveHeight(15) : "auto",
-            // paddingBottom: expandedComments.length * responsiveHeight(6)
-          },
-        ]}
-        renderItem={__renderItem}
+};
+const PostComponent = ({ item, index, likePress, commentPress }) => (                // view post component
+  <View style={styles.PillarItemView}>
+    <Image source={{ uri: item.image }} style={styles.pillarImage} />
+    <View style={styles.pillarInfoView}>
+      <Text style={styles.pillerHeading}>{item.title}</Text>
+      <View style={styles.pillarStatusInfo}>
+        <View style={styles.PillarlikeCommentView}>
+          <TouchableOpacity onPress={likePress}>
+            <Image source={AppImages.redHeartIcon} style={styles.PillarlikeCommentImage} />
+          </TouchableOpacity>
+          <Text style={styles.pillarLikesCount}>{item.likes}</Text>
+          <Text style={styles.pillarLikes}>{AppConstants.likes}</Text>
+        </View>
+        <TouchableOpacity onPress={commentPress}>
+          <View style={styles.PillarlikeCommentView}>
+            <Image source={AppImages.greenChatIcon} style={styles.PillarlikeCommentImage} />
+            <Text style={styles.pillarComments}>{AppConstants.comments}</Text>
+            <Text style={styles.pillarCommentsCount}>{item.comments}</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+    </View>
+  </View>
+)
+const CommentInput = ({ onChangeText, onSendPress }) => (   // comment Input component
+  <View style={styles.commentFieldView}>
+    <TextInput
+      placeholder={AppConstants.addYourCommenthere}
+      style={styles.commentInput}
+      onChangeText={onChangeText}
+      // editable={false}
+      //   autoFocus={KeyBoardVisible ? true : false}
+      //   onFocus={() => setKeyBoardVisible(true)}
+      onSubmitEditing={() => setKeyBoardVisible(false)}
+    />
+    <TouchableOpacity
+      style={{
+        position: "absolute",
+        right: -1,
+        top: -1,
+      }}
+      onPress={onSendPress}
+    >
+      {/* send button Image */}
+      <Image
+        source={AppImages.sendButton}
+        resizeMode="contain"
+        style={styles.sendButtonIcon}
       />
-    );
-  };
-
-  // pages for material top tabnav
-  const Articles = () => {
-    return renderPillars(AppConstants.dummydata);
-  }; // render Article Tab data
-  const Videos = () => {
-    return renderPillars(AppConstants.dummydata);
-  }; // render Videos Tab data
-  const Podcasts = () => {
-    return renderPillars(AppConstants.dummydata);
-  }; // render Podcasts Tab data
-  const Stories = () => {
-    return renderPillars(AppConstants.dummydata);
-  }; // render Stories Tab data
-
-  const MyTabs = () => {
-    // material Top tab nav
-    return (
-      <Tab.Navigator
-        tabBarOptions={{
-          indicatorStyle: styles.indicator,
-          pressColor: AppColors.white,
-          style: {
-            elevation: 0,
-            shadowColor: "#ffffff",
-            shadowOffset: { width: 0, height: 0 }, // change this for more shadow
-            shadowOpacity: 0.4,
-            shadowRadius: 6,
-            borderBottomWidth: 0.2,
-            borderBottomColor: AppColors.lightGrey,
-          },
+    </TouchableOpacity>
+  </View>
+)
+const CommentComponent = ({ item, index, likePress, commentPress }) => {             // users comment component
+  return (
+    <View key={index}>
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          marginBottom: 20,
         }}
       >
-        <Tab.Screen
-          options={{
-            tabBarLabel: ({ focused }) =>
-              focused ? (
-                <Text style={styles.selected}>{AppConstants.articles}</Text>
-              ) : (
-                <Text style={styles.notSelected}>{AppConstants.articles}</Text>
-              ),
-          }}
-          name="Articles"
-          component={Articles}
-          listeners={{
-            focus: (e) => {
-              Keyboard.dismiss();
-              setExpandedComments([]);
-              setKeyBoardVisible(false);
-            },
-          }}
+        <Image
+          source={{ uri: item.image }}
+          style={styles.commentProfile}
         />
-        <Tab.Screen
-          options={{
-            tabBarLabel: ({ focused }) =>
-              focused ? (
-                <Text style={styles.selected}>{AppConstants.videos}</Text>
-              ) : (
-                <Text style={styles.notSelected}>{AppConstants.videos}</Text>
-              ),
-          }}
-          name="Videos"
-          component={Videos}
-          listeners={{
-            focus: (e) => {
-              Keyboard.dismiss();
-              setExpandedComments([]);
-              setKeyBoardVisible(false);
-            },
-          }}
-        />
-        <Tab.Screen
-          options={{
-            tabBarLabel: ({ focused }) =>
-              focused ? (
-                <Text style={styles.selected}>{AppConstants.podcasts}</Text>
-              ) : (
-                <Text style={styles.notSelected}>{AppConstants.podcasts}</Text>
-              ),
-          }}
-          name="Podcasts"
-          component={Podcasts}
-          listeners={{
-            focus: (e) => {
-              Keyboard.dismiss();
-              setExpandedComments([]);
-              setKeyBoardVisible(false);
-            },
-          }}
-        />
-        <Tab.Screen
-          options={{
-            tabBarLabel: ({ focused }) =>
-              focused ? (
-                <Text style={styles.selected}>{AppConstants.stories}</Text>
-              ) : (
-                <Text style={styles.notSelected}>{AppConstants.stories}</Text>
-              ),
-          }}
-          name="Stories"
-          component={Stories}
-          listeners={{
-            focus: (e) => {
-              Keyboard.dismiss();
-              setExpandedComments([]);
-              setKeyBoardVisible(false);
-            },
-          }}
-        />
-      </Tab.Navigator>
-    );
-  };
+        <Text style={styles.commentProfileUserName}>
+          {item.userName}
+        </Text>
+      </View>
+      <Text style={styles.commentStyle}>{item.comment}</Text>
+      <View
+        style={[styles.pillarStatusInfo, styles.pillarStatusInfoCustom]}
+      >
+        <View style={styles.PillarlikeCommentView}>
+          <TouchableOpacity onPress={likePress}>
+            <Image source={AppImages.greenHeartIcon} style={styles.PillarlikeCommentImage}
+            />
+          </TouchableOpacity>
+          <Text style={styles.pillarLikesCount}>{item.likes}</Text>
+          <Text style={styles.pillarLikes}>{AppConstants.likes}</Text>
+        </View>
+        <TouchableOpacity onPress={commentPress}>
+          <View style={styles.PillarlikeCommentView}>
+            <Image source={AppImages.greenChatIcon} style={styles.PillarlikeCommentImage} />
+            <Text style={styles.pillarComments}>{AppConstants.comments}</Text>
+            <Text style={styles.pillarCommentsCount}>{item.comments}</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+    </View>
+  )
+}
+let TabContent = null                                       // initialized TabContent Component
 
-  const LineHider = () => {
+const SkinWellbeing = ({ navigation }) => {
+  const [expandedComments, setExpandedComments] = useState([])
+  const [KeyBoardVisible, setKeyBoardVisible] = useState(false);
+  const dispatch = useDispatch()
+  const state = useSelector(state => state.WellbeingReducer)
+  const isLoading = state.isLoading
+  console.log(state.wellBeingCategories, "CATE");
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      dispatch(getWellbeingCategories())
+    });
+    return unsubscribe;
+
+  }, [])
+  useEffect(() => {                                       // keyboard handeler
+    Keyboard.addListener("keyboardDidShow", () => setKeyBoardVisible(true));
+    Keyboard.addListener("keyboardDidHide", () => setKeyBoardVisible(false));
+    return () => {
+      Keyboard.removeAllListeners("keyboardDidShow")
+      Keyboard.removeAllListeners("keyboardDidHide")
+    };
+  }, [KeyBoardVisible]);
+  //----------------------------------------------------Functions
+  function handleCommentClick(postId) {
+    let TEMP = [...expandedComments]
+    TEMP.push(postId)
+    setExpandedComments(TEMP)
+  }
+  //----------------------------------------------------
+  // { console.log(expandedComments); }
+
+  TabContent = ({ data }) => (
+    <FlatList
+      data={data}
+      extraData={data}
+      bounces={false}
+      keyboardShouldPersistTaps='always'
+      showsVerticalScrollIndicator={false}
+      keyExtractor={(item, index) => index.toString()}
+      contentContainerStyle={[styles.tabsContentFlatlist, {}]}
+      renderItem={renderTabContent}
+    />
+  )
+
+  const renderTabContent = ({ item, index }) => (
+    <View style={styles.pillerMainContainer}>
+      <PostComponent                                      // View Post Component
+        item={item}
+        index={index}
+        likePress={() => {
+
+        }}
+        commentPress={() => {
+          handleCommentClick(item.postId)
+        }}
+      />
+      <View style={{
+        flex: 1,
+        paddingTop: 10
+      }}>
+        {expandedComments.includes(item.postId) && < CommentInput                                       // Input comment component
+          onChangeText={() => { }}
+          onSendPress={() => {
+            setKeyBoardVisible(false)
+            let TEMP = [...expandedComments];
+            TEMP.splice(TEMP.indexOf(item.postId), 1);
+            setExpandedComments(TEMP);
+          }} />}
+        {expandedComments.includes(item.postId) && < View style={styles.pillarItemCommentsContainer}>
+          {dummyComments.map((item, index) => (
+            <CommentComponent                               // View Comment Component
+              item={item}
+              index={index}
+              likePress={() => {
+
+              }}
+              commentPress={(() => {
+
+              })} />
+          ))}
+        </View>}
+      </View>
+    </View >
+  );
+  LineHiderComponent = () => {                          // Hides the line under the tabs
     // hides the line under tabs from horizontal ends
     return (
       <View style={styles.lineHiderView}>
@@ -343,66 +253,61 @@ const SkinWellbeing = ({ navigation }) => {
       </View>
     );
   };
-  useEffect(() => {
-    // Keyboard.addListener("keyboardDidShow", keyboardWillShow);
-    Keyboard.addListener("keyboardDidHide", keyboardWillHide);
-    // return () => {
-    //   keyboardWillShowSub.remove();
-    //   keyboardWillHideSub.remove();
-    // };
-  }, []);
-  const keyboardWillShow = (event) => {
-    setKeyBoardVisible(true);
-  };
 
-  const keyboardWillHide = (event) => {
-    setKeyBoardVisible(false);
-  };
   return (
     <View style={styles.container}>
-      <View style={styles.curveHeaderContainer}>
-        <ImageBackground
-          resizeMode="stretch"
-          source={AppImages.curveBigHeaderImage}
-          style={styles.curveHeaderImage}
-        >
-          <Text style={styles.title}>{AppConstants.skinWellbeing}</Text>
-          <Text style={styles.infoText}>
-            {AppConstants.chooseFromOurPillarsOfWellness}
-          </Text>
-        </ImageBackground>
-      </View>
-      {/* <ScrollView contentContainerStyle={{ height: responsiveHeight(120) }}> */}
-      <View style={styles.container}>
-        <View
-          style={{
-            marginBottom: 20,
-            display: KeyBoardVisible ? "none" : "flex",
-          }}
-        >
-          <FlatList
-            data={AppConstants.wellNessPillars}
-            renderItem={_renderItem}
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.pillarsFlatlistStyle}
-            horizontal
-            keyExtractor={(item, index) => index.toString()}
-          />
-        </View>
-
-        <View
-          style={[
-            styles.tabsContainer,
-            // { height: responsiveHeight(20) * AppConstants.dummydata.length },
-          ]}
-        >
-          <LineHider />
-          {MyTabs()}
-        </View>
-      </View>
-      {/* </ScrollView> */}
+      {isLoading ?
+        (<View style={styles.container}>
+          <HeaderComponent />
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', }}>
+            <ActivityIndicator
+              color={AppColors.main}
+              size='small' />
+          </View>
+        </View>)
+        : (<View style={styles.container}>
+          <HeaderComponent />
+          {!KeyBoardVisible && <WellbeingCategories data={state.wellBeingCategories} />}
+          <View style={[styles.tabsContainer,]}>
+            <LineHiderComponent />
+            <WellbeingTabs />
+          </View>
+        </View>)}
     </View>
   );
 };
 
+
+// pages for material top tabnav
+
+const Articles = () => {// render Article Tab data
+  return (
+    <View style={styles.container}>
+      <TabContent data={AppConstants.WellbeingDummyData.Articles} />
+    </View>
+  )
+};
+const Videos = () => {  // render Videos Tab data
+  return (
+    <View style={styles.container}>
+      <TabContent data={AppConstants.WellbeingDummyData.Videos} />
+    </View>
+  )
+};
+const Podcasts = () => {  // render Podcasts Tab data
+  return (
+    <View style={styles.container}>
+      <TabContent data={AppConstants.WellbeingDummyData.Podcasts} />
+    </View>
+  )
+};
+const Stories = () => {     // render Stories Tab data
+  return (
+    <View style={styles.container}>
+      <TabContent data={AppConstants.WellbeingDummyData.Stories} />
+    </View>
+  )
+};
+
+export const Tabs = { Articles, Videos, Podcasts, Stories }         // exported to materialTabBar navigator
 export default SkinWellbeing;

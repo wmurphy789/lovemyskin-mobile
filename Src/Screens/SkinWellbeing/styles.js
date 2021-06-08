@@ -80,14 +80,7 @@ export default StyleSheet.create({
     // flex: 2,
   },
   pillarItemCommentsContainer: {
-    backgroundColor: "rgba(103, 198, 175, 0.1)",
     display: "flex",
-    marginBottom: responsiveHeight(2),
-    marginHorizontal: responsiveWidth(5),
-    paddingHorizontal: responsiveWidth(3),
-    borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 10,
-    paddingBottom: responsiveHeight(1.7),
   },
   commentProfile: {
     height: 40,
@@ -136,16 +129,23 @@ export default StyleSheet.create({
     fontFamily: AppFonts.light,
     fontSize: responsiveFontSize(1.2),
   },
-
+  pillerMainContainer: {
+    backgroundColor: "rgba(103, 198, 175, 0.5)",
+    marginHorizontal: responsiveWidth(5),
+    paddingHorizontal: responsiveWidth(3),
+    paddingVertical:responsiveHeight(1.7),
+    borderRadius: 10,
+    marginBottom: responsiveHeight(2)
+  },
   PillarItemView: {
     // will change borderradius later
     flexDirection: "row",
-    backgroundColor: "rgba(103, 198, 175, 0.1)",
-    marginHorizontal: responsiveWidth(5),
+    // backgroundColor: "rgba(103, 198, 175, 0.5)",
+    // marginHorizontal: responsiveWidth(5),
+    // paddingHorizontal: responsiveWidth(3),
     // marginBottom: responsiveHeight(2),
     borderRadius: 10,
-    paddingHorizontal: responsiveWidth(3),
-    paddingVertical: responsiveHeight(1.7),
+    // paddingTop: responsiveHeight(1.7),
   },
   pillarImage: {
     height: responsiveHeight(13.5),
@@ -227,8 +227,7 @@ export default StyleSheet.create({
   },
   tabsContentFlatlist: {
     paddingTop: 25,
+    paddingBottom:110,
     backgroundColor: AppColors.white,
-
-    // paddingBottom:110
   },
 });

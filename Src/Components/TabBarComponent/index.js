@@ -55,8 +55,8 @@ const TabBarComponent = (props) => {
     },
   ];
   useEffect(() => {
-    Keyboard.addListener("keyboardDidShow", keyboardWillShow);
-    Keyboard.addListener("keyboardDidHide", keyboardWillHide);
+    // Keyboard.addListener("keyboardDidShow", keyboardWillShow);
+    // Keyboard.addListener("keyboardDidHide", keyboardWillHide);
     // return () => {
     //   keyboardWillShowSub.remove();
     //   keyboardWillHideSub.remove();
@@ -69,7 +69,7 @@ const TabBarComponent = (props) => {
   const keyboardWillHide = (event) => {
     setKeyBoardVisible(false);
   };
-  return KeyBoardVisible ? null : (
+  return  (
     <ImageBackground
       // resizeMode='contain'
       source={AppImages.bottomTab}

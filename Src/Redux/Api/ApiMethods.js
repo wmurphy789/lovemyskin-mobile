@@ -140,7 +140,7 @@ const Method = {
   },
   PUT(url, body) {
     // console.log("post url", url);
-    return APIKit.put(url, {
+    return APIKit.put(url, body, {
       headers: {
         "Content-Type": "multipart/form-data",
         Accept: "application/json",
@@ -213,14 +213,14 @@ const Method = {
   },
   PATCH(url, body) {
     // console.log("post url", url);
-    return APIKit.patch(url, {
+    return APIKit.patch(url, body, {
       headers: {
-        "Content-Type": "multipart/form-data",
         Accept: "application/json",
+        "content-Type": "application/json",
       },
     })
       .then((data) => {
-        if (data.status == 200) {
+        if (data.status == 200 || 204) {
           return {
             status: StatusCodes.Success,
             result: data.data,
@@ -248,7 +248,8 @@ const Method = {
             };
           } else if (
             error.response.status == 403 ||
-            error.response.status == 401
+            error.response.status == 401 ||
+            error.response.status == 404
           ) {
             return {
               result: { msg: error.response.data.message },
