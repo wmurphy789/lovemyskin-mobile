@@ -1,8 +1,9 @@
 import { put, call } from "redux-saga/effects";
 import { DataManager } from "../../../Support/Datamanager";
 import * as types from "../../ActionTypes";
-import { loginApi, signupApi } from "../../Api";
+import { loginApi, signupApi, updtaeQuestionIdApi } from "../../Api";
 import jwt_decode from "jwt-decode";
+import { showmessage } from "../../../Support/Validations";
 // LOGIN SAGA
 export function* loginSaga(action) {
   yield put({ type: types.API_LOGIN_START });
@@ -18,7 +19,12 @@ export function* loginSaga(action) {
       });
       DataManager.setAccessToken(result.jwt);
       DataManager.setUserId(decoded.id);
-      action.navigation.navigate("Tabs");
+      showmessage("Login successfully.");
+      if (decoded.question_id) {
+        action.navigation.navigate("Tabs");
+      } else {
+        action.navigation.navigate("SkinPriorities");
+      }
     } else {
       yield put({ type: types.API_LOGIN_ERROR });
     }
@@ -37,11 +43,33 @@ export function* signupSaga(action) {
       yield put({
         type: types.API_SIGNUP_SUCCESS,
       });
-      // action.navigation.navigate("Tabs");
+      showmessage("User register successfully.");
+      // DataManager.setAccessToken(result?.data?.jwt);
+      // DataManager.setUserId(result?.data?.id);
+      action.navigation.goBack();
     } else {
       yield put({ type: types.API_SIGNUP_ERROR });
     }
   } catch (error) {
     yield put({ type: types.API_SIGNUP_ERROR });
+  }
+}
+
+// update question id SAGA
+export function* updateQuestionIdSaga(action) {
+  yield put({ type: types.API_UPDATE_QUESTION_ID_START });
+  try {
+    let response = yield call(updtaeQuestionIdApi, action.payload);
+    let { result, status } = response;
+    if (status === 1) {
+      yield put({
+        type: types.API_UPDATE_QUESTION_ID_SUCCESS,
+      });
+      action.navigation.navigate("Tabs");
+    } else {
+      yield put({ type: types.API_UPDATE_QUESTION_ID_ERROR });
+    }
+  } catch (error) {
+    yield put({ type: types.API_UPDATE_QUESTION_ID_ERROR });
   }
 }

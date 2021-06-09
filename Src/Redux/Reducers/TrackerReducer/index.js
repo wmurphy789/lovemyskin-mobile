@@ -4,9 +4,11 @@ import * as types from "../../ActionTypes";
 const initialState = {
   onLoad: false,
   isDisable: false,
+  isDeleted: false,
   allEntry: [],
   entry: {},
   totalEntry: 0,
+  totalPercentage: 0,
 };
 
 export const TrackerReducer = (state = initialState, action) => {
@@ -34,22 +36,24 @@ export const TrackerReducer = (state = initialState, action) => {
         onLoad: false,
         allEntry: filterAllEntries(action.data, action.selectedDate),
         entry: filterEntry(action.data, action.selectedDate),
-        totalEntry: action.data.length,
+        totalEntry: action?.meta?.entries_this_month,
+        totalPercentage: action?.meta?.percent_entries,
       };
     case types.API_GET_TRACKER_ALL_ENTRY_ERROR:
       return { ...state, isDisable: false, onLoad: false };
 
     //delete entry
     case types.API_DELETE_TRACKER_ENTRY_START:
-      return { ...state, isDisable: true, onLoad: true };
+      return { ...state, isDisable: true, onLoad: true, isDeleted: false };
     case types.API_DELETE_TRACKER_ENTRY_SUCCESS:
       return {
         ...state,
         isDisable: false,
         onLoad: false,
+        isDeleted: true,
       };
     case types.API_DELETE_TRACKER_ENTRY_ERROR:
-      return { ...state, isDisable: false, onLoad: false };
+      return { ...state, isDisable: false, onLoad: false, isDeleted: false };
 
     //edit entry
     case types.API_EDIT_TRACKER_ENTRY_START:

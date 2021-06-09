@@ -1,4 +1,5 @@
 import React from "react";
+import { useState } from "react";
 import {
   View,
   Text,
@@ -18,10 +19,79 @@ import {
   responsiveWidth,
 } from "../../Theme/ResponsiveDimensions";
 import styles from "./styles";
+import * as ImagePicker from "expo-image-picker";
+import ImagePickerModal from "../../Components/ImagePickerModal";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { submitFeedbackAutodrumAction } from "../../Redux/Actions/SkinDiagonseAction";
+import { showmessage } from "../../Support/Validations";
+import Loader from "../../Components/Loader";
+import { useEffect } from "react";
 
-const demoImage =
-  "https://s3.amazonaws.com/rentalutions-assets/marketing/personas/Character-Mark.jpg";
 const SkinDiagnosis = ({ navigation }) => {
+  const [imagePickerModal, setImagePickerModal] = useState(false);
+  const [photo, setPhoto] = useState(null);
+  const dispatch = useDispatch();
+  const SkinDiagonseState = useSelector(
+    (state) => state.submitFeedbackAutodrumReducer
+  );
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      setPhoto(null);
+    });
+    return unsubscribe;
+  }, []);
+  const openGallery = async () => {
+    setImagePickerModal(false);
+    // Ask the user for the permission to access the media library
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      alert("You've refused to allow this appp to access your photos!");
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync();
+
+    if (!result.cancelled) {
+      setPhoto(result.uri);
+    }
+  };
+
+  const openCamera = async () => {
+    setImagePickerModal(false);
+    // Ask the user for the permission to access the camera
+    const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      alert("You've refused to allow this appp to access your camera!");
+      return;
+    }
+
+    const result = await ImagePicker.launchCameraAsync();
+
+    if (!result.cancelled) {
+      setPhoto(result.uri);
+    }
+  };
+  const submitFeedback = () => {
+    if (photo) {
+      var data = new FormData();
+      data.append("file", {
+        type: "image/jpg",
+        uri: photo,
+        name: Math.random() * 100000000000000000 + ".jpg",
+      });
+      dispatch(
+        submitFeedbackAutodrumAction(
+          { formData: data, image: photo },
+          navigation
+        )
+      );
+    } else {
+      showmessage("Please upload a image.");
+    }
+  };
   return (
     <View style={styles.container}>
       <CurvedHeader
@@ -31,6 +101,15 @@ const SkinDiagnosis = ({ navigation }) => {
           Methods.navigate(navigation, "AllAffirmations");
         }}
       />
+      <Loader load={SkinDiagonseState?.onLoad} />
+      <ImagePickerModal
+        load={imagePickerModal}
+        onClose={() => {
+          setImagePickerModal(false);
+        }}
+        openCamera={() => openCamera()}
+        openGallery={() => openGallery()}
+      />
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: responsiveHeight(8) }}
@@ -39,24 +118,41 @@ const SkinDiagnosis = ({ navigation }) => {
           <Text style={styles.infoText}>
             {AppConstants.firstAddPictureOfYourSkinConcern}
           </Text>
-          <View style={styles.uploadImageContainer}>
-            <TouchableOpacity style={styles.cameraButton}>
-              <Image
-                source={AppImages.greenCameraIcon}
-                style={styles.cameraIcon}
-              />
-              <Text style={styles.cameraText}>{AppConstants.selectPhoto}</Text>
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity
+            style={styles.cameraButton}
+            onPress={() => setImagePickerModal(true)}
+          >
+            <View style={styles.uploadImageContainer}>
+              {photo ? (
+                <Image
+                  source={{ uri: photo }}
+                  style={styles.uploadImageContainer}
+                />
+              ) : (
+                <View style={styles.uploadImageContainer}>
+                  <Image
+                    source={AppImages.greenCameraIcon}
+                    style={styles.cameraIcon}
+                  />
+                  <Text style={styles.cameraText}>
+                    {AppConstants.uploadTakePhoto}
+                  </Text>
+                </View>
+              )}
+            </View>
+          </TouchableOpacity>
+          {/* </View> */}
           <FullButton
+            disabled={SkinDiagonseState?.isDisable}
             onPress={() => {
-              Methods.navigate(navigation, "SkinDiagnosisReport");
+              submitFeedback();
+              // Methods.navigate(navigation, "SkinDiagnosisReport");
             }}
             title={AppConstants.submit}
             customStyles={styles.button}
           />
           <View style={{ alignItems: "center" }}>
-            <TouchableOpacity style={styles.feedbackButton}>
+            <TouchableOpacity style={styles.feedbackButton} activeOpacity={1}>
               <Text style={styles.feedbacktext}>
                 {AppConstants.feedback.toUpperCase()}
               </Text>

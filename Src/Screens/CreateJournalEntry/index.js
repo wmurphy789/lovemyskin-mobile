@@ -30,6 +30,9 @@ import {
   responsiveWidth,
 } from "../../Theme/ResponsiveDimensions";
 import styles from "./styles";
+import * as ImagePicker from "expo-image-picker";
+import ImagePickerModal from "../../Components/ImagePickerModal";
+import { useEffect } from "react";
 const dropDownoption = [
   { id: 0, feeling: "good" },
   { id: 1, feeling: "bad" },
@@ -38,6 +41,12 @@ const dropDownoption = [
 const CreateJournalEntry = (props) => {
   const id = props?.route?.params?.item?.id;
   const [dropDrownOpen, setDropDrownOpen] = useState(false);
+  const [imagePickerModal, setImagePickerModal] = useState(false);
+  const [photo, setPhoto] = useState(
+    props?.route?.params?.item?.image ||
+      props?.route?.params?.item?.attributes?.image ||
+      null
+  );
   const [felling, setFelling] = useState(
     props?.route?.params?.item?.text ||
       props?.route?.params?.item?.attributes?.feeling ||
@@ -48,27 +57,49 @@ const CreateJournalEntry = (props) => {
       props?.route?.params?.item?.attributes?.description ||
       ""
   );
+  useEffect(() => {
+    if (!id) {
+      setPhoto(null);
+      setFelling("good");
+      setDescription("");
+    }
+  }, []);
   const dispatch = useDispatch();
   const TrackerState = useSelector((state) => state.TrackerReducer);
   const createEntry = () => {
-    if (description.length > 0) {
+    const des = description?.trim();
+    if (des.length > 0) {
       var data = new FormData();
-      data.append("entry_date", moment().format("YYYY-MM-DD"));
-      data.append("description", description);
+      data.append(
+        "entry_date",
+        moment(props?.route?.params?.selectedDate).format("YYYY-MM-DD")
+      );
+      data.append("description", des);
       data.append("feeling", felling);
-      // data.append('photo', fs.createReadStream('/Users/react/Downloads/2021-06-06.jpeg'))
+      photo &&
+        data.append("photo", {
+          type: "image/jpg",
+          uri: photo,
+          name: Math.random() * 100000000000000000 + ".jpg",
+        });
       dispatch(createTrackerEntryAction(data, props.navigation));
     } else {
       showmessage("Please enter your description");
     }
   };
   const updateEntry = () => {
-    if (description.length > 0) {
+    const des = description?.trim();
+    if (des.length > 0) {
       var data = new FormData();
 
-      data.append("description", description);
+      data.append("description", des);
       data.append("feeling", felling);
-      // data.append('photo', fs.createReadStream('/Users/react/Downloads/2021-06-06.jpeg'))
+      photo &&
+        data.append("photo", {
+          type: "image/jpg",
+          uri: photo,
+          name: Math.random() * 100000000000000000 + ".jpg",
+        });
       dispatch(
         editTrackerEntryAction({ formData: data, id: id }, props.navigation)
       );
@@ -76,6 +107,41 @@ const CreateJournalEntry = (props) => {
       showmessage("Please enter your description");
     }
   };
+
+  const openGallery = async () => {
+    setImagePickerModal(false);
+    // Ask the user for the permission to access the media library
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      alert("You've refused to allow this appp to access your photos!");
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync();
+
+    if (!result.cancelled) {
+      setPhoto(result.uri);
+    }
+  };
+
+  const openCamera = async () => {
+    setImagePickerModal(false);
+    // Ask the user for the permission to access the camera
+    const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      alert("You've refused to allow this appp to access your camera!");
+      return;
+    }
+
+    const result = await ImagePicker.launchCameraAsync();
+
+    if (!result.cancelled) {
+      setPhoto(result.uri);
+    }
+  };
+
   const mainView = () => (
     <View style={styles.container}>
       <Text style={styles.infoText}>{AppConstants.HowFeelingToday}</Text>
@@ -126,6 +192,7 @@ const CreateJournalEntry = (props) => {
                     setDropDrownOpen(false);
                     setFelling(item.feeling);
                   }}
+                  key={item.id}
                 >
                   <View
                     key={item.id}
@@ -159,12 +226,29 @@ const CreateJournalEntry = (props) => {
           resizeMode="contain"
         /> */}
       </View>
-      <View style={styles.uploadImageContainer}>
-        <TouchableOpacity style={styles.cameraButton}>
-          <Image source={AppImages.greenCameraIcon} style={styles.cameraIcon} />
-          <Text style={styles.cameraText}>{AppConstants.uploadTakePhoto}</Text>
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity
+        style={styles.cameraButton}
+        onPress={() => setImagePickerModal(true)}
+      >
+        <View style={styles.uploadImageContainer}>
+          {photo ? (
+            <Image
+              source={{ uri: photo }}
+              style={styles.uploadImageContainer}
+            />
+          ) : (
+            <>
+              <Image
+                source={AppImages.greenCameraIcon}
+                style={styles.cameraIcon}
+              />
+              <Text style={styles.cameraText}>
+                {AppConstants.uploadTakePhoto}
+              </Text>
+            </>
+          )}
+        </View>
+      </TouchableOpacity>
 
       <FullButton
         title={id ? "Update Affirmation" : AppConstants.createAffirmation}
@@ -183,6 +267,14 @@ const CreateJournalEntry = (props) => {
         }}
       />
       <Loader load={TrackerState.onLoad} />
+      <ImagePickerModal
+        load={imagePickerModal}
+        onClose={() => {
+          setImagePickerModal(false);
+        }}
+        openCamera={() => openCamera()}
+        openGallery={() => openGallery()}
+      />
       <ScrollView
         bounces={false}
         keyboardShouldPersistTaps="always"

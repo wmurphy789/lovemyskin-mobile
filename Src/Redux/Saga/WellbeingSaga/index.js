@@ -25,12 +25,12 @@ export function* fetchWellbeingCategoriesPosts({ param }) {                     
     try {
         let response = yield call(ApiMethods.wellbeingCategoriesApi, param)
         console.log(response, "Wellbeing posts response");
-        if (response.status == 1) {
-            yield put({ type: ActionType.WELLBEING_CATEGORIES_POSTS_SUCESS, Result: response.result })
-        }
-        else {
-            yield put({ type: ActionType.WELLBEING_CATEGORIES_POSTS_FAIL, Result: { msg: "Not Found!" } })
-        }
+        // if (response.status == 1) {
+        //     yield put({ type: ActionType.WELLBEING_CATEGORIES_POSTS_SUCESS, Result: response.result })
+        // }
+        // else {
+        //     yield put({ type: ActionType.WELLBEING_CATEGORIES_POSTS_FAIL, Result: { msg: "Not Found!" } })
+        // }
 
     } catch (e) {
         yield put({

@@ -9,7 +9,11 @@ import { Tabs } from "../../Screens/SkinWellbeing";
 
 const Tab = createMaterialTopTabNavigator();
 
-const WellbeingTabs = () => {
+const WellbeingTabs = ({
+    articleEvent,
+    videosEvent,
+    podcastsEvent,
+    storiesEvent }) => {
     // material Top tab nav
     return (
         <Tab.Navigator
@@ -38,11 +42,7 @@ const WellbeingTabs = () => {
                 }}
                 name="Articles"
                 component={Tabs.Articles}
-                listeners={{
-                    focus: (e) => {
-
-                    },
-                }}
+                listeners={{ focus: articleEvent }}
             />
             <Tab.Screen
                 options={{
@@ -55,10 +55,7 @@ const WellbeingTabs = () => {
                 }}
                 name="Videos"
                 component={Tabs.Videos}
-                listeners={{
-                    focus: (e) => {
-                    },
-                }}
+                listeners={{ focus: videosEvent }}
             />
             <Tab.Screen
                 options={{
@@ -71,10 +68,7 @@ const WellbeingTabs = () => {
                 }}
                 name="Podcasts"
                 component={Tabs.Podcasts}
-                listeners={{
-                    focus: (e) => {
-                    },
-                }}
+                listeners={{ focus: podcastsEvent }}
             />
             <Tab.Screen
                 options={{
@@ -87,10 +81,7 @@ const WellbeingTabs = () => {
                 }}
                 name="Stories"
                 component={Tabs.Stories}
-                listeners={{
-                    focus: (e) => {
-                    },
-                }}
+                listeners={{ focus: storiesEvent }}
             />
         </Tab.Navigator>
     );

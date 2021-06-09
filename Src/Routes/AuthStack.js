@@ -17,6 +17,7 @@ const AuthStack = () => {
         animationEnabled: true,
         cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
       }}
+      initialRouteName="SignIn"
     >
       <Stack.Screen
         name="SignIn"

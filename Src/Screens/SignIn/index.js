@@ -9,12 +9,13 @@ import {
   TouchableOpacity,
   Platform,
   KeyboardAvoidingView,
+  BackHandler,
 } from "react-native";
 import { FullButton } from "../../Components/Button";
 import { IconInput } from "../../Components/Input/Input";
 import AppConstants from "../../Theme/AppConstants";
 import { AppImages } from "../../Theme/AppImages";
-import Methods from "../../Support/Methods";
+import Methods, { navigationRef } from "../../Support/Methods";
 import styles from "./styles";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
@@ -22,6 +23,7 @@ import { formikValidation } from "../../Support/Validations";
 import { showMessage } from "react-native-flash-message";
 import { loginAction } from "../../Redux/Actions/AuthActions";
 import Loader from "../../Components/Loader";
+import { useEffect } from "react";
 
 const socialLoginData = [
   {
@@ -49,14 +51,43 @@ const SignIn = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
   const authState = useSelector((state) => state.AuthReducer);
+  // useEffect(() => {
+  //   const unsubscribe = navigation.addListener("focus", () => {
+  //     setEmail("");
+  //     setPassword("");
+  //   });
+  //   return unsubscribe;
+  // }, []);
   const signIn = () => {
-    // const validate = formikValidation(email, password);
-    // if (validate) {
-    const email = "testing6@gmail.com";
-    const password = "Abc@1234";
-    dispatch(loginAction({ email, password }, navigation));
-    // }
+    console.log("email--->", email);
+    const validate = formikValidation(email?.trim(), password?.trim());
+
+    if (validate) {
+      // const email = "testing5@gmail.com";
+      // const password = "Abc@1234";
+
+      dispatch(
+        loginAction(
+          { email: email?.trim(), password: password?.trim() },
+          navigation
+        )
+      );
+      setEmail("");
+      setPassword("");
+    }
   };
+  // useEffect(() => {
+  //   const backHandler = BackHandler.addEventListener(
+  //     "hardwareBackPress",
+  //     handleBackButton
+  //   );
+  //   // return backHandler;
+  // }, []);
+  // const handleBackButton = () => {
+  //   const route = navigationRef?.current?.getCurrentRoute();
+  //   if (route?.name == "SignIn") BackHandler.exitApp();
+  //   return true;
+  // };
 
   return (
     <View style={{ flex: 1, backgroundColor: "#fff" }}>
@@ -85,6 +116,7 @@ const SignIn = ({ navigation }) => {
             <View style={styles.inputView}>
               <IconInput
                 type={true}
+                text={email}
                 image={AppImages.greenMailIcon}
                 placeholder={AppConstants.enterYourEmailAddress}
                 customStyles={styles.input}
@@ -94,6 +126,7 @@ const SignIn = ({ navigation }) => {
             <View style={styles.inputView}>
               <IconInput
                 secureInput={true}
+                text={password}
                 image={AppImages.greenLockSimpleIcon}
                 placeholder={AppConstants.enterYourPassword}
                 customStyles={styles.input}

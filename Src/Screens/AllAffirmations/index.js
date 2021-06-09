@@ -8,56 +8,76 @@ import {
   Image,
   FlatList,
   ImageBackground,
+  BackHandler,
 } from "react-native";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import Loader from "../../Components/Loader";
 import { getAffirmationAction } from "../../Redux/Actions/AffirmationAction";
-import Methods from "../../Support/Methods";
+import Methods, { navigationRef } from "../../Support/Methods";
 import AppConstants from "../../Theme/AppConstants";
 import { AppImages } from "../../Theme/AppImages";
 import { responsiveHeight } from "../../Theme/ResponsiveDimensions";
 import styles from "./styles";
 
-const AllAffirmations = ({ navigation }) => {
+const AllAffirmations = (props) => {
   const dispatch = useDispatch();
   const AffirmationState = useSelector((state) => state.AffirmationReducer);
   useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", () => {
-      dispatch(getAffirmationAction({}, navigation));
+    const unsubscribe = props.navigation.addListener("focus", () => {
+      dispatch(getAffirmationAction({}, props.navigation));
     });
+    BackHandler.addEventListener("hardwareBackPress", handleBackButton);
     return unsubscribe;
   }, []);
+  const handleBackButton = () => {
+    console.log(
+      "navigationRef?.current?.getCurrentRoute()",
+      navigationRef?.current?.getCurrentRoute()
+    );
+    const route = navigationRef?.current?.getCurrentRoute();
+    if (route?.name == "AllAffirmations" || route?.name == "SignIn") {
+      BackHandler.exitApp();
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   function createAffirmation() {
-    Methods.navigate(navigation, "CreateAffirmation");
+    Methods.navigate(props.navigation, "CreateAffirmation");
   }
   function viewAffirmation(id, screenColor) {
-    navigation.navigate("ViewAffirmation", {
+    props.navigation.navigate("ViewAffirmation", {
       id,
       screenColor,
     });
   }
-
-  const HeaderComponent = (props) => {
-    const { item, index } = props;
+  console.log("AffirmationState", AffirmationState?.myAffirmation);
+  const HeaderComponent = () => {
     return (
       <TouchableOpacity
         activeOpacity={0.5}
-        onPress={() => viewAffirmation(item?.id, item.attributes?.hex_color)}
+        onPress={() =>
+          viewAffirmation(
+            AffirmationState?.myAffirmation?.id,
+            AffirmationState?.myAffirmation.hex_color
+          )
+        }
       >
         <View style={styles.myAffirmationsTileView}>
           <View style={styles.myAffirmationsTileViewTop}>
             <Image
-              source={{ uri: item?.attributes?.icon_url }}
+              source={{ uri: AffirmationState?.myAffirmation?.icon_url }}
               style={styles.myAffirmationsTileImage}
             />
             <Text style={styles.myAffirmationsTileText}>
-              {item?.attributes?.description}
+              {AffirmationState?.myAffirmation?.description}
             </Text>
           </View>
           <View style={styles.myAffirmationsTileViewBottom}>
             <Text style={styles.myAffirmationsTileCount}>
-              {item?.attributes?.count}
+              {AffirmationState?.myAffirmation?.count}
             </Text>
           </View>
         </View>
@@ -111,40 +131,39 @@ const AllAffirmations = ({ navigation }) => {
                 numColumns={2}
                 // horizontal
                 contentContainerStyle={styles.tilesflatlist}
-                // ListHeaderComponent={(prp) => <HeaderComponent props={prp} />}
+                ListHeaderComponent={() =>
+                  AffirmationState?.myAffirmation?.id ? (
+                    <HeaderComponent />
+                  ) : null
+                }
                 renderItem={({ item, index }) => {
-                  if (item?.attributes?.description == "My Affirmations") {
-                    return <HeaderComponent item={item} index={index} />;
-                  } else {
-                    return (
-                      <TouchableOpacity
-                        activeOpacity={0.9}
-                        onPress={() => {
-                          viewAffirmation(item?.id, item.attributes?.hex_color);
-                        }}
+                  return (
+                    <TouchableOpacity
+                      key={index}
+                      activeOpacity={0.9}
+                      onPress={() => {
+                        viewAffirmation(item?.id, item.hex_color);
+                      }}
+                    >
+                      <View
+                        style={[
+                          styles.tileView,
+                          { backgroundColor: item?.hex_color },
+                        ]}
                       >
-                        <View
-                          style={[
-                            styles.tileView,
-                            { backgroundColor: item?.attributes?.hex_color },
-                          ]}
-                        >
-                          <View style={styles.tileInner}>
-                            <Image
-                              source={{ uri: item?.attributes?.icon_url }}
-                              style={styles.tileImage}
-                            />
-                            <Text style={styles.tileText}>
-                              {item?.attributes?.description}
-                            </Text>
-                          </View>
-                          <Text style={styles.tileCount}>
-                            {item?.attributes?.count}
+                        <View style={styles.tileInner}>
+                          <Image
+                            source={{ uri: item?.icon_url }}
+                            style={styles.tileImage}
+                          />
+                          <Text style={styles.tileText}>
+                            {item?.description}
                           </Text>
                         </View>
-                      </TouchableOpacity>
-                    );
-                  }
+                        <Text style={styles.tileCount}>{item?.count}</Text>
+                      </View>
+                    </TouchableOpacity>
+                  );
                 }}
               />
             </View>

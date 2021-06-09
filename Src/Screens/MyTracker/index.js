@@ -30,6 +30,7 @@ import {
 } from "../../Redux/Actions/TrackerActions";
 import moment from "moment";
 import Loader from "../../Components/Loader";
+import { showmessage } from "../../Support/Validations";
 
 const MyTracker = (props) => {
   const [viewType, setViewType] = useState(1);
@@ -84,6 +85,11 @@ const MyTracker = (props) => {
   useEffect(() => {
     ApiHit();
   }, [selectedDate]);
+  useEffect(() => {
+    if (TrackerState?.isDeleted) {
+      ApiHit();
+    }
+  }, [TrackerState?.isDeleted]);
   const ApiHit = () => {
     const selectedDateMonth = moment(selectedDate).get("M") + 1;
     const selectedDateYear = moment(selectedDate).get("Y");
@@ -149,6 +155,16 @@ const MyTracker = (props) => {
     setShowPopUp(false);
     setExpandIndex([]);
   };
+  const createJournalentry = () => {
+    if (!TrackerState?.entry?.id) {
+      setViewType(0);
+      props.navigation.navigate("CreateJournalEntry", {
+        selectedDate: selectedDate,
+      });
+    } else {
+      showmessage("Entry already created for the selected date.");
+    }
+  };
   const renderCalendarListView = (item, index) => {
     return (
       <View
@@ -175,6 +191,7 @@ const MyTracker = (props) => {
           </View>
           <View style={styles.greenDot} />
         </View>
+
         <View
           style={[
             styles.calendarLsitViewContent,
@@ -201,98 +218,99 @@ const MyTracker = (props) => {
             },
           ]}
         >
-          {item.smile != 3 && (
-            <View>
-              <TouchableOpacity
-                // style={{ padding: responsiveWidth(2) }}
-                onPress={() => {
-                  setPopUpIndexView(index);
-                }}
-              >
-                <Image
-                  source={AppImages.ThreedotsWhite}
-                  style={styles.dotsImage}
-                  resizeMode="contain"
-                />
-              </TouchableOpacity>
-
-              {popupIndex.includes(index) && (
-                <View
-                  style={{
-                    position: "absolute",
-                    backgroundColor: "#F0F9F7",
-                    top: responsiveHeight(2),
-                    left: responsiveWidth(0),
-                    width: responsiveWidth(24),
-                    borderRadius: responsiveWidth(2),
-                    zIndex: 9999,
+          <TouchableOpacity
+            onPress={() => (item.smile != 3 ? setExpandedView(index) : null)}
+            activeOpacity={1}
+          >
+            {item.smile != 3 && (
+              <View>
+                <TouchableOpacity
+                  // style={{ padding: responsiveWidth(2) }}
+                  onPress={() => {
+                    setPopUpIndexView(index);
                   }}
                 >
-                  <TouchableOpacity
+                  <Image
+                    source={AppImages.ThreedotsWhite}
+                    style={styles.dotsImage}
+                    resizeMode="contain"
+                  />
+                </TouchableOpacity>
+
+                {popupIndex.includes(index) && (
+                  <View
                     style={{
-                      paddingHorizontal: responsiveWidth(4),
-                      paddingVertical: responsiveHeight(1.5),
-                    }}
-                    onPress={() => {
-                      editEntry(item, index);
+                      position: "absolute",
+                      backgroundColor: "#F0F9F7",
+                      top: responsiveHeight(2),
+                      left: responsiveWidth(0),
+                      width: responsiveWidth(24),
+                      borderRadius: responsiveWidth(2),
+                      zIndex: 9999,
                     }}
                   >
-                    <Text
+                    <TouchableOpacity
                       style={{
-                        fontSize: responsiveFontSize(2),
-                        fontFamily: AppFonts.regular,
+                        paddingHorizontal: responsiveWidth(4),
+                        paddingVertical: responsiveHeight(1.5),
+                      }}
+                      onPress={() => {
+                        editEntry(item, index);
                       }}
                     >
-                      Edit
-                    </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={{
-                      paddingHorizontal: responsiveWidth(4),
-                      paddingTop: responsiveHeight(0.5),
-                      paddingVertical: responsiveHeight(2),
-                    }}
-                    onPress={() => {
-                      Alert.alert(
-                        "",
-                        "Are you sure you want to delete this entry.",
-                        [
-                          {
-                            text: "No",
-                            onPress: () => setPopUpIndexView(index),
-                            style: "cancel",
-                          },
-                          {
-                            text: "Yes",
-                            onPress: () => deleteEntry(item, index),
-                          },
-                        ]
-                      );
-                    }}
-                  >
-                    <Text
+                      <Text
+                        style={{
+                          fontSize: responsiveFontSize(2),
+                          fontFamily: AppFonts.regular,
+                        }}
+                      >
+                        Edit
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
                       style={{
-                        fontSize: responsiveFontSize(2),
-                        fontFamily: AppFonts.regular,
+                        paddingHorizontal: responsiveWidth(4),
+                        paddingTop: responsiveHeight(0.5),
+                        paddingVertical: responsiveHeight(2),
+                      }}
+                      onPress={() => {
+                        Alert.alert(
+                          "",
+                          "Are you sure you want to delete this entry.",
+                          [
+                            {
+                              text: "No",
+                              onPress: () => setPopUpIndexView(index),
+                              style: "cancel",
+                            },
+                            {
+                              text: "Yes",
+                              onPress: () => deleteEntry(item, index),
+                            },
+                          ]
+                        );
                       }}
                     >
-                      Delete
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              )}
-            </View>
-          )}
-          <View
-            style={{
-              // flex: 1,
-              justifyContent: "center",
-              height: responsiveHeight(9),
-              marginBottom: responsiveHeight(0.6),
-            }}
-          >
-            <TouchableOpacity
-              onPress={() => (item.smile != 3 ? setExpandedView(index) : null)}
+                      <Text
+                        style={{
+                          fontSize: responsiveFontSize(2),
+                          fontFamily: AppFonts.regular,
+                        }}
+                      >
+                        Delete
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                )}
+              </View>
+            )}
+            <View
+              style={{
+                // flex: 1,
+                justifyContent: "center",
+                height: responsiveHeight(9),
+                marginBottom: responsiveHeight(0.6),
+              }}
             >
               <View style={styles.calendarLsitViewContentTextView}>
                 <Text
@@ -333,40 +351,40 @@ const MyTracker = (props) => {
                   </View>
                 )}
               </View>
-            </TouchableOpacity>
-          </View>
-          {item.smile == 3 && (
-            <View
-              style={{
-                alignItems: "center",
-                marginTop: responsiveHeight(0.5),
-              }}
-            >
-              <Image
-                resizeMode="contain"
-                source={AppImages.simpleDownArrowDark}
-                style={{ height: 6.2, width: 10 }}
-              />
             </View>
-          )}
-          <View
-            style={{ display: expandIndex.includes(index) ? "flex" : "none" }}
-          >
-            <View style={styles.calendarLsitViewContentTextView}>
-              <Text style={styles.calendarLsitViewContentSubText}>
-                {item?.subText}
-              </Text>
-            </View>
-            {item?.image && (
-              <View style={styles.calendarLsitImageView}>
+            {item.smile == 3 && (
+              <View
+                style={{
+                  alignItems: "center",
+                  marginTop: responsiveHeight(0.5),
+                }}
+              >
                 <Image
-                  source={{ uri: item?.image }}
-                  style={styles.calendarLsitImage}
-                  resizeMode="stretch"
+                  resizeMode="contain"
+                  source={AppImages.simpleDownArrowDark}
+                  style={{ height: 6.2, width: 10 }}
                 />
               </View>
             )}
-          </View>
+            <View
+              style={{ display: expandIndex.includes(index) ? "flex" : "none" }}
+            >
+              <View style={styles.calendarLsitViewContentTextView}>
+                <Text style={styles.calendarLsitViewContentSubText}>
+                  {item?.subText}
+                </Text>
+              </View>
+              {item?.image && (
+                <View style={styles.calendarLsitImageView}>
+                  <Image
+                    source={{ uri: item?.image }}
+                    style={styles.calendarLsitImage}
+                    resizeMode="stretch"
+                  />
+                </View>
+              )}
+            </View>
+          </TouchableOpacity>
         </View>
       </View>
     );
@@ -552,6 +570,9 @@ const MyTracker = (props) => {
                   fontSize: responsiveFontSize(1.7),
                   fontFamily: AppFonts.light,
                   marginTop: responsiveHeight(1.5),
+                  marginBottom: TrackerState?.entry?.attributes?.image
+                    ? 0
+                    : responsiveHeight(2),
                 }}
               >
                 {TrackerState?.entry?.attributes?.description}
@@ -649,9 +670,15 @@ const MyTracker = (props) => {
                 }}
               >
                 <View style={styles.percantageView}>
-                  <Text style={styles.percantageText}>35.2%</Text>
+                  <Text style={styles.percantageText}>
+                    {Math.abs(TrackerState?.totalPercentage)} %
+                  </Text>
                   <Image
-                    source={AppImages.upArrow}
+                    source={
+                      Math.sign(TrackerState?.totalPercentage) == -1
+                        ? AppImages.downArrow
+                        : AppImages.upArrow
+                    }
                     resizeMode="contain"
                     style={styles.upArrowImage}
                   />
@@ -675,7 +702,7 @@ const MyTracker = (props) => {
             <TouchableOpacity
               activeOpacity={0.8}
               onPress={() => {
-                setViewType(0), props.navigation.navigate("CreateJournalEntry");
+                createJournalentry();
               }}
             >
               <Image source={AppImages.edit} style={styles.optionsImage} />

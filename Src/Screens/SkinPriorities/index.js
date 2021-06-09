@@ -9,6 +9,8 @@ import {
   TouchableOpacity,
   TouchableHighlight,
 } from "react-native";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { FullButton } from "../../Components/Button";
 import { IconInput } from "../../Components/Input/Input";
 import Methods from "../../Support/Methods";
@@ -22,9 +24,17 @@ import {
   responsiveWidth,
 } from "../../Theme/ResponsiveDimensions";
 import styles from "./styles";
+import { updateQuestionIdAction } from "../../Redux/Actions/AuthActions";
+import Loader from "../../Components/Loader";
 
 const SkinPriorities = ({ navigation }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const dispatch = useDispatch();
+  const AuthReducerState = useSelector((state) => state.AuthReducer);
+  const updateQuestionId = () => {
+    dispatch(updateQuestionIdAction(selectedIndex, navigation));
+  };
+
   return (
     <View style={{ backgroundColor: AppColors.white, flex: 1 }}>
       <TouchableHighlight
@@ -96,7 +106,7 @@ const SkinPriorities = ({ navigation }) => {
             <FullButton
               title={AppConstants.continue}
               onPress={() => {
-                Methods.navigate(navigation, "Tabs");
+                updateQuestionId();
               }}
             />
           </View>

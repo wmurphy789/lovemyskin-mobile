@@ -16,3 +16,11 @@ export const signupAction = (info, navigation) => {
   };
   return action;
 };
+export const updateQuestionIdAction = (info, navigation) => {
+  const action = {
+    type: types.API_UPDATE_QUESTION_ID_LOAD,
+    payload: info,
+    navigation,
+  };
+  return action;
+};

@@ -19,6 +19,7 @@
     "expo-app-loading": "^1.0.3",
     "expo-asset": "^8.3.2",
     "expo-font": "^9.1.0",
+    "expo-image-picker": "^10.1.4",
     "expo-status-bar": "^1.0.4",
     "formik": "^2.2.9",
     "jwt-decode": "^3.1.2",

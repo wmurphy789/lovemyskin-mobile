@@ -1,4 +1,4 @@
-import APIKit from "./ApiKit";
+import { APIKit, APIKit_Autodrum } from "./ApiKit";
 import { Platform } from "react-native";
 import { showmessage } from "../../Support/Validations";
 // let internetStatus = null;
@@ -11,7 +11,6 @@ const StatusCodes = {
 
 const Method = {
   POST(url, body) {
-    console.log("post url", url);
     return APIKit.post(url, body, {
       headers: {
         "Access-Control-Allow-Origin": "*",
@@ -20,16 +19,20 @@ const Method = {
       },
     })
       .then(async (data) => {
-        console.log("data->>>>>", data);
         if (data) {
-          if (data.status === 201 || data.status === 200) {
+          if (
+            data.status === 201 ||
+            data.status === 200 ||
+            data.status === 204
+          ) {
             return {
               status: StatusCodes.Success,
               result: data.data,
             };
           } else {
+            showmessage("Something went wrong.");
             return {
-              result: { message: data.data.message },
+              result: { message: "Something went wrong." },
               status: StatusCodes.Failure,
             };
           }
@@ -49,8 +52,9 @@ const Method = {
           };
         } else {
           if (error.response.status == 400) {
+            showmessage("Something went wrong.");
             return {
-              result: { msg: error.response.data.message },
+              result: { msg: error.response.data.errors[0] },
               status: StatusCodes.Failure,
             };
           } else if (
@@ -59,7 +63,7 @@ const Method = {
           ) {
             showmessage("Unauthenticated");
             return {
-              result: { msg: error.response.data.message },
+              result: { msg: "Unauthenticated" },
               status: StatusCodes.Unauthenticate,
             };
           } else if (error.response.status == 404) {
@@ -69,9 +73,87 @@ const Method = {
               status: StatusCodes.Unauthenticate,
             };
           } else if (error.response.status == 422) {
-            showmessage(error.response.data.message);
+            showmessage(error.response.data.errors[0]);
+            return {
+              result: { msg: error.response.data.errors[0] },
+              status: StatusCodes.Unauthenticate,
+            };
+          } else {
+            showmessage("Something went wrong.");
+            return {
+              result: { msg: "Something went wrong." },
+              status: StatusCodes.Failure,
+            };
+          }
+        }
+      });
+  },
+  POST_FORMDATA(url, body) {
+    return APIKit.post(url, body, {
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Content-Type": "multipart/form-data",
+        accept: "application/json",
+      },
+    })
+      .then(async (data) => {
+        if (data) {
+          if (
+            data.status === 201 ||
+            data.status === 200 ||
+            data.status === 204
+          ) {
+            return {
+              status: StatusCodes.Success,
+              result: data.data,
+            };
+          } else {
+            showmessage("Something went wrong.");
+            return {
+              result: { message: "Something went wrong." },
+              status: StatusCodes.Failure,
+            };
+          }
+        } else {
+          showmessage("Something went wrong.");
+          return {
+            result: { message: "Something went wrong." },
+            status: StatusCodes.Failure,
+          };
+        }
+      })
+      .catch(async (error) => {
+        if (error.response == undefined) {
+          return {
+            result: { msg: "Server Timed Out" },
+            status: StatusCodes.Failure,
+          };
+        } else {
+          if (error.response.status == 400) {
+            showmessage("Something went wrong.");
+            return {
+              result: { msg: error.response.data.errors[0] },
+              status: StatusCodes.Failure,
+            };
+          } else if (
+            error.response.status == 403 ||
+            error.response.status == 401
+          ) {
+            showmessage("Unauthenticated");
+            return {
+              result: { msg: "Unauthenticated" },
+              status: StatusCodes.Unauthenticate,
+            };
+          } else if (error.response.status == 404) {
+            showmessage("Invalid credentials");
             return {
               result: { msg: "Invalid credentials" },
+              status: StatusCodes.Unauthenticate,
+            };
+          } else if (error.response.status == 422) {
+            showmessage(error.response.data.errors[0]);
+            return {
+              result: { msg: error.response.data.errors[0] },
               status: StatusCodes.Unauthenticate,
             };
           } else {
@@ -142,21 +224,25 @@ const Method = {
     // console.log("post url", url);
     return APIKit.put(url, body, {
       headers: {
-        "Content-Type": "multipart/form-data",
+        "content-Type": "application/json",
         Accept: "application/json",
       },
     })
       .then(async (data) => {
-        console.log("data----->", data);
         if (data) {
-          if (data.status === 201 || data.status === 200) {
+          if (
+            data.status === 201 ||
+            data.status === 200 ||
+            data.status === 204
+          ) {
             return {
               status: StatusCodes.Success,
               result: data.data,
             };
           } else {
+            showmessage("Something went wrong.");
             return {
-              result: { message: data.data.message },
+              result: { message: "Something went wrong." },
               status: StatusCodes.Failure,
             };
           }
@@ -176,8 +262,9 @@ const Method = {
           };
         } else {
           if (error.response.status == 400) {
+            showmessage("Something went wrong.");
             return {
-              result: { msg: error.response.data.message },
+              result: { msg: error.response.data.errors[0] },
               status: StatusCodes.Failure,
             };
           } else if (
@@ -186,19 +273,19 @@ const Method = {
           ) {
             showmessage("Unauthenticated");
             return {
-              result: { msg: error.response.data.message },
+              result: { msg: "Unauthenticated" },
               status: StatusCodes.Unauthenticate,
             };
           } else if (error.response.status == 404) {
-            showmessage("Invalid credentials");
+            showmessage("Something went wrong.");
             return {
-              result: { msg: "Invalid credentials" },
+              result: { msg: "Something went wrong." },
               status: StatusCodes.Unauthenticate,
             };
           } else if (error.response.status == 422) {
-            showmessage(error.response.data.message);
+            showmessage(error.response.data.errors[0]);
             return {
-              result: { msg: "Invalid credentials" },
+              result: { msg: error.response.data.errors[0] },
               status: StatusCodes.Unauthenticate,
             };
           } else {
@@ -211,62 +298,9 @@ const Method = {
         }
       });
   },
-  PATCH(url, body) {
+  PUT_FORMDATA(url, body) {
     // console.log("post url", url);
-    return APIKit.patch(url, body, {
-      headers: {
-        Accept: "application/json",
-        "content-Type": "application/json",
-      },
-    })
-      .then((data) => {
-        if (data.status == 200 || 204) {
-          return {
-            status: StatusCodes.Success,
-            result: data.data,
-          };
-        } else {
-          return {
-            result: { msg: "Something went wrong." },
-            status: StatusCodes.Failure,
-          };
-        }
-      })
-      .catch((error) => {
-        // console.log("GET error:  ", error, "GET error:  &&", error.response);
-
-        if (error.response == undefined) {
-          return {
-            result: { msg: "Server Timed Out" },
-            status: StatusCodes.Failure,
-          };
-        } else {
-          if (error.response.status == 400) {
-            return {
-              result: { msg: error.response.data.message },
-              status: StatusCodes.Failure,
-            };
-          } else if (
-            error.response.status == 403 ||
-            error.response.status == 401 ||
-            error.response.status == 404
-          ) {
-            return {
-              result: { msg: error.response.data.message },
-              status: StatusCodes.Unauthenticate,
-            };
-          } else {
-            return {
-              result: { msg: "Something went wrong." },
-              status: StatusCodes.Failure,
-            };
-          }
-        }
-      });
-  },
-  DELETE(url, body) {
-    // console.log("post url", url);
-    return APIKit.delete(url, {
+    return APIKit.put(url, body, {
       headers: {
         "Content-Type": "multipart/form-data",
         Accept: "application/json",
@@ -284,8 +318,9 @@ const Method = {
               result: data.data,
             };
           } else {
+            showmessage("Something went wrong.");
             return {
-              result: { message: data.data.message },
+              result: { message: "Something went wrong." },
               status: StatusCodes.Failure,
             };
           }
@@ -298,7 +333,6 @@ const Method = {
         }
       })
       .catch(async (error) => {
-        console.log("in error", error, error.response);
         if (error.response == undefined) {
           return {
             result: { msg: "Server Timed Out" },
@@ -306,8 +340,9 @@ const Method = {
           };
         } else {
           if (error.response.status == 400) {
+            showmessage("Something went wrong.");
             return {
-              result: { msg: error.response.data.message },
+              result: { msg: error.response.data.errors[0] },
               status: StatusCodes.Failure,
             };
           } else if (
@@ -316,7 +351,7 @@ const Method = {
           ) {
             showmessage("Unauthenticated");
             return {
-              result: { msg: error.response.data.message },
+              result: { msg: "Unauthenticated" },
               status: StatusCodes.Unauthenticate,
             };
           } else if (error.response.status == 404) {
@@ -326,10 +361,295 @@ const Method = {
               status: StatusCodes.Unauthenticate,
             };
           } else if (error.response.status == 422) {
-            showmessage(error.response.data.message);
+            showmessage(error.response.data.errors[0]);
+            return {
+              result: { msg: error.response.data.errors[0] },
+              status: StatusCodes.Unauthenticate,
+            };
+          } else {
+            showmessage("Something went wrong.");
+            return {
+              result: { msg: "Something went wrong." },
+              status: StatusCodes.Failure,
+            };
+          }
+        }
+      });
+  },
+  PATCH(url, body) {
+    // console.log("post url", url);
+    return APIKit.patch(url, body, {
+      headers: {
+        "content-Type": "application/json",
+        accept: "application/json",
+      },
+    })
+      .then(async (data) => {
+        if (data) {
+          if (
+            data.status === 201 ||
+            data.status === 200 ||
+            data.status === 204
+          ) {
+            return {
+              status: StatusCodes.Success,
+              result: data.data,
+            };
+          } else {
+            showmessage("Something went wrong.");
+            return {
+              result: { message: "Something went wrong." },
+              status: StatusCodes.Failure,
+            };
+          }
+        } else {
+          showmessage("Something went wrong.");
+          return {
+            result: { message: "Something went wrong." },
+            status: StatusCodes.Failure,
+          };
+        }
+      })
+      .catch(async (error) => {
+        if (error.response == undefined) {
+          return {
+            result: { msg: "Server Timed Out" },
+            status: StatusCodes.Failure,
+          };
+        } else {
+          if (error.response.status == 400) {
+            showmessage("Something went wrong.");
+            return {
+              result: { msg: error.response.data.errors[0] },
+              status: StatusCodes.Failure,
+            };
+          } else if (
+            error.response.status == 403 ||
+            error.response.status == 401
+          ) {
+            showmessage("Unauthenticated");
+            return {
+              result: { msg: "Unauthenticated" },
+              status: StatusCodes.Unauthenticate,
+            };
+          } else if (error.response.status == 404) {
+            showmessage("Something went wrong.");
             return {
               result: { msg: "Something went wrong." },
               status: StatusCodes.Unauthenticate,
+            };
+          } else if (error.response.status == 422) {
+            showmessage(error.response.data.errors[0]);
+            return {
+              result: { msg: error.response.data.errors[0] },
+              status: StatusCodes.Unauthenticate,
+            };
+          } else {
+            showmessage("Something went wrong.");
+            return {
+              result: { msg: "Something went wrong." },
+              status: StatusCodes.Failure,
+            };
+          }
+        }
+      });
+  },
+  PATCH_FORMDATA(url, body) {
+    // console.log("post url", url);
+    return APIKit.patch(url, body, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        accept: "application/json",
+      },
+    })
+      .then(async (data) => {
+        if (data) {
+          if (
+            data.status === 201 ||
+            data.status === 200 ||
+            data.status === 204
+          ) {
+            return {
+              status: StatusCodes.Success,
+              result: data.data,
+            };
+          } else {
+            showmessage("Something went wrong.");
+            return {
+              result: { message: "Something went wrong." },
+              status: StatusCodes.Failure,
+            };
+          }
+        } else {
+          showmessage("Something went wrong.");
+          return {
+            result: { message: "Something went wrong." },
+            status: StatusCodes.Failure,
+          };
+        }
+      })
+      .catch(async (error) => {
+        if (error.response == undefined) {
+          return {
+            result: { msg: "Server Timed Out" },
+            status: StatusCodes.Failure,
+          };
+        } else {
+          if (error.response.status == 400) {
+            showmessage("Something went wrong.");
+            return {
+              result: { msg: error.response.data.errors[0] },
+              status: StatusCodes.Failure,
+            };
+          } else if (
+            error.response.status == 403 ||
+            error.response.status == 401
+          ) {
+            showmessage("Unauthenticated");
+            return {
+              result: { msg: "Unauthenticated" },
+              status: StatusCodes.Unauthenticate,
+            };
+          } else if (error.response.status == 404) {
+            showmessage("Something went wrong.");
+            return {
+              result: { msg: "Something went wrong." },
+              status: StatusCodes.Unauthenticate,
+            };
+          } else if (error.response.status == 422) {
+            showmessage(error.response.data.errors[0]);
+            return {
+              result: { msg: error.response.data.errors[0] },
+              status: StatusCodes.Unauthenticate,
+            };
+          } else {
+            showmessage("Something went wrong.");
+            return {
+              result: { msg: "Something went wrong." },
+              status: StatusCodes.Failure,
+            };
+          }
+        }
+      });
+  },
+  DELETE(url, body) {
+    // console.log("post url", url);
+    return APIKit.delete(url, {
+      // headers: {
+      //   "Content-Type": "multipart/form-data",
+      //   Accept: "application/json",
+      // },
+    })
+      .then(async (data) => {
+        if (data) {
+          if (
+            data.status === 201 ||
+            data.status === 200 ||
+            data.status === 204
+          ) {
+            return {
+              status: StatusCodes.Success,
+              result: data.data,
+            };
+          } else {
+            showmessage("Something went wrong.");
+            return {
+              result: { message: "Something went wrong." },
+              status: StatusCodes.Failure,
+            };
+          }
+        } else {
+          showmessage("Something went wrong.");
+          return {
+            result: { message: "Something went wrong." },
+            status: StatusCodes.Failure,
+          };
+        }
+      })
+      .catch(async (error) => {
+        if (error.response == undefined) {
+          return {
+            result: { msg: "Server Timed Out" },
+            status: StatusCodes.Failure,
+          };
+        } else {
+          if (error.response.status == 400) {
+            showmessage("Something went wrong.");
+            return {
+              result: { msg: error.response.data.errors[0] },
+              status: StatusCodes.Failure,
+            };
+          } else if (
+            error.response.status == 403 ||
+            error.response.status == 401
+          ) {
+            showmessage("Unauthenticated");
+            return {
+              result: { msg: "Unauthenticated" },
+              status: StatusCodes.Unauthenticate,
+            };
+          } else if (error.response.status == 404) {
+            showmessage("Entry Already deleted.");
+            return {
+              result: { msg: "Entry Already deleted." },
+              status: StatusCodes.Unauthenticate,
+            };
+          } else if (error.response.status == 422) {
+            showmessage(error.response.data.errors[0]);
+            return {
+              result: { msg: error.response.data.errors[0] },
+              status: StatusCodes.Unauthenticate,
+            };
+          } else {
+            showmessage("Something went wrong.");
+            return {
+              result: { msg: "Something went wrong." },
+              status: StatusCodes.Failure,
+            };
+          }
+        }
+      });
+  },
+  POST_AUTODROM(url, body) {
+    return APIKit_Autodrum.post(url, body, {})
+      .then(async (data) => {
+        if (data) {
+          if (
+            data.status === 201 ||
+            data.status === 200 ||
+            data.status == 204
+          ) {
+            return {
+              status: StatusCodes.Success,
+              result: data.data,
+            };
+          } else {
+            showmessage("Something went wrong.");
+            return {
+              result: { message: "Something went wrong." },
+              status: StatusCodes.Failure,
+            };
+          }
+        } else {
+          showmessage("Something went wrong.");
+          return {
+            result: { message: "Something went wrong." },
+            status: StatusCodes.Failure,
+          };
+        }
+      })
+      .catch(async (error) => {
+        if (error.response == undefined) {
+          return {
+            result: { msg: "Server Timed Out" },
+            status: StatusCodes.Failure,
+          };
+        } else {
+          if (error.response.status == 417) {
+            showmessage("Image does not include skin.");
+            return {
+              result: { msg: "Image does not include skin." },
+              status: StatusCodes.Failure,
             };
           } else {
             showmessage("Something went wrong.");

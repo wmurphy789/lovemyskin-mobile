@@ -13,17 +13,38 @@ import BottomTabNavigator from "./BottomTabNavigator";
 import CreateAffirmation from "../Screens/CreateAffirmation";
 import ViewAffirmation from "../Screens/ViewAffirmation";
 import CreateJournalEntry from "../Screens/CreateJournalEntry";
+import { DataManager } from "../Support/Datamanager";
+import { useState } from "react";
+import { useEffect } from "react";
+import Loader from "../Components/Loader";
+import { navigationRef } from "../Support/Methods";
 
 const Stack = createStackNavigator();
 const Setup = () => {
-  return (
-    <NavigationContainer>
+  const [Intial, setIntial] = useState(null);
+  useEffect(() => {
+    authenticateUser();
+  }, []);
+  const authenticateUser = async () => {
+    DataManager.getUserId().then((token) => {
+      console.log("token---", token);
+      if (token) {
+        setIntial("Tabs");
+      } else {
+        setIntial("Auth");
+      }
+    });
+  };
+
+  return Intial ? (
+    <NavigationContainer ref={navigationRef}>
       <Stack.Navigator
         screenOptions={{
           gestureEnabled: false,
           animationEnabled: true,
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
         }}
+        initialRouteName={Intial}
       >
         <Stack.Screen
           name="Auth"
@@ -80,6 +101,8 @@ const Setup = () => {
         />
       </Stack.Navigator>
     </NavigationContainer>
+  ) : (
+    <Loader load={!Intial ? true : false} />
   );
 };
 

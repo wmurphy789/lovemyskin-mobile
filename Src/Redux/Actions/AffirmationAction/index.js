@@ -25,3 +25,20 @@ export const createAffirmationAction = (info, navigation) => {
   };
   return action;
 };
+
+export const deleteAffirmationAction = (info, navigation) => {
+  const action = {
+    type: types.API_DELETE_AFFIRMATION_LOAD,
+    payload: info,
+    navigation,
+  };
+  return action;
+};
+export const updateAffirmationAction = (info, navigation) => {
+  const action = {
+    type: types.API_UPDATE_AFFIRMATION_LOAD,
+    payload: info,
+    navigation,
+  };
+  return action;
+};

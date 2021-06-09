@@ -8,36 +8,36 @@ import AppConstants from "../../Theme/AppConstants";
 import { AppImages } from "../../Theme/AppImages";
 import styles from "./styles";
 import Methods from "../../Support/Methods";
-import { showmessage } from "../../Support/Validations";
+import {
+  formikValidationChangePassword,
+  showmessage,
+} from "../../Support/Validations";
 import { useDispatch } from "react-redux";
 import { changePasswordAction } from "../../Redux/Actions/ProfileActions";
 const ChangePassword = ({ navigation }) => {
-
-  const dispatch = useDispatch()
-  const [oldPassword, setOldPassword] = useState('')
-  const [newPassword, setNewPassword] = useState('')
-  const [confirmNewPassword, setConfirmNewPassword] = useState('')
+  const dispatch = useDispatch();
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmNewPassword, setConfirmNewPassword] = useState("");
 
   function handlePasswordChange() {
-
     let data = {
-      oldPassword,
-      newPassword,
-      confirmNewPassword,
-      navigation
+      oldPassword: oldPassword?.trim(),
+      newPassword: newPassword?.trim(),
+      confirmNewPassword: confirmNewPassword?.trim(),
+      navigation,
+    };
+    // const passwordRegex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+    Keyboard.dismiss(); // not working because keyboard listener added
+    const validate = formikValidationChangePassword(
+      oldPassword?.trim(),
+      newPassword?.trim(),
+      confirmNewPassword?.trim()
+    );
+    if (validate) {
+      // dispatch(updatetProfileAction(data));
+      dispatch(changePasswordAction(data));
     }
-    const passwordRegex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
-    Keyboard.dismiss()      // not working because keyboard listener added
-    oldPassword.trim() != '' && newPassword.trim() != '' && confirmNewPassword.trim() != ''
-      ? oldPassword.match(passwordRegex)
-        ? newPassword.match(passwordRegex)
-          ? newPassword == confirmNewPassword
-            ? dispatch(changePasswordAction(data))
-            : showmessage("Password didn't match.")
-          : showmessage("Please enter password in correct format(i.e.Min 8 chars,1 number,1 capitalamd 1 special char")
-        : showmessage("Old password is invaild.")
-      : showmessage("Please fill all the fields.")
-    // Methods.navigate(navigation, "Auth")
   }
   return (
     <View style={{ flex: 1, backgroundColor: AppColors.white }}>
@@ -56,19 +56,25 @@ const ChangePassword = ({ navigation }) => {
           <SimpleInput
             placeholder={AppConstants.enterOldPassword}
             secureInput={true}
-            onChangeText={(text) => { setOldPassword(text) }}
+            onChangeText={(text) => {
+              setOldPassword(text);
+            }}
             customStyles={styles.input}
           />
           <SimpleInput
             placeholder={AppConstants.enterNewPassword}
             secureInput={true}
-            onChangeText={(text) => { setNewPassword(text) }}
+            onChangeText={(text) => {
+              setNewPassword(text);
+            }}
             customStyles={styles.input}
           />
           <SimpleInput
             placeholder={AppConstants.confirmNewPassword}
             secureInput={true}
-            onChangeText={(text) => { setConfirmNewPassword(text) }}
+            onChangeText={(text) => {
+              setConfirmNewPassword(text);
+            }}
             customStyles={styles.input}
           />
           <FullButton

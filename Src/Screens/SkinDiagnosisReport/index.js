@@ -7,7 +7,9 @@ import {
   Image,
   TouchableOpacity,
   FlatList,
+  Linking,
 } from "react-native";
+import { useSelector } from "react-redux";
 import { FullButton } from "../../Components/Button";
 import { CurvedHeader } from "../../Components/Header";
 import { SimpleInput } from "../../Components/Input/Input";
@@ -20,10 +22,21 @@ import {
 } from "../../Theme/ResponsiveDimensions";
 import styles from "./styles";
 
-const demoImage =
-  "https://img.webmd.com/dtmcms/live/webmd/consumer_assets/site_images/articles/health_tools/eye_color_and_shape_slideshow/493ss_thinkstock_rf_blue_eye.jpg?resize=375px:250px&output-quality=50";
-
 const SkinDiagnosisReport = ({ navigation }) => {
+  const SkinDiagonseState = useSelector(
+    (state) => state.submitFeedbackAutodrumReducer
+  );
+
+  const openReadMore = async (url) => {
+    const supported = await Linking.canOpenURL(url);
+
+    if (supported) {
+      await Linking.openURL(url);
+    } else {
+      console.log("cannot open this url.");
+    }
+  };
+
   const _renderItem = ({ item, index }) => (
     <View style={styles.listView}>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -32,30 +45,31 @@ const SkinDiagnosisReport = ({ navigation }) => {
           source={AppImages.greenPillIcon}
           style={styles.pillIcon}
         />
-        <Text style={styles.answerText}>{item}</Text>
+        <Text style={styles.answerText}>{item?.name}</Text>
       </View>
-      <TouchableOpacity style={styles.readMoreButton}>
+      <TouchableOpacity
+        style={styles.readMoreButton}
+        onPress={() => openReadMore(item?.readMoreUrl)}
+      >
         <Text style={styles.readMoreText}>{AppConstants.readMore}</Text>
       </TouchableOpacity>
     </View>
   );
   const mainView = () => (
     <View style={styles.container}>
-      {/* <CurvedHeader
-                title={AppConstants.skinDiagnosis}
-                leftIcon={AppImages.backIcon}
-                leftPress={() => { alert("Go back") }}
-            /> */}
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollViewContainer}
       >
-        <Image source={{ uri: demoImage }} style={styles.imageContainer} />
+        <Image
+          source={{ uri: SkinDiagonseState?.image }}
+          style={styles.imageContainer}
+        />
         <View style={styles.topAnswersrankedView}>
           <Text style={styles.infoText}>{AppConstants.topAnswersranked}</Text>
         </View>
         <FlatList
-          data={AppConstants.dummyAnswers}
+          data={SkinDiagonseState?.predictions}
           keyExtractor={(item, index) => index.toString()}
           renderItem={_renderItem}
         />
@@ -63,9 +77,6 @@ const SkinDiagnosisReport = ({ navigation }) => {
     </View>
   );
   return (
-    // <ScrollView bounces={false} keyboardShouldPersistTaps='always'>
-    //     {mainView()}
-    // </ScrollView>
     <View style={styles.container}>
       <CurvedHeader
         title={AppConstants.skinDiagnosis}

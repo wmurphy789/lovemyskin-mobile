@@ -45,7 +45,6 @@ export const SimpleInput = ({
   type,
   image,
   editable,
-  maxLength
 }) => {
   const inputRef = useRef(null);
   useEffect(() => {
@@ -58,12 +57,11 @@ export const SimpleInput = ({
       <TextInput
         secureTextEntry={secureInput}
         value={text}
-        editable={editable}
         ref={inputRef}
+        editable={editable}
         defaultValue={defaultValue}
         onChangeText={onChangeText}
         placeholder={placeholder}
-        maxLength={40}
         keyboardType={type ? "email-address" : "default"}
         style={[styles.simpleInputField, customFontStyles]}
       />

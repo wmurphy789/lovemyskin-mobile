@@ -2,7 +2,12 @@ import * as Actiontypes from '../../ActionTypes'
 
 const INITIAL_STATE = {
     isLoading: false,
-    wellBeingCategories: []
+    wellBeingCategories: [],
+    wellbeingArticles: [],
+    wellbeingVideos: [],
+    wellbeingPodcasts: [],
+    wellbeingStories: [],
+
 }
 
 export const WellbeingReducer = (state = INITIAL_STATE, action) => {
@@ -17,7 +22,7 @@ export const WellbeingReducer = (state = INITIAL_STATE, action) => {
         case Actiontypes.WELLBEING_CATEGORIES_SUCESS: {                                               //  GET PROFILE DETAILS SUCESS
             return {
                 ...state,
-                isLoading: false,
+                isLoading: true,
                 wellBeingCategories: action.Result.data
             }
         }
@@ -34,7 +39,7 @@ export const WellbeingReducer = (state = INITIAL_STATE, action) => {
             }
         }
 
-         //************************************************>> GET WELLBEING CATEGORIES POSTS CASES <<**************************************************/
+        //************************************************>> GET WELLBEING CATEGORIES POSTS CASES <<**************************************************/
         case Actiontypes.WELLBEING_CATEGORIES_POSTS_LOAD: {                                               //  GET PROFILE DETAILS SUCESS
             return {
                 ...state,

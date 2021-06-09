@@ -27,13 +27,15 @@ export default StyleSheet.create({
     alignSelf: "center",
     borderRadius: 10,
     // marginVertical: responsiveHeight(4),
-    marginTop: 30,
+    // marginTop: 30,
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#F0F9F7",
   },
   cameraButton: {
     alignItems: "center",
+    justifyContent: "center",
+    marginTop: 30,
   },
   cameraText: {
     marginTop: responsiveHeight(1),

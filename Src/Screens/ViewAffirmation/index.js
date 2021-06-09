@@ -7,11 +7,18 @@ import {
   Image,
   FlatList,
   TouchableHighlight,
+  ScrollView,
+  Share,
+  Alert,
 } from "react-native";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { getAffirmationByIdAction } from "../../Redux/Actions/AffirmationAction";
+import {
+  deleteAffirmationAction,
+  getAffirmationByIdAction,
+} from "../../Redux/Actions/AffirmationAction";
 import Methods from "../../Support/Methods";
+import { AppColors } from "../../Theme/AppColors";
 import AppConstants from "../../Theme/AppConstants";
 import { AppImages } from "../../Theme/AppImages";
 import { responsiveHeight } from "../../Theme/ResponsiveDimensions";
@@ -27,7 +34,10 @@ const ViewAffirmation = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const AffirmationState = useSelector((state) => state.AffirmationReducer);
   useEffect(() => {
-    dispatch(getAffirmationByIdAction({ id }, navigation));
+    const unsubscribe = navigation.addListener("focus", () => {
+      dispatch(getAffirmationByIdAction({ id }, navigation));
+    });
+    return unsubscribe;
   }, []);
   const DummyMusicBar = () => (
     // dummy UI of Music SeekBar
@@ -61,6 +71,29 @@ const ViewAffirmation = ({ navigation, route }) => {
   function goBack() {
     Methods.goBack(navigation);
   }
+  const onShare = async (item) => {
+    try {
+      const result = await Share.share({
+        message: `${item?.attributes?.category_name}
+Description: ${item?.attributes?.description}`,
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+  const deleteAffirmation = (item) => {
+    dispatch(deleteAffirmationAction({ id: item.id, itemId: id }, navigation));
+  };
+
   const Header = () => (
     <View style={styles.headerContainer}>
       <Image
@@ -137,41 +170,62 @@ const ViewAffirmation = ({ navigation, route }) => {
     </View>
   );
   //render my affirmations    #note : created seprately because myaffirmations may containe music
-  const _renderMyAffirmations = () => (
+  const _renderMyAffirmations = ({ item, index }) => (
     <View
       style={[
         styles.ItemView,
         {
           backgroundColor: screenColor,
-          marginBottom: 12,
+          flex: 1,
+          marginBottom:
+            AffirmationState.dataDetails.length - 1 == index ? 0 : 12,
         },
       ]}
     >
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-        <Text style={styles.itemTitle}>
-          {AffirmationState?.dataDetails?.attributes?.category_name}
-        </Text>
+        <Text style={styles.itemTitle}>{item?.attributes?.category_name}</Text>
         <View
           style={{
             display:
-              AffirmationState?.dataDetails?.attributes?.category_name ==
-              "My Affirmations"
+              item?.attributes?.category_name == "My Affirmations"
                 ? "flex"
                 : "none",
           }}
         >
-          <CustomIconButton icon={AppImages.editBlackIcon} />
+          <CustomIconButton
+            icon={AppImages.editBlackIcon}
+            onPress={() =>
+              navigation.navigate("CreateAffirmation", { item: item })
+            }
+          />
           <CustomIconButton
             icon={AppImages.deleteBlackIcon}
             customStyles={styles.customStylesDeleteButton}
+            onPress={() =>
+              Alert.alert(
+                "",
+                "Are you sure you want to delete this affirmation.",
+                [
+                  {
+                    text: "No",
+                    onPress: () => console.log("pressed no"),
+                    style: "cancel",
+                  },
+                  {
+                    text: "Yes",
+                    onPress: () => deleteAffirmation(item),
+                  },
+                ]
+              )
+            }
           />
         </View>
       </View>
       <View>
-        <Text style={styles.itemtext}>
-          {AffirmationState?.dataDetails?.attributes?.description}
-        </Text>
-        {AffirmationState?.dataDetails?.attributes?.song_id && (
+        <View style={styles.itemtextView}>
+          <Text style={styles.itemtext}>{item?.attributes?.description}</Text>
+        </View>
+        {item?.attributes?.song_id && (
           <View>
             <DummyMusicBar />
             <View style={styles.playerTimerView}>
@@ -191,9 +245,9 @@ const ViewAffirmation = ({ navigation, route }) => {
       </View>
       <CustomIconButton
         icon={AppImages.shareBlackIcon}
-        // onPress={() => {
-        //   alert("Share!");
-        // }}
+        onPress={() => {
+          onShare(item);
+        }}
       />
     </View>
   );
@@ -213,27 +267,40 @@ const ViewAffirmation = ({ navigation, route }) => {
     //   );
     // } else {
     return (
-      // <FlatList
-      //   data={AffirmationState.dataDetails}
-      //   bounces={false}
-      //   showsVerticalScrollIndicator={false}
-      //   stickyHeaderIndices={[0]}
-      //   // ListHeaderComponent={() => <Header />}
-      //   keyExtractor={(item, index) => index.toString()}
-      //   renderItem={_renderAffirmations}
-      // />
-      <>
-        <Header />
-        {_renderMyAffirmations()}
-        {/* {_renderMyAffirmations()} */}
-      </>
+      <FlatList
+        data={AffirmationState.dataDetails}
+        bounces={false}
+        showsVerticalScrollIndicator={false}
+        stickyHeaderIndices={[0]}
+        ListHeaderComponent={() => <Header />}
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={_renderMyAffirmations}
+      />
+      // <>
+      //   <Header />
+      //   {_renderMyAffirmations()}
+      //   {/* {_renderMyAffirmations()} */}
+      // </>
     );
     // }
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor:
+          AffirmationState.dataDetails.length == 1
+            ? screenColor
+            : AppColors.white,
+      }}
+    >
+      {/* <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ backgroundColor: screenColor }}
+      > */}
       {mainView()}
+      {/* </ScrollView> */}
       {/* <Header /> */}
     </View>
   );

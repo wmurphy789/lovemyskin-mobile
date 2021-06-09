@@ -47,6 +47,6 @@ export const DataManager = {
   },
 
   async clearLocalStorage() {
-    await AsyncStorage.multiRemove(["accessToken", "userId", "deviceToken"]);
+    await AsyncStorage.clear();
   },
 };

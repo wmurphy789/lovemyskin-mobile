@@ -4,7 +4,6 @@ import { AppColors } from "../../Theme/AppColors";
 import AppConstants from "../../Theme/AppConstants";
 import { AppImages } from "../../Theme/AppImages";
 import styles from "./styles";
-import { responsiveHeight, responsiveWidth, } from "../../Theme/ResponsiveDimensions";
 import WellbeingTabs from "../../Components/WellbeingTopTab";
 import { useDispatch, useSelector } from "react-redux";
 import { getWellbeingCategories } from "../../Redux/Actions/WellbeingActions";
@@ -163,16 +162,26 @@ let TabContent = null                                       // initialized TabCo
 const SkinWellbeing = ({ navigation }) => {
   const [expandedComments, setExpandedComments] = useState([])
   const [KeyBoardVisible, setKeyBoardVisible] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState(null)
   const dispatch = useDispatch()
   const state = useSelector(state => state.WellbeingReducer)
+
   const isLoading = state.isLoading
-  console.log(state.wellBeingCategories, "CATE");
-  useEffect(() => {
+
+  const articleFocusEvent = () => { console.log(state.wellBeingCategories); }
+  const videosFocusEvent = () => { alert('videos') }
+  const podcastsFocusEvent = () => { alert('podcast') }
+  const storiesFocusEvent = () => { alert('stories') }
+  useEffect(() => {                                       // navigation focus listener
     const unsubscribe = navigation.addListener('focus', () => {
       dispatch(getWellbeingCategories())
     });
     return unsubscribe;
-
+  }, [])
+  useEffect(() => {
+    console.log(state?.WellbeingCategories,'weeewew');
+    // setSelectedCategory(state?.WellbeingCategories)
+    // console.log(selectedCategory, "SELECTED");
   }, [])
   useEffect(() => {                                       // keyboard handeler
     Keyboard.addListener("keyboardDidShow", () => setKeyBoardVisible(true));
@@ -189,7 +198,6 @@ const SkinWellbeing = ({ navigation }) => {
     setExpandedComments(TEMP)
   }
   //----------------------------------------------------
-  // { console.log(expandedComments); }
 
   TabContent = ({ data }) => (
     <FlatList
@@ -268,15 +276,19 @@ const SkinWellbeing = ({ navigation }) => {
         : (<View style={styles.container}>
           <HeaderComponent />
           {!KeyBoardVisible && <WellbeingCategories data={state.wellBeingCategories} />}
-          <View style={[styles.tabsContainer,]}>
+          <View style={styles.tabsContainer}>
             <LineHiderComponent />
-            <WellbeingTabs />
+            <WellbeingTabs
+              articleEvent={() => { articleFocusEvent() }}
+              videosEvent={() => { videosFocusEvent() }}
+              podcastsEvent={() => { podcastsFocusEvent() }}
+              storiesEvent={() => { storiesFocusEvent() }}
+            />
           </View>
         </View>)}
     </View>
   );
 };
-
 
 // pages for material top tabnav
 

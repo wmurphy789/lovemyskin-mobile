@@ -18,6 +18,18 @@ export const signupApi = (info) => {
   };
   return ApiMethod.POST("users", body);
 };
+export const updtaeQuestionIdApi = (info) => {
+  let body = {
+    data: {
+      type: "user",
+      attributes: {
+        // Can be 0,1,2
+        question_id: info,
+      },
+    },
+  };
+  return ApiMethod.PATCH("users/answer_question", body);
+};
 export const getAffirmationApi = (info) => {
   return ApiMethod.GET("affirmations", null);
 };
@@ -53,42 +65,67 @@ export const deleteTrackerEntryApi = (info) => {
 };
 export const createTrackerEntryApi = (info) => {
   const body = info;
-  return ApiMethod.POST(`trackers`, body);
+  return ApiMethod.POST_FORMDATA(`trackers`, body);
 };
 export const editTrackerEntryApi = (info) => {
   const body = info.formData;
-  return ApiMethod.PUT(`trackers/${info.id}`, body);
+  return ApiMethod.PUT_FORMDATA(`trackers/${info.id}`, body);
 };
-// commit
+
+export const submitFeedbackAutodrumApi = (info) => {
+  const body = info.formData;
+  return ApiMethod.POST_AUTODROM(
+    `query?model=autoderm_v2_0&language=en&simple_names=false`,
+    body
+  );
+};
+
+export const deleteAffirmationApi = (info) => {
+  return ApiMethod.DELETE(`affirmations/${info.id}`, null);
+};
+export const updateAffirmationApi = (info) => {
+  let body = {
+    data: {
+      type: "affirmation",
+      attributes: {
+        description: info?.description,
+      },
+    },
+  };
+  return ApiMethod.PUT(`affirmations/${info?.id}`, body);
+};
+
 export const getUserProfileApi = (info) => {
   return ApiMethod.GET("users");
 };
 export const updateProfileApi = (info) => {
   let body = {
-    "data": {
-      "type": "user",
-      "attributes": {
-        "first_name": info.fName,
-        "last_name": info.lName,
-        "email": info.userEmail,
-        "username": info.userId
-      }
-    }
-  }
-  return ApiMethod.PATCH("users/7e4d1eeb-0cae-4e4f-9726-c9062294da42", body);
+    data: {
+      type: "user",
+      attributes: {
+        first_name: info?.fName,
+        last_name: info?.lName,
+        // email: info.userEmail,
+        username: info?.userId,
+      },
+    },
+  };
+  return ApiMethod.PATCH(`users/${info?.id}`, body);
+};
+export const updateProfileImageApi = (body) => {
+  return ApiMethod.POST_FORMDATA("users/update_profile_photo", body);
 };
 export const changePasswordApi = (info) => {
-
   let body = {
-    "data": {
-      "type": "user",
-      "attributes": {
-        "current_password": info.oldPassword,
-        "password": info.newPassword,
-        "confirmation_password": info.confirmNewPassword
-      }
-    }
-  }
+    data: {
+      type: "user",
+      attributes: {
+        current_password: info.oldPassword,
+        password: info.newPassword,
+        confirmation_password: info.confirmNewPassword,
+      },
+    },
+  };
   return ApiMethod.PATCH("users/update_password", body);
 };
 
@@ -98,6 +135,14 @@ export const wellbeingCategoriesApi = (info) => {
 
 export const wellbeingCategoriesPostsApi = (info) => {
   //type="article"
-  let url = 'resources/b2f285b9-ae7d-4383-9e5a-3471fdc43712?page[number]=' + info.from + '&page[size]=' + info.to + '&resoure_type=' + info.type
+  let url =
+    "resources/" +
+    info.categoryId +
+    "?page[number]=" +
+    info.from +
+    "&page[size]=" +
+    info.to +
+    "&resoure_type=" +
+    info.type;
   // return ApiMethod.GET("resources");
 };

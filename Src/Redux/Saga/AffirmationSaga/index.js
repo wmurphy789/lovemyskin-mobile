@@ -4,8 +4,10 @@ import { showmessage } from "../../../Support/Validations";
 import * as types from "../../ActionTypes";
 import {
   createAffirmationApi,
+  deleteAffirmationApi,
   getAffirmationApi,
   getAffirmationByIdApi,
+  updateAffirmationApi,
 } from "../../Api";
 
 // get affirmation SAGA
@@ -17,7 +19,7 @@ export function* getAffirmationSaga(action) {
     if (status === 1) {
       yield put({
         type: types.API_GETAFFIRMATION_SUCCESS,
-        data: result.data,
+        data: result,
       });
     } else {
       yield put({ type: types.API_GETAFFIRMATION_ERROR });
@@ -62,5 +64,48 @@ export function* createAffirmationSaga(action) {
     }
   } catch (error) {
     yield put({ type: types.API_CREATE_AFFIRMATION_ERROR });
+  }
+}
+
+//delete affirmation saga
+export function* deleteAffirmationSaga(action) {
+  yield put({ type: types.API_DELETE_AFFIRMATION_START });
+  try {
+    let response = yield call(deleteAffirmationApi, action.payload);
+    let { result, status } = response;
+    if (status === 1) {
+      // yield put({
+      //   type: types.API_GETAFFIRMATION_BY_ID_LOAD,
+      //   payload: action.payload.itemId,
+      //   navigation: action.navigation,
+      // });
+      yield put({
+        type: types.API_DELETE_AFFIRMATION_SUCCESS,
+      });
+      action.navigation.goBack();
+    } else {
+      yield put({ type: types.API_DELETE_AFFIRMATION_ERROR });
+    }
+  } catch (error) {
+    yield put({ type: types.API_DELETE_AFFIRMATION_ERROR });
+  }
+}
+
+//update affirmation saga
+export function* updateAffirmationSaga(action) {
+  yield put({ type: types.API_UPDATE_AFFIRMATION_START });
+  try {
+    let response = yield call(updateAffirmationApi, action.payload);
+    let { result, status } = response;
+    if (status === 1) {
+      yield put({
+        type: types.API_UPDATE_AFFIRMATION_SUCCESS,
+      });
+      action.navigation.goBack();
+    } else {
+      yield put({ type: types.API_UPDATE_AFFIRMATION_ERROR });
+    }
+  } catch (error) {
+    yield put({ type: types.API_UPDATE_AFFIRMATION_ERROR });
   }
 }

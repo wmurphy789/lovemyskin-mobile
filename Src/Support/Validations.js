@@ -43,6 +43,90 @@ const formikValidation = (email, password, confirmPassword) => {
     }
   }
 };
+const formikValidationProfile = (firstName, lastName, userName) => {
+  if (firstName?.length == 0) {
+    showmessage("Please enter First Name.");
+    return false;
+  } else {
+    if (firstName?.length < 2) {
+      showmessage("First Name should be atleast 2 char long.");
+      return false;
+    } else {
+      if (lastName?.length == 0) {
+        showmessage("Please enter Last Name.");
+        return false;
+      } else {
+        if (lastName?.length < 2) {
+          showmessage("Last Name should be atleast 2 char long.");
+          return false;
+        } else {
+          if (userName?.length == 0) {
+            showmessage("Please enter Username.");
+            return false;
+          } else {
+            if (userName?.length < 2) {
+              showmessage("Username should be atleast 2 char long.");
+              return false;
+            } else {
+              return true;
+            }
+          }
+        }
+      }
+    }
+  }
+};
+
+const formikValidationChangePassword = (
+  oldPassword,
+  password,
+  confirmPassword
+) => {
+  if (oldPassword?.length == 0) {
+    showmessage("Please enter old password.");
+    return false;
+  } else {
+    if (passwordRegix.test(oldPassword)) {
+      if (password?.length == 0) {
+        showmessage("Please enter new password.");
+        return false;
+      } else {
+        if (passwordRegix.test(password)) {
+          if (confirmPassword?.length == 0) {
+            showmessage("Please enter confirm password.");
+            return false;
+          } else {
+            if (passwordRegix.test(confirmPassword)) {
+              if (confirmPassword === password) {
+                return true;
+              } else {
+                showmessage(
+                  "New password and confirm password should be same."
+                );
+                return false;
+              }
+            } else {
+              showmessage(
+                "Please enter confirm password in correct format(i.e.Min 8 chars,1 number,1 capitalamd 1 special char"
+              );
+              return false;
+            }
+          }
+        } else {
+          showmessage(
+            "Please enter new password in correct format(i.e.Min 8 chars,1 number,1 capitalamd 1 special char"
+          );
+          return false;
+        }
+      }
+    } else {
+      showmessage(
+        "Please enter old password in correct format(i.e.Min 8 chars,1 number,1 capitalamd 1 special char"
+      );
+      return false;
+    }
+  }
+};
 
 const showmessage = (message) => {
   showMessage({
@@ -62,4 +146,9 @@ const showmessage = (message) => {
   });
 };
 
-export { formikValidation, showmessage };
+export {
+  formikValidation,
+  showmessage,
+  formikValidationProfile,
+  formikValidationChangePassword,
+};

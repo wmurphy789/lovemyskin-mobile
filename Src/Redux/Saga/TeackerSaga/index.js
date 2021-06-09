@@ -39,6 +39,7 @@ export function* getTrackerAllEntrySaga(action) {
         type: types.API_GET_TRACKER_ALL_ENTRY_SUCCESS,
         data: result.data,
         selectedDate: action.payload.selectedDate,
+        meta: result.meta,
       });
     } else {
       yield put({ type: types.API_GET_TRACKER_ALL_ENTRY_ERROR });
@@ -55,32 +56,6 @@ export function* deleteTrackerEntrySaga(action) {
     let response = yield call(deleteTrackerEntryApi, action.payload);
     let { result, status } = response;
     if (status === 1) {
-      console.log("action--->", action.payload);
-      const selectedDateMonth =
-        moment(action.payload.selectedDate).get("M") + 1;
-      const selectedDateYear = moment(action.payload.selectedDate).get("Y");
-      const NoOfdaysInSelectedMonth = moment(
-        action.payload.selectedDate
-      ).daysInMonth();
-      const startDate = moment(
-        selectedDateMonth + "/" + "01/" + selectedDateYear
-      );
-      const endDate = moment(
-        selectedDateMonth +
-          "/" +
-          NoOfdaysInSelectedMonth +
-          "/" +
-          selectedDateYear
-      );
-      yield put({
-        type: types.API_GET_TRACKER_ALL_ENTRY_LOAD,
-        payload: {
-          startDate: moment(startDate).format("YYYY-MM-DD"),
-          endDate: moment(endDate).format("YYYY-MM-DD"),
-          selectedDate: action.payload.selectedDate,
-        },
-        navigation: action.navigation,
-      });
       yield put({
         type: types.API_DELETE_TRACKER_ENTRY_SUCCESS,
       });
@@ -111,7 +86,7 @@ export function* createTrackerEntrySaga(action) {
     yield put({ type: types.API_CREATE_TRACKER_ENTRY_ERROR });
   }
 }
-//create entries saga
+//update entries saga
 export function* editTrackerEntrySaga(action) {
   yield put({ type: types.API_EDIT_TRACKER_ENTRY_START });
   try {

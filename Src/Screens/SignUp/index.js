@@ -1,4 +1,5 @@
 import React from "react";
+import { useEffect } from "react";
 import { useState } from "react";
 import {
   View,
@@ -47,10 +48,27 @@ const SignUp = ({ navigation }) => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const dispatch = useDispatch();
   const authState = useSelector((state) => state.AuthReducer);
+
   const signUp = () => {
-    const validate = formikValidation(email, password, confirmPassword);
+    const validate = formikValidation(
+      email?.trim(),
+      password?.trim(),
+      confirmPassword?.trim()
+    );
     if (validate) {
-      dispatch(signupAction({ email, password, confirmPassword }, navigation));
+      dispatch(
+        signupAction(
+          {
+            email: email?.trim(),
+            password: password?.trim(),
+            confirmPassword: confirmPassword?.trim(),
+          },
+          navigation
+        )
+      );
+      setEmail("");
+      setPassword("");
+      setConfirmPassword("");
     }
   };
   return (
@@ -79,6 +97,7 @@ const SignUp = ({ navigation }) => {
               <IconInput
                 type={true}
                 image={AppImages.greenMailIcon}
+                text={email}
                 placeholder={AppConstants.enterYourEmailAddress}
                 customStyles={styles.input}
                 onChangeText={(text) => setEmail(text)}
@@ -88,6 +107,7 @@ const SignUp = ({ navigation }) => {
               <IconInput
                 image={AppImages.greenLockSimpleIcon}
                 secureInput={true}
+                text={password}
                 placeholder={AppConstants.enterYourPassword}
                 customStyles={styles.input}
                 onChangeText={(text) => setPassword(text)}
@@ -97,6 +117,7 @@ const SignUp = ({ navigation }) => {
               <IconInput
                 image={AppImages.greenLockSimpleIcon}
                 secureInput={true}
+                text={confirmPassword}
                 placeholder={AppConstants.confirmYourPassword}
                 customStyles={styles.input}
                 onChangeText={(text) => setConfirmPassword(text)}

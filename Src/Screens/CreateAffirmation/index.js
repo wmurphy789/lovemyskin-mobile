@@ -17,7 +17,10 @@ import { useDispatch } from "react-redux";
 import { FullButton } from "../../Components/Button";
 import { CurvedHeader } from "../../Components/Header";
 import Loader from "../../Components/Loader";
-import { createAffirmationAction } from "../../Redux/Actions/AffirmationAction";
+import {
+  createAffirmationAction,
+  updateAffirmationAction,
+} from "../../Redux/Actions/AffirmationAction";
 import Methods from "../../Support/Methods";
 import { showmessage } from "../../Support/Validations";
 import AppConstants from "../../Theme/AppConstants";
@@ -28,21 +31,33 @@ import {
 } from "../../Theme/ResponsiveDimensions";
 import styles from "./styles";
 
-const CreateAffirmation = ({ navigation }) => {
-  const [description, setDescription] = useState("");
+const CreateAffirmation = (props) => {
+  const id = props?.route?.params?.item?.id;
+  const [description, setDescription] = useState(
+    props?.route?.params?.item?.attributes?.description || ""
+  );
   const dispatch = useDispatch();
   const AffirmationState = useSelector((state) => state.AffirmationReducer);
   const createAffirmation = () => {
-    if (description.length > 0)
+    const des = description?.trim();
+    if (des.length > 0)
+      dispatch(createAffirmationAction({ description: des }, props.navigation));
+    else {
+      showmessage("Please enter your affirmation");
+    }
+  };
+  const updateAffirmation = () => {
+    const des = description?.trim();
+    if (des.length > 0)
       dispatch(
-        createAffirmationAction({ description: description }, navigation)
+        updateAffirmationAction({ id: id, description: des }, props.navigation)
       );
     else {
       showmessage("Please enter your affirmation");
     }
   };
   function goBack() {
-    Methods.goBack(navigation);
+    Methods.goBack(props.navigation);
   }
   return (
     <View style={styles.container}>
@@ -66,7 +81,7 @@ const CreateAffirmation = ({ navigation }) => {
               style={styles.curveheaderButton}
               underlayColor={"rgba(33, 131, 129, 0.5)"}
               activeOpacity={1}
-              onPress={() => navigation.goBack()}
+              onPress={() => props.navigation.goBack()}
             >
               <Image
                 source={AppImages.backIcon}
@@ -79,7 +94,9 @@ const CreateAffirmation = ({ navigation }) => {
           </Text>
         </ImageBackground>
       </View>
-      <Text style={styles.infoText}>{AppConstants.createYourAffirmation}</Text>
+      <Text style={styles.infoText}>
+        {id ? "Update your affirmation" : AppConstants.createYourAffirmation}
+      </Text>
       {/* <View style={{ height: 10, width: "100%", marginTop: 20, backgroundColor: "#fff" }} /> */}
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -101,6 +118,7 @@ const CreateAffirmation = ({ navigation }) => {
         <TextInput
           multiline
           maxLength={500}
+          defaultValue={description}
           placeholder={AppConstants.typeYourAffirmationHere}
           style={styles.input}
           onChangeText={(text) => setDescription(text)}
@@ -156,9 +174,9 @@ const CreateAffirmation = ({ navigation }) => {
           )}
         />
         <FullButton
-          title={AppConstants.createAffirmation}
+          title={id ? "Update Affirmation" : AppConstants.createAffirmation}
           customStyles={styles.button}
-          onPress={() => createAffirmation()}
+          onPress={() => (id ? updateAffirmation() : createAffirmation())}
         />
       </ScrollView>
       {/* </View> */}
