@@ -18,6 +18,7 @@ import { AppColors } from "../../Theme/AppColors";
 import AppConstants from "../../Theme/AppConstants";
 import { AppFonts } from "../../Theme/AppFonts";
 import { AppImages } from "../../Theme/AppImages";
+import ConfirmPopupModal from "../../Components/ConfirmPopup";
 import {
   responsiveFontSize,
   responsiveHeight,
@@ -53,7 +54,7 @@ const options = [
 
 const ViewProfile = ({ navigation, route }) => {
   const [loadingImage, setLoadingImage] = useState(false);
-
+  const [shhowLogoutModal, setShowLogoutModal] = useState(false);
   const dispatch = useDispatch();
   const profileState = useSelector((state) => state?.ProfileReducer);
   useEffect(() => {
@@ -67,23 +68,29 @@ const ViewProfile = ({ navigation, route }) => {
 
   const ItemPressed = (item) => {
     if (item.title == AppConstants.logout) {
-      Alert.alert("", "Are you sure you want to logout.", [
-        {
-          text: "No",
-          onPress: () => console.log("pressed no"),
-          style: "cancel",
-        },
-        {
-          text: "Yes",
-          onPress: () => {
-            DataManager.clearLocalStorage();
-            Methods.navigate(navigation, "SignIn");
-          },
-        },
-      ]);
+      setShowLogoutModal(true);
+      // Alert.alert("", "Are you sure you want to logout.", [
+      //   {
+      //     text: "No",
+      //     onPress: () => console.log("pressed no"),
+      //     style: "cancel",
+      //   },
+      //   {
+      //     text: "Yes",
+      //     onPress: () => {
+      //       DataManager.clearLocalStorage();
+      //       Methods.navigate(navigation, "Auth");
+      //     },
+      //   },
+      // ]);
     } else {
       Methods.navigate(navigation, item.navigate);
     }
+  };
+  const logout = () => {
+    setShowLogoutModal(false);
+    DataManager.clearLocalStorage();
+    Methods.navigate(navigation, "Auth");
   };
   const mainView = () => (
     <View style={styles.container}>
@@ -182,7 +189,17 @@ const ViewProfile = ({ navigation, route }) => {
     //     showsVerticalScrollIndicator={false}>
     //     {mainView()}
     // </ScrollView>
-    <View style={styles.container}>{mainView()}</View>
+    <View style={styles.container}>
+      <ConfirmPopupModal
+        load={shhowLogoutModal}
+        onClose={() => {
+          setShowLogoutModal(false);
+        }}
+        text="Are you sure, you want to logout?"
+        onAction={() => logout()}
+      />
+      {mainView()}
+    </View>
   );
 };
 

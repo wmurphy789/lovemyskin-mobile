@@ -8,6 +8,7 @@ import {
   ImageBackground,
   ScrollView,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import AppConstants from "../../Theme/AppConstants";
 import { AppImages } from "../../Theme/AppImages";
@@ -31,16 +32,20 @@ import {
 import moment from "moment";
 import Loader from "../../Components/Loader";
 import { showmessage } from "../../Support/Validations";
+import ConfirmPopupModal from "../../Components/ConfirmPopup";
 
 const MyTracker = (props) => {
+  const TrackerState = useSelector((state) => state.TrackerReducer);
   const [viewType, setViewType] = useState(1);
   const [expandIndex, setExpandIndex] = useState([]);
-  const [selectedDate, setSelectedDate] = useState();
+  const [selectedDate, setSelectedDate] = useState(TrackerState?.selectedDate);
   const [showPopUp, setShowPopUp] = useState(false);
   const [showPopUpListView, setShowPopUpListView] = useState(false);
   const [popupIndex, setPopupIndex] = useState([]);
+  const [loadingImage, setLoadingImage] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteItem, setDeleteItem] = useState({});
   const dispatch = useDispatch();
-  const TrackerState = useSelector((state) => state.TrackerReducer);
   const getDayInWord = (day) => {
     const weekNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     const text = weekNames[day];
@@ -65,18 +70,20 @@ const MyTracker = (props) => {
     return text;
   };
   const changeMonth = (value) => {
-    var selected_Date = new Date(selectedDate);
+    var selected_Date = new Date(TrackerState?.selectedDate);
     var changedDate = selected_Date.setMonth(selected_Date.getMonth() + value);
-    setSelectedDate(moment(changedDate));
+    // setSelectedDate(moment(changedDate));
+    ApiHit(moment(changedDate));
   };
   useEffect(() => {
     const unsubscribe = props.navigation.addListener("focus", () => {
       setViewType(1);
-      setSelectedDate(moment());
+      // setSelectedDate(TrackerState?.selectedDate);
       setPopupIndex([]);
       setShowPopUpListView(false);
       setShowPopUp(false);
       setExpandIndex([]);
+      // ApiHit();
     });
 
     // Return the function to unsubscribe from the event so it gets removed on unmount
@@ -84,39 +91,75 @@ const MyTracker = (props) => {
   }, []);
   useEffect(() => {
     ApiHit();
-  }, [selectedDate]);
+  }, []);
   useEffect(() => {
     if (TrackerState?.isDeleted) {
       ApiHit();
+      setDeleteItem({});
     }
   }, [TrackerState?.isDeleted]);
-  const ApiHit = () => {
-    const selectedDateMonth = moment(selectedDate).get("M") + 1;
-    const selectedDateYear = moment(selectedDate).get("Y");
-    const NoOfdaysInSelectedMonth = moment(selectedDate).daysInMonth();
-    const startDate = moment(
-      selectedDateMonth + "/" + "01/" + selectedDateYear
-    );
-    const endDate = moment(
-      selectedDateMonth + "/" + NoOfdaysInSelectedMonth + "/" + selectedDateYear
-    );
-    dispatch(
-      getTrackerALLEntryAction(
-        {
-          startDate: moment(startDate).format("YYYY-MM-DD"),
-          endDate: moment(endDate).format("YYYY-MM-DD"),
-          selectedDate: selectedDate,
-        },
-        props.navigation
-      )
-    );
+  const ApiHit = (date) => {
+    if (date) {
+      const selectedDateMonth = moment(date).get("M") + 1;
+      const selectedDateYear = moment(date).get("Y");
+      const NoOfdaysInSelectedMonth = moment(date).daysInMonth();
+      const startDate = moment(
+        selectedDateMonth + "/" + "01/" + selectedDateYear
+      );
+      const endDate = moment(
+        selectedDateMonth +
+          "/" +
+          NoOfdaysInSelectedMonth +
+          "/" +
+          selectedDateYear
+      );
+      console.log("startDate-->", startDate, endDate);
+      dispatch(
+        getTrackerALLEntryAction(
+          {
+            startDate: moment(startDate).format("YYYY-MM-DD"),
+            endDate: moment(endDate).format("YYYY-MM-DD"),
+            selectedDate: date,
+          },
+          props.navigation
+        )
+      );
+    } else {
+      const selectedDateMonth = moment(TrackerState?.selectedDate).get("M") + 1;
+      const selectedDateYear = moment(TrackerState?.selectedDate).get("Y");
+      const NoOfdaysInSelectedMonth = moment(
+        TrackerState?.selectedDate
+      ).daysInMonth();
+      const startDate = moment(
+        selectedDateMonth + "/" + "01/" + selectedDateYear
+      );
+      const endDate = moment(
+        selectedDateMonth +
+          "/" +
+          NoOfdaysInSelectedMonth +
+          "/" +
+          selectedDateYear
+      );
+      console.log("startDate-->", startDate, endDate);
+      dispatch(
+        getTrackerALLEntryAction(
+          {
+            startDate: moment(startDate).format("YYYY-MM-DD"),
+            endDate: moment(endDate).format("YYYY-MM-DD"),
+            selectedDate: TrackerState?.selectedDate,
+          },
+          props.navigation
+        )
+      );
+    }
   };
-  const deleteEntry = (item, index) => {
-    setPopUpIndexView(index);
+  const deleteEntry = () => {
+    setShowDeleteModal(false);
+    setPopUpIndexView(deleteItem?.index);
     setShowPopUp(false);
     dispatch(
       deleteTrackerEntryAction(
-        { id: item.id, selectedDate: selectedDate },
+        { id: deleteItem?.id, selectedDate: TrackerState?.selectedDate },
         props.navigation
       )
     );
@@ -209,9 +252,9 @@ const MyTracker = (props) => {
                   : "#fff",
               elevation: 2,
               shadowColor: "#000000",
-              shadowOffset: { width: 0, height: 10 }, // change this for more shadow
-              shadowOpacity: 0.4,
-              shadowRadius: 6,
+              shadowOffset: { width: 0, height: 2 }, // change this for more shadow
+              shadowOpacity: 0.2,
+              shadowRadius: 3,
               // borderBottomWidth: 0.2,
               // borderRightWidth: 0.2,
               // borderBottomColor: AppColors.lightGrey,
@@ -274,21 +317,27 @@ const MyTracker = (props) => {
                         paddingVertical: responsiveHeight(2),
                       }}
                       onPress={() => {
-                        Alert.alert(
-                          "",
-                          "Are you sure you want to delete this entry.",
-                          [
-                            {
-                              text: "No",
-                              onPress: () => setPopUpIndexView(index),
-                              style: "cancel",
-                            },
-                            {
-                              text: "Yes",
-                              onPress: () => deleteEntry(item, index),
-                            },
-                          ]
-                        );
+                        setShowDeleteModal(true);
+                        setDeleteItem({
+                          id: TrackerState?.entry?.id,
+                          index: index,
+                        });
+                        // onPress={() => {
+                        //   Alert.alert(
+                        //     "",
+                        //     "Are you sure you want to delete this entry.",
+                        //     [
+                        //       {
+                        //         text: "No",
+                        //         onPress: () => setPopUpIndexView(index),
+                        //         style: "cancel",
+                        //       },
+                        //       {
+                        //         text: "Yes",
+                        //         onPress: () => deleteEntry(item, index),
+                        //       },
+                        //     ]
+                        //   );
                       }}
                     >
                       <Text
@@ -377,10 +426,27 @@ const MyTracker = (props) => {
               {item?.image && (
                 <View style={styles.calendarLsitImageView}>
                   <Image
+                    onLoadStart={() => {
+                      setLoadingImage(true);
+                    }}
+                    onLoadEnd={() => {
+                      setLoadingImage(false);
+                    }}
                     source={{ uri: item?.image }}
                     style={styles.calendarLsitImage}
-                    resizeMode="stretch"
+                    // resizeMode="stretch"
                   />
+                  {loadingImage && (
+                    <View
+                      style={{
+                        position: "absolute",
+                        alignSelf: "center",
+                        bottom: responsiveHeight(8.5),
+                      }}
+                    >
+                      <ActivityIndicator color={"#fff"} size="small" />
+                    </View>
+                  )}
                 </View>
               )}
             </View>
@@ -394,9 +460,10 @@ const MyTracker = (props) => {
     return (
       <>
         <CalendarStrip
-          selectedDate={selectedDate}
+          selectedDate={TrackerState?.selectedDate}
           onPressDate={(date) => {
-            setSelectedDate(moment(date));
+            // setSelectedDate(moment(date));
+            ApiHit(moment(date));
           }}
           markedDate={[]}
         />
@@ -457,22 +524,27 @@ const MyTracker = (props) => {
                       paddingVertical: responsiveHeight(2),
                     }}
                     onPress={() => {
-                      Alert.alert(
-                        "",
-                        "Are you sure you want to delete this entry.",
-                        [
-                          {
-                            text: "No",
-                            onPress: () => setShowPopUp(false),
-                            style: "cancel",
-                          },
-                          {
-                            text: "Yes",
-                            onPress: () =>
-                              deleteEntry({ id: TrackerState?.entry?.id }, 0),
-                          },
-                        ]
-                      );
+                      setShowDeleteModal(true);
+                      setDeleteItem({
+                        id: TrackerState?.entry?.id,
+                        index: 0,
+                      });
+                      // Alert.alert(
+                      //   "",
+                      //   "Are you sure you want to delete this entry?",
+                      //   [
+                      //     {
+                      //       text: "No",
+                      //       onPress: () => setShowPopUp(false),
+                      //       style: "cancel",
+                      //     },
+                      //     {
+                      //       text: "Yes",
+                      //       onPress: () =>
+                      //         deleteEntry({ id: TrackerState?.entry?.id }, 0),
+                      //     },
+                      //   ]
+                      // );
                     }}
                   >
                     <Text
@@ -489,7 +561,12 @@ const MyTracker = (props) => {
             </View>
             <View
               style={{
-                backgroundColor: "#48CDA5",
+                backgroundColor:
+                  TrackerState?.entry?.attributes?.feeling == "good"
+                    ? "#4BCEA6"
+                    : TrackerState?.entry?.attributes?.feeling == "bad"
+                    ? "#EF6586"
+                    : "#5DB1CC",
                 marginTop: responsiveHeight(1),
                 flexDirection: "row",
                 justifyContent: "space-between",
@@ -542,7 +619,11 @@ const MyTracker = (props) => {
                     fontFamily: AppFonts.semiBold,
                   }}
                 >
-                  {TrackerState?.entry?.attributes?.feeling}
+                  {TrackerState?.entry?.attributes?.feeling
+                    .charAt(0)
+                    .toUpperCase() +
+                    TrackerState?.entry?.attributes?.feeling.slice(1)}
+                  {}
                 </Text>
               </View>
             </View>
@@ -552,6 +633,7 @@ const MyTracker = (props) => {
                 borderRadius: responsiveWidth(5),
                 paddingHorizontal: responsiveWidth(3),
                 marginBottom: responsiveHeight(15),
+                paddingBottom: responsiveHeight(2),
               }}
             >
               <Text
@@ -578,17 +660,36 @@ const MyTracker = (props) => {
                 {TrackerState?.entry?.attributes?.description}
               </Text>
               {TrackerState?.entry?.attributes?.image && (
-                <Image
-                  source={{ uri: TrackerState?.entry?.attributes?.image }}
-                  style={{
-                    marginTop: responsiveHeight(2),
-                    height: responsiveHeight(30),
-                    width: responsiveWidth(90),
-                    borderRadius: 10,
-                    alignSelf: "center",
-                  }}
-                  resizeMode="contain"
-                />
+                <>
+                  <Image
+                    onLoadStart={() => {
+                      setLoadingImage(true);
+                    }}
+                    onLoadEnd={() => {
+                      setLoadingImage(false);
+                    }}
+                    source={{ uri: TrackerState?.entry?.attributes?.image }}
+                    style={{
+                      marginTop: responsiveHeight(2),
+                      height: responsiveHeight(25),
+                      width: responsiveWidth(90),
+                      borderRadius: 10,
+                      alignSelf: "center",
+                    }}
+                    // resizeMode="stretch"
+                  />
+                  {loadingImage && (
+                    <View
+                      style={{
+                        position: "absolute",
+                        alignSelf: "center",
+                        bottom: responsiveHeight(12.5),
+                      }}
+                    >
+                      <ActivityIndicator color={"#48CDA5"} size="small" />
+                    </View>
+                  )}
+                </>
               )}
             </View>
           </View>
@@ -649,6 +750,17 @@ const MyTracker = (props) => {
   return (
     <View style={styles.container}>
       <Loader load={TrackerState.onLoad} />
+      <ConfirmPopupModal
+        load={showDeleteModal}
+        onClose={() => {
+          setShowDeleteModal(false);
+          setPopUpIndexView(deleteItem?.index);
+          setShowPopUp(false);
+          setDeleteItem({});
+        }}
+        text="Are you sure you want to delete this entry?"
+        onAction={() => deleteEntry()}
+      />
       <ScrollView
         bounces={false}
         keyboardShouldPersistTaps="always"
@@ -671,7 +783,7 @@ const MyTracker = (props) => {
               >
                 <View style={styles.percantageView}>
                   <Text style={styles.percantageText}>
-                    {Math.abs(TrackerState?.totalPercentage)} %
+                    {Math.abs(TrackerState?.totalPercentage * 100)} %
                   </Text>
                   <Image
                     source={
@@ -691,7 +803,9 @@ const MyTracker = (props) => {
                   />
                   <View style={styles.percentageEntryTextView}>
                     <Text style={styles.percentageEntryText}>
-                      {TrackerState?.totalEntry} Entries this month
+                      {TrackerState?.totalEntry}{" "}
+                      {TrackerState?.totalEntry > 1 ? "Entries" : "Entry"} this
+                      month
                     </Text>
                   </View>
                 </View>
@@ -737,8 +851,10 @@ const MyTracker = (props) => {
                 style={styles.calendarImage}
               />
               <Text style={styles.calenderDateUpper}>
-                {getMonthInWord(new Date(selectedDate).getMonth())}{" "}
-                {new Date(selectedDate).getFullYear()}
+                {getMonthInWord(
+                  new Date(TrackerState?.selectedDate).getMonth()
+                )}{" "}
+                {new Date(TrackerState?.selectedDate).getFullYear()}
               </Text>
             </View>
             <View>

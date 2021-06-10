@@ -106,7 +106,7 @@ export default StyleSheet.create({
     textAlignVertical: "top",
     paddingLeft: responsiveWidth(8),
     paddingRight: responsiveWidth(4),
-    marginTop: responsiveHeight(4),
+    marginTop: responsiveHeight(2),
     flexDirection: "row",
   },
   dropDownText: {

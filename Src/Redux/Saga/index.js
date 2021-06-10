@@ -26,6 +26,9 @@ import {
 import {
   fetchWellbeingCategories,
   fetchWellbeingCategoriesPosts,
+  fetchSetLikeUnlikePost,
+  fetchGetPostsComments,
+  fetchSetPostComments
 } from "./WellbeingSaga";
 
 function* rootSaga() {
@@ -62,9 +65,9 @@ function* rootSaga() {
 
   //wellbeing
   yield takeEvery(types.WELLBEING_CATEGORIES_LOAD, fetchWellbeingCategories);
-  yield takeEvery(
-    types.WELLBEING_CATEGORIES_POSTS_LOAD,
-    fetchWellbeingCategoriesPosts
-  );
+  yield takeEvery(types.WELLBEING_CATEGORIES_POSTS_LOAD, fetchWellbeingCategoriesPosts);
+  yield takeEvery(types.LIKE_POST_LOAD, fetchSetLikeUnlikePost);
+  yield takeEvery(types.SET_COMMENT_LOAD, fetchSetPostComments);
+  yield takeEvery(types.GET_COMMENTS_LOAD, fetchGetPostsComments);
 }
 export default rootSaga;

@@ -51,15 +51,14 @@ const SignIn = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
   const authState = useSelector((state) => state.AuthReducer);
-  // useEffect(() => {
-  //   const unsubscribe = navigation.addListener("focus", () => {
-  //     setEmail("");
-  //     setPassword("");
-  //   });
-  //   return unsubscribe;
-  // }, []);
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("blur", () => {
+      setEmail("");
+      setPassword("");
+    });
+    return unsubscribe;
+  }, []);
   const signIn = () => {
-    console.log("email--->", email);
     const validate = formikValidation(email?.trim(), password?.trim());
 
     if (validate) {

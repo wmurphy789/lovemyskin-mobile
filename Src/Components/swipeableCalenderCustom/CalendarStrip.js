@@ -301,6 +301,13 @@ class CalendarStrip extends Component {
       />
     );
   };
+  scrollIndex = () => {
+    const date = moment(this.props.selectedDate).get("D");
+    const total = this.state.datas.length / 7;
+    const index = date / total;
+    console.log("index----->", date, total, parseInt(index));
+    return parseInt(index * total);
+  };
 
   render() {
     const { onPressDate, selectedDate } = this.props;
@@ -339,7 +346,7 @@ class CalendarStrip extends Component {
             bounces={false}
             horizontal
             pagingEnabled
-            // initialScrollIndex={moment(this.props.selectedDate).get("D") / 7}
+            initialScrollIndex={this.scrollIndex()}
             showsHorizontalScrollIndicator={false}
             scrollEventThrottle={500}
             getItemLayout={(data, index) => ({

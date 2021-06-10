@@ -6,6 +6,7 @@ import AppConstants from "../../Theme/AppConstants";
 import React from "react";
 import styles from "./styles";
 import { Tabs } from "../../Screens/SkinWellbeing";
+import { useSelector } from "react-redux";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -15,6 +16,7 @@ const WellbeingTabs = ({
     podcastsEvent,
     storiesEvent }) => {
     // material Top tab nav
+    const tabData = useSelector(state => state.WellbeingReducer.wellbeingPosts)
     return (
         <Tab.Navigator
             tabBarOptions={{
@@ -40,6 +42,9 @@ const WellbeingTabs = ({
                             <Text style={styles.notSelected}>{AppConstants.articles}</Text>
                         ),
                 }}
+                initialParams={{
+                    tabData
+                }}
                 name="Articles"
                 component={Tabs.Articles}
                 listeners={{ focus: articleEvent }}
@@ -52,6 +57,9 @@ const WellbeingTabs = ({
                         ) : (
                             <Text style={styles.notSelected}>{AppConstants.videos}</Text>
                         ),
+                }}
+                initialParams={{
+                    tabData
                 }}
                 name="Videos"
                 component={Tabs.Videos}
@@ -66,6 +74,9 @@ const WellbeingTabs = ({
                             <Text style={styles.notSelected}>{AppConstants.podcasts}</Text>
                         ),
                 }}
+                initialParams={{
+                    tabData
+                }}
                 name="Podcasts"
                 component={Tabs.Podcasts}
                 listeners={{ focus: podcastsEvent }}
@@ -78,6 +89,9 @@ const WellbeingTabs = ({
                         ) : (
                             <Text style={styles.notSelected}>{AppConstants.stories}</Text>
                         ),
+                }}
+                initialParams={{
+                    tabData
                 }}
                 name="Stories"
                 component={Tabs.Stories}

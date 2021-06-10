@@ -57,7 +57,7 @@ export function* createAffirmationSaga(action) {
       yield put({
         type: types.API_CREATE_AFFIRMATION_SUCCESS,
       });
-      showmessage("Affirmmation created successfully");
+      showmessage("Affirmation created successfully");
       action.navigation.navigate("AffirmationStack");
     } else {
       yield put({ type: types.API_CREATE_AFFIRMATION_ERROR });
@@ -82,7 +82,8 @@ export function* deleteAffirmationSaga(action) {
       yield put({
         type: types.API_DELETE_AFFIRMATION_SUCCESS,
       });
-      action.navigation.goBack();
+      showmessage("Affirmation deleted successfully");
+      // action.navigation.goBack();
     } else {
       yield put({ type: types.API_DELETE_AFFIRMATION_ERROR });
     }
@@ -101,6 +102,7 @@ export function* updateAffirmationSaga(action) {
       yield put({
         type: types.API_UPDATE_AFFIRMATION_SUCCESS,
       });
+      showmessage("Affirmation updated successfully");
       action.navigation.goBack();
     } else {
       yield put({ type: types.API_UPDATE_AFFIRMATION_ERROR });

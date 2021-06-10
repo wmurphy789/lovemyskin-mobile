@@ -295,7 +295,7 @@ export default StyleSheet.create({
     justifyContent: "space-between",
   },
   calendarLsitImageView: {
-    marginTop: responsiveHeight(5),
+    marginTop: responsiveHeight(3),
     marginBottom: responsiveHeight(1),
     alignItems: "center",
     justifyContent: "center",

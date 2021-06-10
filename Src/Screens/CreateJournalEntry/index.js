@@ -18,6 +18,7 @@ import Loader from "../../Components/Loader";
 import {
   createTrackerEntryAction,
   editTrackerEntryAction,
+  getTrackerALLEntryAction,
 } from "../../Redux/Actions/TrackerActions";
 import { showmessage } from "../../Support/Validations";
 import { AppColors } from "../../Theme/AppColors";
@@ -34,9 +35,9 @@ import * as ImagePicker from "expo-image-picker";
 import ImagePickerModal from "../../Components/ImagePickerModal";
 import { useEffect } from "react";
 const dropDownoption = [
-  { id: 0, feeling: "good" },
-  { id: 1, feeling: "bad" },
-  { id: 2, feeling: "ok" },
+  { id: 0, feeling: "good", title: "Good" },
+  { id: 1, feeling: "bad", title: "Bad" },
+  { id: 2, feeling: "ok", title: "Ok" },
 ];
 const CreateJournalEntry = (props) => {
   const id = props?.route?.params?.item?.id;
@@ -63,16 +64,48 @@ const CreateJournalEntry = (props) => {
       setFelling("good");
       setDescription("");
     }
+    const unsubscribe = props.navigation.addListener("blur", () => {
+      console.log(
+        "TrackerState?.selectedDate----> on back press",
+        TrackerState?.selectedDate
+      );
+      const selectedDateMonth = moment(TrackerState?.selectedDate).get("M") + 1;
+      const selectedDateYear = moment(TrackerState?.selectedDate).get("Y");
+      const NoOfdaysInSelectedMonth = moment(
+        TrackerState?.selectedDate
+      ).daysInMonth();
+      const startDate = moment(
+        selectedDateMonth + "/" + "01/" + selectedDateYear
+      );
+      const endDate = moment(
+        selectedDateMonth +
+          "/" +
+          NoOfdaysInSelectedMonth +
+          "/" +
+          selectedDateYear
+      );
+      dispatch(
+        getTrackerALLEntryAction(
+          {
+            startDate: moment(startDate).format("YYYY-MM-DD"),
+            endDate: moment(endDate).format("YYYY-MM-DD"),
+            selectedDate: TrackerState?.selectedDate,
+          },
+          props.navigation
+        )
+      );
+    });
+    return unsubscribe;
   }, []);
   const dispatch = useDispatch();
   const TrackerState = useSelector((state) => state.TrackerReducer);
   const createEntry = () => {
     const des = description?.trim();
-    if (des.length > 0) {
+    if (des.length > 2) {
       var data = new FormData();
       data.append(
         "entry_date",
-        moment(props?.route?.params?.selectedDate).format("YYYY-MM-DD")
+        moment(TrackerState?.selectedDate).format("YYYY-MM-DD")
       );
       data.append("description", des);
       data.append("feeling", felling);
@@ -82,14 +115,21 @@ const CreateJournalEntry = (props) => {
           uri: photo,
           name: Math.random() * 100000000000000000 + ".jpg",
         });
-      dispatch(createTrackerEntryAction(data, props.navigation));
+      dispatch(
+        createTrackerEntryAction(
+          { formData: data, selectedDate: TrackerState?.selectedDate },
+          props.navigation
+        )
+      );
+    } else if (des.length > 0) {
+      showmessage("Skin condition sholud be alteast 3 char long");
     } else {
-      showmessage("Please enter your description");
+      showmessage("Please enter about your day and skin condition");
     }
   };
   const updateEntry = () => {
     const des = description?.trim();
-    if (des.length > 0) {
+    if (des.length > 2) {
       var data = new FormData();
 
       data.append("description", des);
@@ -101,10 +141,21 @@ const CreateJournalEntry = (props) => {
           name: Math.random() * 100000000000000000 + ".jpg",
         });
       dispatch(
-        editTrackerEntryAction({ formData: data, id: id }, props.navigation)
+        editTrackerEntryAction(
+          {
+            formData: data,
+            id: id,
+            selectedDate:
+              props?.route?.params?.item?.date ||
+              props?.route?.params?.item?.attributes?.entry_date,
+          },
+          props.navigation
+        )
       );
+    } else if (des.length > 0) {
+      showmessage("Skin condition sholud be alteast 3 char long");
     } else {
-      showmessage("Please enter your description");
+      showmessage("Please enter about your day and skin condition");
     }
   };
 
@@ -114,7 +165,9 @@ const CreateJournalEntry = (props) => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (permissionResult.granted === false) {
-      alert("You've refused to allow this appp to access your photos!");
+      alert(
+        "You've refused to allow this application to access your Photos! Go to setting>>Applications>>LoveMySkin>>Storage permission>>allowed"
+      );
       return;
     }
 
@@ -131,7 +184,9 @@ const CreateJournalEntry = (props) => {
     const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
 
     if (permissionResult.granted === false) {
-      alert("You've refused to allow this appp to access your camera!");
+      alert(
+        "You've refused to allow this application to access your camera! Go to setting>>Applications>>LoveMySkin>>Camera permission>>allowed"
+      );
       return;
     }
 
@@ -159,7 +214,9 @@ const CreateJournalEntry = (props) => {
               },
             ]}
           >
-            <Text style={styles.dropDownText}>{felling}</Text>
+            <Text style={styles.dropDownText}>
+              {felling.charAt(0).toUpperCase() + felling.slice(1)}
+            </Text>
             <Image
               source={AppImages.dropdownicon}
               style={styles.dropDownImage}
@@ -203,7 +260,7 @@ const CreateJournalEntry = (props) => {
                       paddingHorizontal: responsiveWidth(8),
                     }}
                   >
-                    <Text style={styles.dropDownText}>{item.feeling}</Text>
+                    <Text style={styles.dropDownText}>{item.title}</Text>
                   </View>
                 </TouchableOpacity>
               );

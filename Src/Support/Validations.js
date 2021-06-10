@@ -23,7 +23,7 @@ const formikValidation = (email, password, confirmPassword) => {
               if (confirmPassword === password) {
                 return true;
               } else {
-                showmessage("Password and Confirm password should be same");
+                showmessage("Password and confirm password should be same");
                 return false;
               }
             } else {
@@ -32,7 +32,7 @@ const formikValidation = (email, password, confirmPassword) => {
           }
         } else {
           showmessage(
-            "Please enter password in correct format(i.e.Min 8 chars,1 number,1 capitalamd 1 special char"
+            "Please enter password in correct format(i.e.Min 8 chars,1 number,1 capital ad 1 special char)"
           );
           return false;
         }
@@ -45,27 +45,27 @@ const formikValidation = (email, password, confirmPassword) => {
 };
 const formikValidationProfile = (firstName, lastName, userName) => {
   if (firstName?.length == 0) {
-    showmessage("Please enter First Name.");
+    showmessage("Please enter First Name");
     return false;
   } else {
     if (firstName?.length < 2) {
-      showmessage("First Name should be atleast 2 char long.");
+      showmessage("First Name should be atleast 2 char long");
       return false;
     } else {
       if (lastName?.length == 0) {
-        showmessage("Please enter Last Name.");
+        showmessage("Please enter Last Name");
         return false;
       } else {
         if (lastName?.length < 2) {
-          showmessage("Last Name should be atleast 2 char long.");
+          showmessage("Last Name should be atleast 2 char long");
           return false;
         } else {
           if (userName?.length == 0) {
-            showmessage("Please enter Username.");
+            showmessage("Please enter Username");
             return false;
           } else {
             if (userName?.length < 2) {
-              showmessage("Username should be atleast 2 char long.");
+              showmessage("Username should be atleast 2 char long");
               return false;
             } else {
               return true;
@@ -83,45 +83,36 @@ const formikValidationChangePassword = (
   confirmPassword
 ) => {
   if (oldPassword?.length == 0) {
-    showmessage("Please enter old password.");
+    showmessage("Please enter old password");
     return false;
   } else {
     if (passwordRegix.test(oldPassword)) {
       if (password?.length == 0) {
-        showmessage("Please enter new password.");
+        showmessage("Please enter new password");
         return false;
       } else {
         if (passwordRegix.test(password)) {
           if (confirmPassword?.length == 0) {
-            showmessage("Please enter confirm password.");
+            showmessage("Please enter confirm password");
             return false;
           } else {
-            if (passwordRegix.test(confirmPassword)) {
-              if (confirmPassword === password) {
-                return true;
-              } else {
-                showmessage(
-                  "New password and confirm password should be same."
-                );
-                return false;
-              }
+            if (confirmPassword === password) {
+              return true;
             } else {
-              showmessage(
-                "Please enter confirm password in correct format(i.e.Min 8 chars,1 number,1 capitalamd 1 special char"
-              );
+              showmessage("New password and old password should be same");
               return false;
             }
           }
         } else {
           showmessage(
-            "Please enter new password in correct format(i.e.Min 8 chars,1 number,1 capitalamd 1 special char"
+            "Please enter new password in correct format(i.e.Min 8 chars,1 number,1 capital ad 1 special char)"
           );
           return false;
         }
       }
     } else {
       showmessage(
-        "Please enter old password in correct format(i.e.Min 8 chars,1 number,1 capitalamd 1 special char"
+        "Please enter old password in correct format(i.e.Min 8 chars,1 number,1 capital ad 1 special char)"
       );
       return false;
     }
@@ -131,7 +122,7 @@ const formikValidationChangePassword = (
 const showmessage = (message) => {
   showMessage({
     message: message,
-    duration: 3000,
+    duration: 1500,
     titleStyle: {
       color: AppColors.black,
       fontSize: responsiveFontSize(1.6),

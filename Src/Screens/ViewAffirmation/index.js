@@ -13,6 +13,7 @@ import {
 } from "react-native";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
+import ConfirmPopupModal from "../../Components/ConfirmPopup";
 import {
   deleteAffirmationAction,
   getAffirmationByIdAction,
@@ -20,8 +21,12 @@ import {
 import Methods from "../../Support/Methods";
 import { AppColors } from "../../Theme/AppColors";
 import AppConstants from "../../Theme/AppConstants";
+import { AppFonts } from "../../Theme/AppFonts";
 import { AppImages } from "../../Theme/AppImages";
-import { responsiveHeight } from "../../Theme/ResponsiveDimensions";
+import {
+  responsiveFontSize,
+  responsiveHeight,
+} from "../../Theme/ResponsiveDimensions";
 import styles from "./styles";
 
 const ViewAffirmation = ({ navigation, route }) => {
@@ -30,6 +35,8 @@ const ViewAffirmation = ({ navigation, route }) => {
   const [isPlaying, setisPlaying] = useState(false);
   const [timeElapsed, settimeElapsed] = useState("0:54");
   const [timeRemaining, setTimeRemaining] = useState("2:34");
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [Item, setItem] = useState({});
   // create dummy data just for UI purpose
   const dispatch = useDispatch();
   const AffirmationState = useSelector((state) => state.AffirmationReducer);
@@ -39,6 +46,10 @@ const ViewAffirmation = ({ navigation, route }) => {
     });
     return unsubscribe;
   }, []);
+  useEffect(() => {
+    if (AffirmationState?.isDeleted || AffirmationState?.isEdited)
+      dispatch(getAffirmationByIdAction({ id }, navigation));
+  }, [AffirmationState?.isDeleted, AffirmationState?.isEdited]);
   const DummyMusicBar = () => (
     // dummy UI of Music SeekBar
     <View
@@ -90,8 +101,9 @@ Description: ${item?.attributes?.description}`,
       alert(error.message);
     }
   };
-  const deleteAffirmation = (item) => {
-    dispatch(deleteAffirmationAction({ id: item.id, itemId: id }, navigation));
+  const deleteAffirmation = () => {
+    setShowDeleteModal(false);
+    dispatch(deleteAffirmationAction({ id: Item.id, itemId: id }, navigation));
   };
 
   const Header = () => (
@@ -135,6 +147,7 @@ Description: ${item?.attributes?.description}`,
 
   const CustomIconButton = ({ icon, onPress, customStyles }) => (
     <TouchableOpacity
+      // disabled={AffirmationState?.onLoad}
       activeOpacity={0.5}
       style={[styles.itemImage, customStyles]}
       onPress={onPress}
@@ -201,23 +214,10 @@ Description: ${item?.attributes?.description}`,
           <CustomIconButton
             icon={AppImages.deleteBlackIcon}
             customStyles={styles.customStylesDeleteButton}
-            onPress={() =>
-              Alert.alert(
-                "",
-                "Are you sure you want to delete this affirmation.",
-                [
-                  {
-                    text: "No",
-                    onPress: () => console.log("pressed no"),
-                    style: "cancel",
-                  },
-                  {
-                    text: "Yes",
-                    onPress: () => deleteAffirmation(item),
-                  },
-                ]
-              )
-            }
+            onPress={() => {
+              setShowDeleteModal(true);
+              setItem(item);
+            }}
           />
         </View>
       </View>
@@ -272,9 +272,38 @@ Description: ${item?.attributes?.description}`,
         bounces={false}
         showsVerticalScrollIndicator={false}
         stickyHeaderIndices={[0]}
+        style={{
+          flex: 1,
+          // backgroundColor: screenColor,
+        }}
+        // contentContainerStyle={{
+        //   justifyContent: "center",
+        //   alignItems: "center",
+        // }}
         ListHeaderComponent={() => <Header />}
         keyExtractor={(item, index) => index.toString()}
         renderItem={_renderMyAffirmations}
+        ListEmptyComponent={() => (
+          <View
+            style={{
+              alignItems: "center",
+              justifyContent: "center",
+              // flex: 1,
+              paddingTop: responsiveHeight(35),
+              // backgroundColor: screenColor,
+            }}
+          >
+            <Text
+              style={{
+                color: screenColor,
+                fontFamily: AppFonts.light,
+                fontSize: responsiveFontSize(1.6),
+              }}
+            >
+              No affirmation found
+            </Text>
+          </View>
+        )}
       />
       // <>
       //   <Header />
@@ -295,6 +324,15 @@ Description: ${item?.attributes?.description}`,
             : AppColors.white,
       }}
     >
+      <ConfirmPopupModal
+        load={showDeleteModal}
+        onClose={() => {
+          setShowDeleteModal(false);
+          setItem({});
+        }}
+        text="Are you sure, you want to delete the affirmation?"
+        onAction={() => deleteAffirmation()}
+      />
       {/* <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ backgroundColor: screenColor }}

@@ -54,14 +54,14 @@ const TabBarComponent = (props) => {
       navigation: "ProfileStack",
     },
   ];
-  useEffect(() => {
-    Keyboard.addListener("keyboardDidShow", keyboardWillShow);
-    Keyboard.addListener("keyboardDidHide", keyboardWillHide);
-    // return () => {
-    //   keyboardWillShowSub.remove();
-    //   keyboardWillHideSub.remove();
-    // };
-  }, []);
+  // useEffect(() => {
+  //   Keyboard.addListener("keyboardDidShow", keyboardWillShow);
+  //   Keyboard.addListener("keyboardDidHide", keyboardWillHide);
+  //   // return () => {
+  //   //   keyboardWillShowSub.remove();
+  //   //   keyboardWillHideSub.remove();
+  //   // };
+  // }, []);
   const keyboardWillShow = (event) => {
     setKeyBoardVisible(true);
   };

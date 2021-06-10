@@ -19,7 +19,7 @@ export function* loginSaga(action) {
       });
       DataManager.setAccessToken(result.jwt);
       DataManager.setUserId(decoded.id);
-      showmessage("Login successfully.");
+      showmessage("Login successfully");
       if (decoded.question_id) {
         action.navigation.navigate("Tabs");
       } else {
@@ -43,7 +43,7 @@ export function* signupSaga(action) {
       yield put({
         type: types.API_SIGNUP_SUCCESS,
       });
-      showmessage("User register successfully.");
+      showmessage("You have registered successfully");
       // DataManager.setAccessToken(result?.data?.jwt);
       // DataManager.setUserId(result?.data?.id);
       action.navigation.goBack();

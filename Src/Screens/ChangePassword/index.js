@@ -37,6 +37,9 @@ const ChangePassword = ({ navigation }) => {
     if (validate) {
       // dispatch(updatetProfileAction(data));
       dispatch(changePasswordAction(data));
+      setOldPassword("");
+      setNewPassword("");
+      setConfirmNewPassword("");
     }
   }
   return (
@@ -56,6 +59,7 @@ const ChangePassword = ({ navigation }) => {
           <SimpleInput
             placeholder={AppConstants.enterOldPassword}
             secureInput={true}
+            text={oldPassword}
             onChangeText={(text) => {
               setOldPassword(text);
             }}
@@ -64,6 +68,7 @@ const ChangePassword = ({ navigation }) => {
           <SimpleInput
             placeholder={AppConstants.enterNewPassword}
             secureInput={true}
+            text={newPassword}
             onChangeText={(text) => {
               setNewPassword(text);
             }}
@@ -72,6 +77,7 @@ const ChangePassword = ({ navigation }) => {
           <SimpleInput
             placeholder={AppConstants.confirmNewPassword}
             secureInput={true}
+            text={confirmNewPassword}
             onChangeText={(text) => {
               setConfirmNewPassword(text);
             }}

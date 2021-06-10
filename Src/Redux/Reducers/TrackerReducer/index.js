@@ -9,6 +9,7 @@ const initialState = {
   entry: {},
   totalEntry: 0,
   totalPercentage: 0,
+  selectedDate: moment(),
 };
 
 export const TrackerReducer = (state = initialState, action) => {
@@ -38,6 +39,7 @@ export const TrackerReducer = (state = initialState, action) => {
         entry: filterEntry(action.data, action.selectedDate),
         totalEntry: action?.meta?.entries_this_month,
         totalPercentage: action?.meta?.percent_entries,
+        selectedDate: action.selectedDate,
       };
     case types.API_GET_TRACKER_ALL_ENTRY_ERROR:
       return { ...state, isDisable: false, onLoad: false };
@@ -51,6 +53,7 @@ export const TrackerReducer = (state = initialState, action) => {
         isDisable: false,
         onLoad: false,
         isDeleted: true,
+        selectedDate: action.selectedDate,
       };
     case types.API_DELETE_TRACKER_ENTRY_ERROR:
       return { ...state, isDisable: false, onLoad: false, isDeleted: false };
@@ -63,6 +66,7 @@ export const TrackerReducer = (state = initialState, action) => {
         ...state,
         isDisable: false,
         onLoad: false,
+        selectedDate: action.selectedDate,
       };
     case types.API_EDIT_TRACKER_ENTRY_ERROR:
       return { ...state, isDisable: false, onLoad: false };
@@ -75,6 +79,7 @@ export const TrackerReducer = (state = initialState, action) => {
         ...state,
         isDisable: false,
         onLoad: false,
+        selectedDate: action.selectedDate,
       };
     case types.API_CREATE_TRACKER_ENTRY_ERROR:
       return { ...state, isDisable: false, onLoad: false };

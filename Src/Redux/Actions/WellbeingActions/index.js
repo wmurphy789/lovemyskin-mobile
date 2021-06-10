@@ -7,3 +7,15 @@ export const getCategoriesPosts = (param) => ({
     type: types.WELLBEING_CATEGORIES_POSTS_LOAD,
     param
 })
+export const likeUnlikePost = (param) => ({
+    type: types.LIKE_POST_LOAD,
+    param
+})
+export const getPostsComments = (param) => ({
+    type: types.GET_COMMENTS_LOAD,
+    param
+})
+export const setPostComments = (param) => ({
+    type: types.SET_COMMENT_LOAD,
+    param
+})

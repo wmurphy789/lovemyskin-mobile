@@ -6,6 +6,7 @@ import {
   Image,
   TouchableOpacity,
   Keyboard,
+  ActivityIndicator,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { FullButton } from "../../Components/Button";
@@ -22,10 +23,11 @@ import {
 import { formikValidationProfile } from "../../Support/Validations";
 import * as ImagePicker from "expo-image-picker";
 import ImagePickerModal from "../../Components/ImagePickerModal";
-const demoImage =
-  "https://lh3.googleusercontent.com/proxy/1YUhSIrFZOy-4QNFcWiSlZRmuxD3yH095orPAStqSgRWlwh4qLJ4nGnLVPCSEUniBHI4djHLD-PV8GueOTQUglwrw7n8zRzbKNJs-QLM1zHHr6TuoM4rGIIHg50xmZVU0vlOeknsGg";
+import { AppColors } from "../../Theme/AppColors";
+import { responsiveHeight } from "../../Theme/ResponsiveDimensions";
 const EditProfile = ({ navigation, route }) => {
   const dispatch = useDispatch();
+  const [loadingImage, setLoadingImage] = useState(false);
 
   // let userData = route?.params?.userData
   // let UserName = userData.name
@@ -54,7 +56,9 @@ const EditProfile = ({ navigation, route }) => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (permissionResult.granted === false) {
-      alert("You've refused to allow this appp to access your photos!");
+      alert(
+        "You've refused to allow this application to access your Photos! Go to setting>>Applications>>LoveMySkin>>Storage permission>>allowed"
+      );
       return;
     }
     const result = await ImagePicker.launchImageLibraryAsync();
@@ -66,8 +70,11 @@ const EditProfile = ({ navigation, route }) => {
     setImagePickerModal(false);
     // Ask the user for the permission to access the camera
     const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+    console.log("permission--->>", permissionResult);
     if (permissionResult.granted === false) {
-      alert("You've refused to allow this appp to access your camera!");
+      alert(
+        "You've refused to allow this application to access your camera! Go to setting>>Applications>>LoveMySkin>>Camera permission>>allowed"
+      );
       return;
     }
     const result = await ImagePicker.launchCameraAsync();
@@ -139,20 +146,39 @@ const EditProfile = ({ navigation, route }) => {
           >
             <View style={styles.profileImageContainer}>
               <Image
+                onLoadStart={() => {
+                  setLoadingImage(true);
+                }}
+                onLoadEnd={() => {
+                  setLoadingImage(false);
+                }}
                 style={styles.profileImage}
                 source={userImage ? { uri: userImage } : AppImages.userDummy}
               />
-              <TouchableOpacity
-                style={styles.editButton}
-                onPress={() => {
-                  setImagePickerModal(true);
-                }}
-              >
-                <Image
-                  source={AppImages.darkGreenEditIcon}
-                  style={styles.editImage}
-                />
-              </TouchableOpacity>
+              {loadingImage && (
+                <View
+                  style={{
+                    position: "absolute",
+                    alignSelf: "center",
+                    bottom: responsiveHeight(12),
+                  }}
+                >
+                  <ActivityIndicator color={AppColors.main} size="small" />
+                </View>
+              )}
+              {!loadingImage && (
+                <TouchableOpacity
+                  style={styles.editButton}
+                  onPress={() => {
+                    setImagePickerModal(true);
+                  }}
+                >
+                  <Image
+                    source={AppImages.darkGreenEditIcon}
+                    style={styles.editImage}
+                  />
+                </TouchableOpacity>
+              )}
             </View>
             <SimpleInput
               placeholder="First Name"

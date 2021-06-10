@@ -85,7 +85,7 @@ export function* fetchChangePassword({ param }) {
       Methods.navigate(param.navigation, "Auth");
     } else if (response.status == 3) {
       yield put({ type: ActionType.CHANGE_PASSWORD_FAIL, Result: response });
-      showmessage("Old credentials wrong.");
+      showmessage("Old Password is wrong.");
     } else {
       yield put({ type: ActionType.CHANGE_PASSWORD_FAIL, Result: response });
       showmessage("Something went wrong!");

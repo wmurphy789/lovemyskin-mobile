@@ -47,7 +47,9 @@ const SkinDiagnosis = ({ navigation }) => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (permissionResult.granted === false) {
-      alert("You've refused to allow this appp to access your photos!");
+      alert(
+        "You've refused to allow this application to access your Photos! Go to setting>>Applications>>LoveMySkin>>Storage permission>>allowed"
+      );
       return;
     }
 
@@ -64,7 +66,9 @@ const SkinDiagnosis = ({ navigation }) => {
     const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
 
     if (permissionResult.granted === false) {
-      alert("You've refused to allow this appp to access your camera!");
+      alert(
+        "You've refused to allow this application to access your camera! Go to setting>>Applications>>LoveMySkin>>Camera permission>>allowed"
+      );
       return;
     }
 
@@ -89,7 +93,7 @@ const SkinDiagnosis = ({ navigation }) => {
         )
       );
     } else {
-      showmessage("Please upload a image.");
+      showmessage("Please upload an image");
     }
   };
   return (

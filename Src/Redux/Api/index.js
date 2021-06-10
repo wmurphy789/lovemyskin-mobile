@@ -64,7 +64,7 @@ export const deleteTrackerEntryApi = (info) => {
   return ApiMethod.DELETE(`trackers/${info.id}`, null);
 };
 export const createTrackerEntryApi = (info) => {
-  const body = info;
+  const body = info.formData;
   return ApiMethod.POST_FORMDATA(`trackers`, body);
 };
 export const editTrackerEntryApi = (info) => {
@@ -132,17 +132,36 @@ export const changePasswordApi = (info) => {
 export const wellbeingCategoriesApi = (info) => {
   return ApiMethod.GET("resources");
 };
-
 export const wellbeingCategoriesPostsApi = (info) => {
-  //type="article"
   let url =
     "resources/" +
-    info.categoryId +
-    "?page[number]=" +
-    info.from +
-    "&page[size]=" +
-    info.to +
-    "&resoure_type=" +
+    info.id +
+    "?page[number]=1&page[size]=20&resoure_type=" +
     info.type;
-  // return ApiMethod.GET("resources");
+  return ApiMethod.GET(url);
+};
+
+export const likeUnlikePostApi = (info) => {
+  let url = "resources/" + info.postId + "/like";
+  return ApiMethod.POST(url);
+};
+export const getPostsCommentsApi = (info) => {
+  let url =
+    "https://lovemyskin-dev.herokuapp.com/api/v1/resources/" +
+    info.postId +
+    "/comments";
+  return ApiMethod.GET(url);
+};
+export const setPostCommentsApi = (info) => {
+  let url = "resources";
+  let body = {
+    data: {
+      type: "resource_comment",
+      attributes: {
+        message: info.message,
+        resource_id: info.postId,
+      },
+    },
+  };
+  return ApiMethod.POST(url, body);
 };

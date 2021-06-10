@@ -30,6 +30,7 @@ export function* getTrackerEntrySaga(action) {
 }
 //get all entries saga
 export function* getTrackerAllEntrySaga(action) {
+  console.log("action.payload.selecteddate", action.payload.selectedDate);
   yield put({ type: types.API_GET_TRACKER_ALL_ENTRY_START });
   try {
     let response = yield call(getTrackerAllEntryApi, action.payload);
@@ -54,10 +55,12 @@ export function* deleteTrackerEntrySaga(action) {
   yield put({ type: types.API_DELETE_TRACKER_ENTRY_START });
   try {
     let response = yield call(deleteTrackerEntryApi, action.payload);
+
     let { result, status } = response;
     if (status === 1) {
       yield put({
         type: types.API_DELETE_TRACKER_ENTRY_SUCCESS,
+        selectedDate: action.payload.selectedDate,
       });
     } else {
       yield put({ type: types.API_DELETE_TRACKER_ENTRY_ERROR });
@@ -76,6 +79,7 @@ export function* createTrackerEntrySaga(action) {
     if (status === 1) {
       yield put({
         type: types.API_CREATE_TRACKER_ENTRY_SUCCESS,
+        selectedDate: action.payload.selectedDate,
       });
       showmessage("Entry created successfully");
       action.navigation.navigate("MyTracker");
@@ -95,6 +99,7 @@ export function* editTrackerEntrySaga(action) {
     if (status === 1) {
       yield put({
         type: types.API_EDIT_TRACKER_ENTRY_SUCCESS,
+        selectedDate: action.payload.selectedDate,
       });
       showmessage("Entry updated successfully");
       action.navigation.navigate("MyTracker");

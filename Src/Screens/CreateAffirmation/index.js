@@ -40,19 +40,25 @@ const CreateAffirmation = (props) => {
   const AffirmationState = useSelector((state) => state.AffirmationReducer);
   const createAffirmation = () => {
     const des = description?.trim();
-    if (des.length > 0)
+
+    if (des.length > 2) {
       dispatch(createAffirmationAction({ description: des }, props.navigation));
-    else {
+    } else if (des.length > 0) {
+      showmessage("Affirmation sholud be alteast 3 char long");
+    } else {
       showmessage("Please enter your affirmation");
     }
   };
   const updateAffirmation = () => {
     const des = description?.trim();
-    if (des.length > 0)
+
+    if (des.length > 2) {
       dispatch(
         updateAffirmationAction({ id: id, description: des }, props.navigation)
       );
-    else {
+    } else if (des.length > 0) {
+      showmessage("Affirmation sholud be alteast 3 char long");
+    } else {
       showmessage("Please enter your affirmation");
     }
   };
@@ -174,6 +180,7 @@ const CreateAffirmation = (props) => {
           )}
         />
         <FullButton
+          disabled={AffirmationState?.onLoad}
           title={id ? "Update Affirmation" : AppConstants.createAffirmation}
           customStyles={styles.button}
           onPress={() => (id ? updateAffirmation() : createAffirmation())}

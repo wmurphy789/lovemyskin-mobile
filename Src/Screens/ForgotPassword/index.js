@@ -16,6 +16,13 @@ import { responsiveHeight } from "../../Theme/ResponsiveDimensions";
 import { AppColors } from "../../Theme/AppColors";
 
 const ForgotPassword = ({ navigation }) => {
+  const [email, setEmail] = useState("");
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("blur", () => {
+      setEmail("");
+    });
+    return unsubscribe;
+  }, []);
   return (
     <ScrollView
       bounces={false}
@@ -49,6 +56,8 @@ const ForgotPassword = ({ navigation }) => {
         >
           <IconInput
             type={true}
+            text={email}
+            onChangeText={(text) => setEmail(text)}
             // customStyles={styles.input}
             image={AppImages.greenMailIcon}
             placeholder={AppConstants.enterYourEmailAddress}
@@ -58,7 +67,10 @@ const ForgotPassword = ({ navigation }) => {
         <FullButton
           customStyles={styles.button}
           title={AppConstants.submit}
-          onPress={() => Methods.goBack(navigation)}
+          onPress={() => {
+            Methods.goBack(navigation);
+            setEmail("");
+          }}
         />
       </View>
     </ScrollView>

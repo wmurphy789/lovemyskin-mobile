@@ -49,6 +49,14 @@ const SignUp = ({ navigation }) => {
   const dispatch = useDispatch();
   const authState = useSelector((state) => state.AuthReducer);
 
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("blur", () => {
+      setEmail("");
+      setPassword("");
+      setConfirmPassword("");
+    });
+    return unsubscribe;
+  }, []);
   const signUp = () => {
     const validate = formikValidation(
       email?.trim(),
