@@ -28,7 +28,7 @@ const ConfirmPopupModal = (props) => {
         <View
           style={{
             backgroundColor: AppColors.white,
-            height: 150,
+            // height: 150,
             width: 250,
             borderRadius: 10,
           }}
@@ -47,7 +47,7 @@ const ConfirmPopupModal = (props) => {
                   color: "#000",
                 }}
               >
-                {props.text}{" "}
+                {props.text}
               </Text>
             </View>
           </TouchableOpacity>
@@ -56,6 +56,7 @@ const ConfirmPopupModal = (props) => {
               flexDirection: "row",
               // flex: 1,
               alignItems: "center",
+              marginBottom: 10,
               justifyContent: "space-around",
             }}
           >

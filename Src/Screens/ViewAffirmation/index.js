@@ -28,6 +28,7 @@ import {
   responsiveHeight,
 } from "../../Theme/ResponsiveDimensions";
 import styles from "./styles";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const ViewAffirmation = ({ navigation, route }) => {
   const [id, setscreenTitle] = useState(route?.params?.id); // will be recieved from routes params
@@ -37,6 +38,7 @@ const ViewAffirmation = ({ navigation, route }) => {
   const [timeRemaining, setTimeRemaining] = useState("2:34");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [Item, setItem] = useState({});
+  const [openShare, setOpenShare] = useState(false);
   // create dummy data just for UI purpose
   const dispatch = useDispatch();
   const AffirmationState = useSelector((state) => state.AffirmationReducer);
@@ -147,41 +149,42 @@ Description: ${item?.attributes?.description}`,
 
   const CustomIconButton = ({ icon, onPress, customStyles }) => (
     <TouchableOpacity
-      // disabled={AffirmationState?.onLoad}
+      disabled={openShare}
       activeOpacity={0.5}
       style={[styles.itemImage, customStyles]}
       onPress={onPress}
     >
-      <Image source={icon} resizeMode="contain" style={styles.itemImage} />
+      <MaterialCommunityIcons name={icon} size={25} color="#fff" />
+      {/* <Image source={icon} resizeMode="contain" style={styles.itemImage} /> */}
     </TouchableOpacity>
   );
 
   // render all affirmations
-  const _renderAffirmations = ({ item, index }) => (
-    <View
-      style={[
-        styles.ItemView,
-        {
-          backgroundColor: screenColor,
-          marginBottom:
-            index == AffirmationState.dataDetails.length - 1 ? 0 : 12,
-        },
-      ]}
-    >
-      <Text style={styles.itemTitle}>
-        {AffirmationState.dataDetails?.attributes?.category_name}
-      </Text>
-      <Text style={styles.itemtext}>
-        {AffirmationState.dataDetails?.attributes?.description}
-      </Text>
-      <CustomIconButton
-        icon={AppImages.shareBlackIcon}
-        // onPress={() => {
-        //   alert("Share!");
-        // }}
-      />
-    </View>
-  );
+  // const _renderAffirmations = ({ item, index }) => (
+  //   <View
+  //     style={[
+  //       styles.ItemView,
+  //       {
+  //         backgroundColor: screenColor,
+  //         marginBottom:
+  //           index == AffirmationState.dataDetails.length - 1 ? 0 : 12,
+  //       },
+  //     ]}
+  //   >
+  //     <Text style={styles.itemTitle}>
+  //       {AffirmationState.dataDetails?.attributes?.category_name}
+  //     </Text>
+  //     <Text style={styles.itemtext}>
+  //       {AffirmationState.dataDetails?.attributes?.description}
+  //     </Text>
+  //     {/* <CustomIconButton
+  //       icon={AppImages.shareBlackIcon}
+  //       // onPress={() => {
+  //       //   alert("Share!");
+  //       // }}
+  //     /> */}
+  //   </View>
+  // );
   //render my affirmations    #note : created seprately because myaffirmations may containe music
   const _renderMyAffirmations = ({ item, index }) => (
     <View
@@ -206,13 +209,13 @@ Description: ${item?.attributes?.description}`,
           }}
         >
           <CustomIconButton
-            icon={AppImages.editBlackIcon}
+            icon={"pencil"}
             onPress={() =>
               navigation.navigate("CreateAffirmation", { item: item })
             }
           />
           <CustomIconButton
-            icon={AppImages.deleteBlackIcon}
+            icon={"delete"}
             customStyles={styles.customStylesDeleteButton}
             onPress={() => {
               setShowDeleteModal(true);
@@ -244,9 +247,13 @@ Description: ${item?.attributes?.description}`,
         )}
       </View>
       <CustomIconButton
-        icon={AppImages.shareBlackIcon}
-        onPress={() => {
+        icon={"share"}
+        onPress={async () => {
+          await setOpenShare(true);
           onShare(item);
+          setTimeout(() => {
+            setOpenShare(false);
+          }, 300);
         }}
       />
     </View>
@@ -269,6 +276,7 @@ Description: ${item?.attributes?.description}`,
     return (
       <FlatList
         data={AffirmationState.dataDetails}
+        extraData={AffirmationState}
         bounces={false}
         showsVerticalScrollIndicator={false}
         stickyHeaderIndices={[0]}
@@ -283,27 +291,27 @@ Description: ${item?.attributes?.description}`,
         ListHeaderComponent={() => <Header />}
         keyExtractor={(item, index) => index.toString()}
         renderItem={_renderMyAffirmations}
-        ListEmptyComponent={() => (
-          <View
-            style={{
-              alignItems: "center",
-              justifyContent: "center",
-              // flex: 1,
-              paddingTop: responsiveHeight(35),
-              // backgroundColor: screenColor,
-            }}
-          >
-            <Text
-              style={{
-                color: screenColor,
-                fontFamily: AppFonts.light,
-                fontSize: responsiveFontSize(1.6),
-              }}
-            >
-              No affirmation found
-            </Text>
-          </View>
-        )}
+        // ListEmptyComponent={() => (
+        //   <View
+        //     style={{
+        //       alignItems: "center",
+        //       justifyContent: "center",
+        //       // flex: 1,
+        //       paddingTop: responsiveHeight(35),
+        //       // backgroundColor: screenColor,
+        //     }}
+        //   >
+        //     <Text
+        //       style={{
+        //         color: screenColor,
+        //         fontFamily: AppFonts.light,
+        //         fontSize: responsiveFontSize(1.6),
+        //       }}
+        //     >
+        //       No affirmation found
+        //     </Text>
+        //   </View>
+        // )}
       />
       // <>
       //   <Header />

@@ -9,6 +9,7 @@ import {
   ScrollView,
   Alert,
   ActivityIndicator,
+  TouchableWithoutFeedback,
 } from "react-native";
 import AppConstants from "../../Theme/AppConstants";
 import { AppImages } from "../../Theme/AppImages";
@@ -77,7 +78,7 @@ const MyTracker = (props) => {
   };
   useEffect(() => {
     const unsubscribe = props.navigation.addListener("focus", () => {
-      setViewType(1);
+      // setViewType(1);
       // setSelectedDate(TrackerState?.selectedDate);
       setPopupIndex([]);
       setShowPopUpListView(false);
@@ -200,12 +201,12 @@ const MyTracker = (props) => {
   };
   const createJournalentry = () => {
     if (!TrackerState?.entry?.id) {
-      setViewType(0);
+      // setViewType(0);
       props.navigation.navigate("CreateJournalEntry", {
         selectedDate: selectedDate,
       });
     } else {
-      showmessage("Entry already created for the selected date.");
+      showmessage("Entry already created for the selected date");
     }
   };
   const renderCalendarListView = (item, index) => {
@@ -319,7 +320,7 @@ const MyTracker = (props) => {
                       onPress={() => {
                         setShowDeleteModal(true);
                         setDeleteItem({
-                          id: TrackerState?.entry?.id,
+                          id: item?.id,
                           index: index,
                         });
                         // onPress={() => {
@@ -748,131 +749,150 @@ const MyTracker = (props) => {
     );
   };
   return (
-    <View style={styles.container}>
-      <Loader load={TrackerState.onLoad} />
-      <ConfirmPopupModal
-        load={showDeleteModal}
-        onClose={() => {
-          setShowDeleteModal(false);
-          setPopUpIndexView(deleteItem?.index);
-          setShowPopUp(false);
-          setDeleteItem({});
-        }}
-        text="Are you sure you want to delete this entry?"
-        onAction={() => deleteEntry()}
-      />
-      <ScrollView
-        bounces={false}
-        keyboardShouldPersistTaps="always"
-        showsVerticalScrollIndicator={false}
-      >
-        <View style={styles.upperContainer}>
-          <View style={styles.circle} />
-          <Text style={styles.affirmationText}>{AppConstants.myTracker}</Text>
-          <TouchableOpacity activeOpacity={0.8}>
-            <ImageBackground
-              source={AppImages.bigRectangleRound}
-              style={styles.addMyAffirmation}
-            >
-              <View
-                style={{
-                  flex: 1,
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
+    <TouchableWithoutFeedback
+      onPress={() => {
+        setPopupIndex([]);
+        setShowPopUpListView(false);
+        setShowPopUp(false);
+        setExpandIndex([]);
+      }}
+    >
+      <View style={styles.container}>
+        <Loader load={TrackerState.onLoad} />
+        <ConfirmPopupModal
+          load={showDeleteModal}
+          onClose={() => {
+            setShowDeleteModal(false);
+            setPopUpIndexView(deleteItem?.index);
+            setShowPopUp(false);
+            setDeleteItem({});
+          }}
+          text="Are you sure, you want to delete this journal entry?"
+          onAction={() => deleteEntry()}
+        />
+        <ScrollView
+          bounces={false}
+          keyboardShouldPersistTaps="always"
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.upperContainer}>
+            <View style={styles.circle} />
+            <Text style={styles.affirmationText}>{AppConstants.myTracker}</Text>
+            <TouchableOpacity activeOpacity={0.8}>
+              <ImageBackground
+                source={AppImages.bigRectangleRound}
+                style={styles.addMyAffirmation}
               >
-                <View style={styles.percantageView}>
-                  <Text style={styles.percantageText}>
-                    {Math.abs(TrackerState?.totalPercentage * 100)} %
-                  </Text>
-                  <Image
-                    source={
-                      Math.sign(TrackerState?.totalPercentage) == -1
-                        ? AppImages.downArrow
-                        : AppImages.upArrow
-                    }
-                    resizeMode="contain"
-                    style={styles.upArrowImage}
-                  />
-                </View>
-                <View style={styles.percentageEntryView}>
-                  <Image
-                    source={AppImages.editEntry}
-                    style={styles.editEntryImage}
-                    resizeMode="contain"
-                  />
-                  <View style={styles.percentageEntryTextView}>
-                    <Text style={styles.percentageEntryText}>
-                      {TrackerState?.totalEntry}{" "}
-                      {TrackerState?.totalEntry > 1 ? "Entries" : "Entry"} this
-                      month
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <View style={styles.percantageView}>
+                    <Text style={styles.percantageText}>
+                      {/* 300000000 % */}
+                      {Math.abs(TrackerState?.totalPercentage * 100)} %
                     </Text>
+                    <Image
+                      source={
+                        Math.sign(TrackerState?.totalPercentage) == -1
+                          ? AppImages.downArrow
+                          : AppImages.upArrow
+                      }
+                      resizeMode="contain"
+                      style={styles.upArrowImage}
+                    />
+                  </View>
+                  <View style={styles.percentageEntryView}>
+                    <Image
+                      source={AppImages.editEntry}
+                      style={styles.editEntryImage}
+                      resizeMode="contain"
+                    />
+                    <View style={styles.percentageEntryTextView}>
+                      <Text style={styles.percentageEntryText}>
+                        {TrackerState?.totalEntry}{" "}
+                        {TrackerState?.totalEntry > 1 ? "Entries" : "Entry"}{" "}
+                        this month
+                      </Text>
+                    </View>
                   </View>
                 </View>
-              </View>
-            </ImageBackground>
-          </TouchableOpacity>
-          <View style={styles.optionView}>
-            <TouchableOpacity
-              activeOpacity={0.8}
-              onPress={() => {
-                createJournalentry();
-              }}
+              </ImageBackground>
+            </TouchableOpacity>
+            <View style={styles.optionView}>
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={() => {
+                  createJournalentry();
+                }}
+              >
+                <Image source={AppImages.edit} style={styles.optionsImage} />
+              </TouchableOpacity>
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={() => onTabPress(1)}
+              >
+                <Image
+                  source={AppImages.calender}
+                  style={styles.optionsImage}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={() => onTabPress(2)}
+              >
+                <Image source={AppImages.toggle} style={styles.optionsImage} />
+              </TouchableOpacity>
+            </View>
+            <View
+              style={[
+                styles.calenderViewUpper,
+                { display: viewType == 2 ? "flex" : "none" },
+              ]}
             >
-              <Image source={AppImages.edit} style={styles.optionsImage} />
-            </TouchableOpacity>
-            <TouchableOpacity activeOpacity={0.8} onPress={() => onTabPress(1)}>
-              <Image source={AppImages.calender} style={styles.optionsImage} />
-            </TouchableOpacity>
-            <TouchableOpacity activeOpacity={0.8} onPress={() => onTabPress(2)}>
-              <Image source={AppImages.toggle} style={styles.optionsImage} />
-            </TouchableOpacity>
-          </View>
-          <View
-            style={[
-              styles.calenderViewUpper,
-              { display: viewType == 2 ? "flex" : "none" },
-            ]}
-          >
-            <View>
-              <TouchableOpacity
-                activeOpacity={0.8}
-                onPress={() => changeMonth(-1)}
-              >
+              <View>
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  onPress={() => changeMonth(-1)}
+                >
+                  <Image
+                    source={AppImages.leftArrow}
+                    style={styles.leftRightArrowImage}
+                  />
+                </TouchableOpacity>
+              </View>
+              <View style={styles.calenderViewDateUpper}>
                 <Image
-                  source={AppImages.leftArrow}
-                  style={styles.leftRightArrowImage}
+                  source={AppImages.calenderWhite}
+                  style={styles.calendarImage}
                 />
-              </TouchableOpacity>
-            </View>
-            <View style={styles.calenderViewDateUpper}>
-              <Image
-                source={AppImages.calenderWhite}
-                style={styles.calendarImage}
-              />
-              <Text style={styles.calenderDateUpper}>
-                {getMonthInWord(
-                  new Date(TrackerState?.selectedDate).getMonth()
-                )}{" "}
-                {new Date(TrackerState?.selectedDate).getFullYear()}
-              </Text>
-            </View>
-            <View>
-              <TouchableOpacity
-                activeOpacity={0.8}
-                onPress={() => changeMonth(1)}
-              >
-                <Image
-                  source={AppImages.rightArrow}
-                  style={styles.leftRightArrowImage}
-                />
-              </TouchableOpacity>
+                <Text style={styles.calenderDateUpper}>
+                  {getMonthInWord(
+                    new Date(TrackerState?.selectedDate).getMonth()
+                  )}{" "}
+                  {new Date(TrackerState?.selectedDate).getFullYear()}
+                </Text>
+              </View>
+              <View>
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  onPress={() => changeMonth(1)}
+                >
+                  <Image
+                    source={AppImages.rightArrow}
+                    style={styles.leftRightArrowImage}
+                  />
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
-        </View>
-        {RenderCalenderView()}
-      </ScrollView>
-    </View>
+          {RenderCalenderView()}
+        </ScrollView>
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 

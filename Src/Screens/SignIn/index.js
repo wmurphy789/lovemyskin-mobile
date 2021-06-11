@@ -19,11 +19,15 @@ import Methods, { navigationRef } from "../../Support/Methods";
 import styles from "./styles";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { formikValidation } from "../../Support/Validations";
+import {
+  formikValidation,
+  formikValidationLogin,
+} from "../../Support/Validations";
 import { showMessage } from "react-native-flash-message";
 import { loginAction } from "../../Redux/Actions/AuthActions";
 import Loader from "../../Components/Loader";
 import { useEffect } from "react";
+import { DataManager } from "../../Support/Datamanager";
 
 const socialLoginData = [
   {
@@ -52,14 +56,42 @@ const SignIn = ({ navigation }) => {
   const dispatch = useDispatch();
   const authState = useSelector((state) => state.AuthReducer);
   useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      () => {
+        console.log(navigationRef.current.getCurrentRoute());
+        let route = navigationRef.current.getCurrentRoute();
+        if (route.name == "SignIn") {
+          BackHandler.exitApp();
+          // return true
+        }
+        // return backHandler.remove();
+      }
+    );
+  }, []);
+  useEffect(() => {
     const unsubscribe = navigation.addListener("blur", () => {
       setEmail("");
       setPassword("");
     });
+
     return unsubscribe;
   }, []);
+  useEffect(() => {
+    const unsubscribe1 = navigation.addListener("focus", () => {
+      console.log("in signin ");
+      DataManager.getUserId().then((token) => {
+        if (token) {
+          navigation.navigate("Tabs");
+        }
+      });
+    });
+
+    return unsubscribe1;
+  }, []);
+
   const signIn = () => {
-    const validate = formikValidation(email?.trim(), password?.trim());
+    const validate = formikValidationLogin(email?.trim(), password?.trim());
 
     if (validate) {
       // const email = "testing5@gmail.com";
@@ -71,22 +103,10 @@ const SignIn = ({ navigation }) => {
           navigation
         )
       );
-      setEmail("");
-      setPassword("");
+      // setEmail("");
+      // setPassword("");
     }
   };
-  // useEffect(() => {
-  //   const backHandler = BackHandler.addEventListener(
-  //     "hardwareBackPress",
-  //     handleBackButton
-  //   );
-  //   // return backHandler;
-  // }, []);
-  // const handleBackButton = () => {
-  //   const route = navigationRef?.current?.getCurrentRoute();
-  //   if (route?.name == "SignIn") BackHandler.exitApp();
-  //   return true;
-  // };
 
   return (
     <View style={{ flex: 1, backgroundColor: "#fff" }}>
@@ -144,6 +164,7 @@ const SignIn = ({ navigation }) => {
             </TouchableOpacity>
             <View style={styles.fullButton}>
               <FullButton
+                disabled={authState?.onLoad}
                 title={AppConstants.signIn}
                 onPress={() => signIn()}
               />

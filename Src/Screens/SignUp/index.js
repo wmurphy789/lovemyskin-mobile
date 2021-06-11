@@ -74,9 +74,9 @@ const SignUp = ({ navigation }) => {
           navigation
         )
       );
-      setEmail("");
-      setPassword("");
-      setConfirmPassword("");
+      // setEmail("");
+      // setPassword("");
+      // setConfirmPassword("");
     }
   };
   return (
@@ -133,7 +133,7 @@ const SignUp = ({ navigation }) => {
             </View>
             <View style={styles.fullButton}>
               <FullButton
-                disabled={authState.isDisable}
+                disabled={authState?.onLoad}
                 title={AppConstants.signUp}
                 onPress={() => signUp()}
                 // onPress={() => Methods.navigate(navigation, "SkinPriorities")}

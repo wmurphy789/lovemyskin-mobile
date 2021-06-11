@@ -77,6 +77,7 @@ class CalendarStrip extends Component {
       datas: [],
       isTodayVisible: true,
       expand: false,
+      scrollIndex: 0,
       monthChangedDate: this.props.selectedDate,
       pageOfToday: 2, // page of today in calendar, start from 0
       currentPage: 2, // current page in calendar,  start from 0
@@ -195,8 +196,17 @@ class CalendarStrip extends Component {
       ...daysInSelectedMonth,
       ...daysInNextMonth,
     ];
-    // const data = [];
-    this.setState({ datas: data });
+    var indexToScroll = data.findIndex(function (item) {
+      return (
+        moment(item?.date).format("YYYY-MM-DD") ===
+        moment(moment(d).startOf("week")).format("YYYY-MM-DD")
+      );
+    });
+    this?._calendarScroll?.scrollToIndex({
+      animated: true,
+      index: indexToScroll,
+    });
+    this.setState({ datas: data, scrollIndex: indexToScroll });
     // return data
   }
 
@@ -236,11 +246,11 @@ class CalendarStrip extends Component {
       const text = monthNames[month];
       return text;
     };
-    const changeMonth = (value) => {
+    const changeMonth = async (value) => {
       var selectedDate = new Date(this.props.selectedDate);
       var changedDate = selectedDate.setMonth(selectedDate.getMonth() + value);
       this.setState({ monthChangedDate: changedDate });
-      this.getInitialDates(changedDate);
+      await this.getInitialDates(changedDate);
       this.props.onPressDate && this.props.onPressDate(changedDate);
       // onMonthChange(changedDate);
     };
@@ -291,6 +301,17 @@ class CalendarStrip extends Component {
         onItemPress={(date) => {
           this.props.onPressDate && this.props.onPressDate(item?.date);
           this.setState({ expand: false });
+          var indexToScroll = this.state.datas.findIndex(function (items) {
+            return (
+              moment(items?.date).format("YYYY-MM-DD") ===
+              moment(moment(item?.date).startOf("week")).format("YYYY-MM-DD")
+            );
+          });
+          this?._calendarScroll?.scrollToIndex({
+            animated: true,
+            index: indexToScroll,
+          });
+          this.setState({ scrollIndex: indexToScroll });
         }}
         highlight={
           moment(this.props.selectedDate).isSame(item?.date, "day") &&
@@ -300,13 +321,6 @@ class CalendarStrip extends Component {
         // marked={marked.find((d) => isSameDay(d, item.date))}
       />
     );
-  };
-  scrollIndex = () => {
-    const date = moment(this.props.selectedDate).get("D");
-    const total = this.state.datas.length / 7;
-    const index = date / total;
-    console.log("index----->", date, total, parseInt(index));
-    return parseInt(index * total);
   };
 
   render() {
@@ -342,11 +356,11 @@ class CalendarStrip extends Component {
         )}
         {!this.state.expand && (
           <FlatList
-            ref={(ref) => (this._calendar = ref)}
+            ref={(ref) => (this._calendarScroll = ref)}
             bounces={false}
             horizontal
             pagingEnabled
-            initialScrollIndex={this.scrollIndex()}
+            initialScrollIndex={this.state.scrollIndex}
             showsHorizontalScrollIndicator={false}
             scrollEventThrottle={500}
             getItemLayout={(data, index) => ({

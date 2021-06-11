@@ -36,12 +36,14 @@ export default StyleSheet.create({
     fontSize: responsiveFontSize(2.2),
     textAlign: "center",
     marginTop: responsiveHeight(1.8),
+    width: responsiveWidth(80),
   },
   profileId: {
     color: AppColors.white,
     fontFamily: AppFonts.regular,
     textAlign: "center",
     marginTop: responsiveHeight(0.5),
+    width: responsiveWidth(80),
   },
   menuItem: {
     flexDirection: "row",

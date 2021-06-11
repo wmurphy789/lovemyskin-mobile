@@ -114,7 +114,11 @@ export default StyleSheet.create({
     // width: responsiveWidth(10),
     height: 45,
     width: 45,
+    borderRadius: 45,
     alignSelf: "flex-end",
+    backgroundColor: "#000",
+    alignItems: "center",
+    justifyContent: "center",
   },
   customStylesDeleteButton: {
     marginTop: responsiveHeight(1),

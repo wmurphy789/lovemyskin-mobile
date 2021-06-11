@@ -24,25 +24,26 @@ const AllAffirmations = (props) => {
   const dispatch = useDispatch();
   const AffirmationState = useSelector((state) => state.AffirmationReducer);
   useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      () => {
+        console.log(navigationRef.current.getCurrentRoute());
+        let route = navigationRef.current.getCurrentRoute();
+        if (route.name == "AllAffirmations") {
+          BackHandler.exitApp();
+          // return true
+        }
+        // return backHandler.remove();
+      }
+    );
+  }, []);
+  useEffect(() => {
     const unsubscribe = props.navigation.addListener("focus", () => {
       dispatch(getAffirmationAction({}, props.navigation));
     });
-    BackHandler.addEventListener("hardwareBackPress", handleBackButton);
+
     return unsubscribe;
   }, []);
-  const handleBackButton = () => {
-    console.log(
-      "navigationRef?.current?.getCurrentRoute()",
-      navigationRef?.current?.getCurrentRoute()
-    );
-    const route = navigationRef?.current?.getCurrentRoute();
-    if (route?.name == "AllAffirmations" || route?.name == "SignIn") {
-      BackHandler.exitApp();
-      return true;
-    } else {
-      return false;
-    }
-  };
 
   function createAffirmation() {
     Methods.navigate(props.navigation, "CreateAffirmation");

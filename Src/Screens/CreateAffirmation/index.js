@@ -44,7 +44,7 @@ const CreateAffirmation = (props) => {
     if (des.length > 2) {
       dispatch(createAffirmationAction({ description: des }, props.navigation));
     } else if (des.length > 0) {
-      showmessage("Affirmation sholud be alteast 3 char long");
+      showmessage("Affirmation should be at least 3 characters long");
     } else {
       showmessage("Please enter your affirmation");
     }
@@ -57,7 +57,7 @@ const CreateAffirmation = (props) => {
         updateAffirmationAction({ id: id, description: des }, props.navigation)
       );
     } else if (des.length > 0) {
-      showmessage("Affirmation sholud be alteast 3 char long");
+      showmessage("Affirmation should be at least 3 characters long");
     } else {
       showmessage("Please enter your affirmation");
     }

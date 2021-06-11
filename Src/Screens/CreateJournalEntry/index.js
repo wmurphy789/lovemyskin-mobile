@@ -9,6 +9,8 @@ import {
   FlatList,
   ScrollView,
   TouchableWithoutFeedback,
+  Linking,
+  Alert,
 } from "react-native";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
@@ -34,6 +36,13 @@ import styles from "./styles";
 import * as ImagePicker from "expo-image-picker";
 import ImagePickerModal from "../../Components/ImagePickerModal";
 import { useEffect } from "react";
+import Constants from "expo-constants";
+import * as IntentLauncher from "expo-intent-launcher";
+
+const pkg = Constants.manifest.releaseChannel
+  ? Constants.manifest.android.package
+  : "host.exp.exponent";
+
 const dropDownoption = [
   { id: 0, feeling: "good", title: "Good" },
   { id: 1, feeling: "bad", title: "Bad" },
@@ -122,7 +131,7 @@ const CreateJournalEntry = (props) => {
         )
       );
     } else if (des.length > 0) {
-      showmessage("Skin condition sholud be alteast 3 char long");
+      showmessage("Skin condition sholud be at least 3 characters long");
     } else {
       showmessage("Please enter about your day and skin condition");
     }
@@ -153,7 +162,7 @@ const CreateJournalEntry = (props) => {
         )
       );
     } else if (des.length > 0) {
-      showmessage("Skin condition sholud be alteast 3 char long");
+      showmessage("Skin condition sholud be at least 3 characters long");
     } else {
       showmessage("Please enter about your day and skin condition");
     }
@@ -165,8 +174,29 @@ const CreateJournalEntry = (props) => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (permissionResult.granted === false) {
-      alert(
-        "You've refused to allow this application to access your Photos! Go to setting>>Applications>>LoveMySkin>>Storage permission>>allowed"
+      Alert.alert(
+        "",
+        "Please enable the library permission from the settings",
+        [
+          {
+            text: "Cancel",
+            onPress: () => console.log("Cancel Pressed"),
+            style: "cancel",
+          },
+          {
+            text: "Ok",
+            onPress: () => {
+              if (Platform.OS === "ios") {
+                Linking.openURL("app-settings:");
+              } else {
+                IntentLauncher.startActivityAsync(
+                  IntentLauncher.ACTION_APPLICATION_DETAILS_SETTINGS,
+                  { data: "package:" + pkg }
+                );
+              }
+            },
+          },
+        ]
       );
       return;
     }
@@ -184,9 +214,26 @@ const CreateJournalEntry = (props) => {
     const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
 
     if (permissionResult.granted === false) {
-      alert(
-        "You've refused to allow this application to access your camera! Go to setting>>Applications>>LoveMySkin>>Camera permission>>allowed"
-      );
+      Alert.alert("", "Please enable the camera permission from the settings", [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel",
+        },
+        {
+          text: "Ok",
+          onPress: () => {
+            if (Platform.OS === "ios") {
+              Linking.openURL("app-settings:");
+            } else {
+              IntentLauncher.startActivityAsync(
+                IntentLauncher.ACTION_APPLICATION_DETAILS_SETTINGS,
+                { data: "package:" + pkg }
+              );
+            }
+          },
+        },
+      ]);
       return;
     }
 
@@ -308,6 +355,7 @@ const CreateJournalEntry = (props) => {
       </TouchableOpacity>
 
       <FullButton
+        disabled={TrackerState?.onLoad}
         title={id ? "Update Affirmation" : AppConstants.createAffirmation}
         customStyles={styles.button}
         onPress={() => (id ? updateEntry() : createEntry())}

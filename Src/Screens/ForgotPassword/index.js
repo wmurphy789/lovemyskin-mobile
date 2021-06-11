@@ -14,6 +14,8 @@ import styles from "./styles";
 import Methods from "../../Support/Methods";
 import { responsiveHeight } from "../../Theme/ResponsiveDimensions";
 import { AppColors } from "../../Theme/AppColors";
+import { useEffect } from "react";
+import { useState } from "react";
 
 const ForgotPassword = ({ navigation }) => {
   const [email, setEmail] = useState("");

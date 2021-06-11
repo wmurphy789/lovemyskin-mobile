@@ -45,7 +45,7 @@ const App = () => {
           <StatusBar barStyle="light-content" />
           <SafeAreaView style={{ flex: 1 }}>
             <Setup />
-            <FlashMessage position="bottom" />
+            <FlashMessage position="top" />
           </SafeAreaView>
         </Provider>
       )}

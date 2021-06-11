@@ -7,6 +7,8 @@ import {
   ScrollView,
   Image,
   TouchableOpacity,
+  Linking,
+  Alert,
 } from "react-native";
 import { FullButton } from "../../Components/Button";
 import { CurvedHeader } from "../../Components/Header";
@@ -27,6 +29,11 @@ import { submitFeedbackAutodrumAction } from "../../Redux/Actions/SkinDiagonseAc
 import { showmessage } from "../../Support/Validations";
 import Loader from "../../Components/Loader";
 import { useEffect } from "react";
+import Constants from "expo-constants";
+import * as IntentLauncher from "expo-intent-launcher";
+const pkg = Constants.manifest.releaseChannel
+  ? Constants.manifest.android.package
+  : "host.exp.exponent";
 
 const SkinDiagnosis = ({ navigation }) => {
   const [imagePickerModal, setImagePickerModal] = useState(false);
@@ -47,8 +54,29 @@ const SkinDiagnosis = ({ navigation }) => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (permissionResult.granted === false) {
-      alert(
-        "You've refused to allow this application to access your Photos! Go to setting>>Applications>>LoveMySkin>>Storage permission>>allowed"
+      Alert.alert(
+        "",
+        "Please enable the library permission from the settings",
+        [
+          {
+            text: "Cancel",
+            onPress: () => console.log("Cancel Pressed"),
+            style: "cancel",
+          },
+          {
+            text: "Ok",
+            onPress: () => {
+              if (Platform.OS === "ios") {
+                Linking.openURL("app-settings:");
+              } else {
+                IntentLauncher.startActivityAsync(
+                  IntentLauncher.ACTION_APPLICATION_DETAILS_SETTINGS,
+                  { data: "package:" + pkg }
+                );
+              }
+            },
+          },
+        ]
       );
       return;
     }
@@ -66,9 +94,26 @@ const SkinDiagnosis = ({ navigation }) => {
     const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
 
     if (permissionResult.granted === false) {
-      alert(
-        "You've refused to allow this application to access your camera! Go to setting>>Applications>>LoveMySkin>>Camera permission>>allowed"
-      );
+      Alert.alert("", "Please enable the camera permission from the settings", [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel",
+        },
+        {
+          text: "Ok",
+          onPress: () => {
+            if (Platform.OS === "ios") {
+              Linking.openURL("app-settings:");
+            } else {
+              IntentLauncher.startActivityAsync(
+                IntentLauncher.ACTION_APPLICATION_DETAILS_SETTINGS,
+                { data: "package:" + pkg }
+              );
+            }
+          },
+        },
+      ]);
       return;
     }
 

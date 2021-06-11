@@ -17,10 +17,12 @@ export function* fetchGetProfile({ param }) {
         type: ActionType.GET_PROFILE_FAIL,
         Result: { msg: "Profile Not Found!" },
       });
+      showmessage("Something went wrong");
       // param.navigate("Auth")
       // showmessage("Profile not found! please login again.");
     }
   } catch (e) {
+    showmessage("Something went wrong");
     yield put({
       type: ActionType.UNKNOWN_ERROR,
       message: "unknown error!",
@@ -35,13 +37,14 @@ export function* fetchUpdateProfile({ param }) {
     if (response.status == 1) {
       yield put({ type: ActionType.UPDATE_PROFILE_SUCCESS, Result: response });
       Methods.goBack(param.navigation);
-      showmessage("Profile details updated successfully.");
-    } else if (response.status == 0) {
+      showmessage("Profile details updated successfully");
+    } else {
       yield put({ type: ActionType.UPDATE_PROFILE_FAIL, Result: response });
-      param.navigate("Auth");
-      showmessage("Profile not found! please login again.");
+      // param.navigate("Auth");
+      showmessage("Something went wrong");
     }
   } catch (e) {
+    showmessage("Something went wrong");
     yield put({
       type: ActionType.UNKNOWN_ERROR,
       message: "unknown error!",
@@ -55,17 +58,15 @@ export function* fetchUpdateProfileImage({ param, navigation }) {
     console.log(response, "response asdgahsj");
     if (response.status == 1) {
       yield put({ type: ActionType.UPDATE_PROFILE_SUCCESS, Result: response });
-      Methods.goBack(navigation);
-      showmessage("Profile details updated successfully.");
-    } else if (response.status == 0) {
-      yield put({ type: ActionType.UPDATE_PROFILE_FAIL, Result: response });
-      navigation.navigate("Auth");
-      showmessage("Profile not found! please login again.");
+      // Methods.goBack(navigation);
+      showmessage("Profile details updated successfully");
     } else {
       console.log(response);
-      showmessage("Failed to update Profile Image.");
+      yield put({ type: ActionType.UPDATE_PROFILE_FAIL, Result: response });
+      showmessage("Failed to update Profile Image");
     }
   } catch (e) {
+    showmessage("Failed to update Profile Image");
     yield put({
       type: ActionType.UNKNOWN_ERROR,
       message: "unknown error!",
@@ -85,12 +86,13 @@ export function* fetchChangePassword({ param }) {
       Methods.navigate(param.navigation, "Auth");
     } else if (response.status == 3) {
       yield put({ type: ActionType.CHANGE_PASSWORD_FAIL, Result: response });
-      showmessage("Old Password is wrong.");
+      showmessage("Old Password is wrong");
     } else {
       yield put({ type: ActionType.CHANGE_PASSWORD_FAIL, Result: response });
-      showmessage("Something went wrong!");
+      showmessage("Something went wrong");
     }
   } catch (e) {
+    showmessage("Something went wrong");
     yield put({
       type: ActionType.UNKNOWN_ERROR,
       message: "unknown error!",

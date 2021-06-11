@@ -7,8 +7,8 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from "react-native";
-import { color } from "react-native-reanimated";
 import { AppColors } from "../../Theme/AppColors";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const ImagePickerModal = (props) => {
   return (
@@ -47,7 +47,7 @@ const ImagePickerModal = (props) => {
               right: -15,
             }}
           > */}
-          <TouchableOpacity
+          {/* <TouchableOpacity
             // activeOpacity={1}
             onPress={() => props.onClose()}
             style={{
@@ -62,11 +62,23 @@ const ImagePickerModal = (props) => {
               right: -10,
               top: -10,
             }}
-          >
-            <Text style={{ fontSize: 16, fontWeight: "bold", color: "#fff" }}>
+          > */}
+          {/* <Text style={{ fontSize: 16, fontWeight: "bold", color: "#fff" }}>
               X
-            </Text>
-          </TouchableOpacity>
+            </Text> */}
+          <MaterialCommunityIcons
+            name={"close-circle"}
+            size={35}
+            color={AppColors.main}
+            style={{
+              position: "absolute",
+              right: -9,
+              top: -9,
+              zIndex: 99999,
+            }}
+            onPress={() => props.onClose()}
+          />
+          {/* </TouchableOpacity> */}
           {/* </View> */}
           <TouchableOpacity activeOpacity={1}>
             <View

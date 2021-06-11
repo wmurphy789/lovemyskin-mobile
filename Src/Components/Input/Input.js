@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from "react";
-import { Image, TextInput, View } from "react-native";
+import { Image, Platform, TextInput, View } from "react-native";
+import { AppColors } from "../../Theme/AppColors";
 import { AppFonts } from "../../Theme/AppFonts";
 import styles from "./styles";
 
@@ -26,8 +27,13 @@ export const IconInput = ({
         keyboardType={type ? "email-address" : "default"}
         ref={inputRef}
         secureTextEntry={secureInput}
-        onChangeText={onChangeText}
-        style={[styles.iconInputField, customStyles]}
+        onChangeText={(text) =>
+          secureInput
+            ? onChangeText(text?.trim())
+            : onChangeText(text?.trimLeft())
+        }
+        placeholderTextColor={"#ccc"}
+        style={[styles.iconInputField, customStyles, { color: "#000" }]}
       />
     </View>
   );
@@ -44,6 +50,7 @@ export const SimpleInput = ({
   defaultValue,
   type,
   image,
+  maxLength,
   editable,
 }) => {
   const inputRef = useRef(null);
@@ -59,11 +66,17 @@ export const SimpleInput = ({
         value={text}
         ref={inputRef}
         editable={editable}
+        maxLength={maxLength}
         defaultValue={defaultValue}
-        onChangeText={onChangeText}
+        onChangeText={(text) =>
+          secureInput
+            ? onChangeText(text?.trim())
+            : onChangeText(text?.trimLeft())
+        }
         placeholder={placeholder}
-        keyboardType={type ? "email-address" : "default"}
-        style={[styles.simpleInputField, customFontStyles]}
+        placeholderTextColor={"#ccc"}
+        keyboardType={type ? "email-address" : "ascii-capable"}
+        style={[styles.simpleInputField, customFontStyles, { color: "#000" }]}
       />
     </View>
   );

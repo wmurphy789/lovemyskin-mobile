@@ -77,7 +77,7 @@ export const AppImages = {
   ThreedotsWhite: require("../../Assets/Images/3dotsWhite.png"),
   sendButton: require("../../Assets/Images/sendButton.png"),
   downArrow: require("../../Assets/Images/downArrow.png"),
-  userDummy: require("../../Assets/Images/userDummy.jpg"),
+  userDummy: require("../../Assets/Images/userDummy.png"),
 };
 
 export const AppImagesExpo = [
@@ -159,5 +159,5 @@ export const AppImagesExpo = [
   require("../../Assets/Images/3dotsWhite.png"),
   require("../../Assets/Images/sendButton.png"),
   require("../../Assets/Images/downArrow.png"),
-  require("../../Assets/Images/userDummy.jpg"),
+  require("../../Assets/Images/userDummy.png"),
 ];

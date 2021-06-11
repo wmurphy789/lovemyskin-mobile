@@ -8,6 +8,7 @@ import {
   Image,
   TouchableOpacity,
   TouchableHighlight,
+  BackHandler,
 } from "react-native";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
@@ -26,6 +27,7 @@ import {
 import styles from "./styles";
 import { updateQuestionIdAction } from "../../Redux/Actions/AuthActions";
 import Loader from "../../Components/Loader";
+import { useEffect } from "react";
 
 const SkinPriorities = ({ navigation }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -34,6 +36,20 @@ const SkinPriorities = ({ navigation }) => {
   const updateQuestionId = () => {
     dispatch(updateQuestionIdAction(selectedIndex, navigation));
   };
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      () => {
+        console.log(navigationRef.current.getCurrentRoute());
+        let route = navigationRef.current.getCurrentRoute();
+        if (route.name == "SkinPriorities") {
+          BackHandler.exitApp();
+          // return true
+        }
+        // return backHandler.remove();
+      }
+    );
+  }, []);
 
   return (
     <View style={{ backgroundColor: AppColors.white, flex: 1 }}>
@@ -42,7 +58,8 @@ const SkinPriorities = ({ navigation }) => {
         underlayColor="rgba(33, 131, 129, 0.5)"
         activeOpacity={1}
         onPress={() => {
-          navigation.goBack();
+          // navigation.goBack();
+          BackHandler.exitApp();
         }}
       >
         <Image source={AppImages.backIcon} style={styles.backImage} />
@@ -104,6 +121,7 @@ const SkinPriorities = ({ navigation }) => {
           </TouchableOpacity>
           <View style={{ marginBottom: responsiveHeight(5) }}>
             <FullButton
+              disabled={AuthReducerState?.onLoad}
               title={AppConstants.continue}
               onPress={() => {
                 updateQuestionId();

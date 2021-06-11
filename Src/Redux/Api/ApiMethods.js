@@ -33,16 +33,16 @@ const Method = {
                 result: data.data,
               };
             } else {
-              showmessage("Something went wrong.");
+              showmessage("Something went wrong");
               return {
-                result: { message: "Something went wrong." },
+                result: { message: "Something went wrong" },
                 status: StatusCodes.Failure,
               };
             }
           } else {
-            showmessage("Something went wrong.");
+            showmessage("Something went wrong");
             return {
-              result: { message: "Something went wrong." },
+              result: { message: "Something went wrong" },
               status: StatusCodes.Failure,
             };
           }
@@ -64,7 +64,7 @@ const Method = {
             };
           } else {
             if (error.response.status == 400) {
-              showmessage("Something went wrong.");
+              showmessage("Something went wrong");
               return {
                 result: { msg: error.response.data.errors[0] },
                 status: StatusCodes.Failure,
@@ -91,9 +91,9 @@ const Method = {
                 status: StatusCodes.Unauthenticate,
               };
             } else {
-              showmessage("Something went wrong.");
+              showmessage("Something went wrong");
               return {
-                result: { msg: "Something went wrong." },
+                result: { msg: "Something went wrong" },
                 status: StatusCodes.Failure,
               };
             }
@@ -129,16 +129,16 @@ const Method = {
                 result: data.data,
               };
             } else {
-              showmessage("Something went wrong.");
+              showmessage("Something went wrong");
               return {
-                result: { message: "Something went wrong." },
+                result: { message: "Something went wrong" },
                 status: StatusCodes.Failure,
               };
             }
           } else {
-            showmessage("Something went wrong.");
+            showmessage("Something went wrong");
             return {
-              result: { message: "Something went wrong." },
+              result: { message: "Something went wrong" },
               status: StatusCodes.Failure,
             };
           }
@@ -160,7 +160,7 @@ const Method = {
             };
           } else {
             if (error.response.status == 400) {
-              showmessage("Something went wrong.");
+              showmessage("Something went wrong");
               return {
                 result: { msg: error.response.data.errors[0] },
                 status: StatusCodes.Failure,
@@ -187,9 +187,9 @@ const Method = {
                 status: StatusCodes.Unauthenticate,
               };
             } else {
-              showmessage("Something went wrong.");
+              showmessage("Something went wrong");
               return {
-                result: { msg: "Something went wrong." },
+                result: { msg: "Something went wrong" },
                 status: StatusCodes.Failure,
               };
             }
@@ -295,16 +295,16 @@ const Method = {
                 result: data.data,
               };
             } else {
-              showmessage("Something went wrong.");
+              showmessage("Something went wrong");
               return {
-                result: { message: "Something went wrong." },
+                result: { message: "Something went wrong" },
                 status: StatusCodes.Failure,
               };
             }
           } else {
-            showmessage("Something went wrong.");
+            showmessage("Something went wrong");
             return {
-              result: { message: "Something went wrong." },
+              result: { message: "Something went wrong" },
               status: StatusCodes.Failure,
             };
           }
@@ -326,7 +326,7 @@ const Method = {
             };
           } else {
             if (error.response.status == 400) {
-              showmessage("Something went wrong.");
+              showmessage("Something went wrong");
               return {
                 result: { msg: error.response.data.errors[0] },
                 status: StatusCodes.Failure,
@@ -341,9 +341,9 @@ const Method = {
                 status: StatusCodes.Unauthenticate,
               };
             } else if (error.response.status == 404) {
-              showmessage("Something went wrong.");
+              showmessage("Something went wrong");
               return {
-                result: { msg: "Something went wrong." },
+                result: { msg: "Something went wrong" },
                 status: StatusCodes.Unauthenticate,
               };
             } else if (error.response.status == 422) {
@@ -353,9 +353,9 @@ const Method = {
                 status: StatusCodes.Unauthenticate,
               };
             } else {
-              showmessage("Something went wrong.");
+              showmessage("Something went wrong");
               return {
-                result: { msg: "Something went wrong." },
+                result: { msg: "Something went wrong" },
                 status: StatusCodes.Failure,
               };
             }
@@ -391,16 +391,16 @@ const Method = {
                 result: data.data,
               };
             } else {
-              showmessage("Something went wrong.");
+              showmessage("Something went wrong");
               return {
-                result: { message: "Something went wrong." },
+                result: { message: "Something went wrong" },
                 status: StatusCodes.Failure,
               };
             }
           } else {
-            showmessage("Something went wrong.");
+            showmessage("Something went wrong");
             return {
-              result: { message: "Something went wrong." },
+              result: { message: "Something went wrong" },
               status: StatusCodes.Failure,
             };
           }
@@ -422,7 +422,7 @@ const Method = {
             };
           } else {
             if (error.response.status == 400) {
-              showmessage("Something went wrong.");
+              showmessage("Something went wrong");
               return {
                 result: { msg: error.response.data.errors[0] },
                 status: StatusCodes.Failure,
@@ -437,9 +437,9 @@ const Method = {
                 status: StatusCodes.Unauthenticate,
               };
             } else if (error.response.status == 404) {
-              showmessage("Something went wrong.");
+              showmessage("Something went wrong");
               return {
-                result: { msg: "Something went wrong." },
+                result: { msg: "Something went wrong" },
                 status: StatusCodes.Unauthenticate,
               };
             } else if (error.response.status == 422) {
@@ -449,9 +449,9 @@ const Method = {
                 status: StatusCodes.Unauthenticate,
               };
             } else {
-              showmessage("Something went wrong.");
+              showmessage("Something went wrong");
               return {
-                result: { msg: "Something went wrong." },
+                result: { msg: "Something went wrong" },
                 status: StatusCodes.Failure,
               };
             }
@@ -487,16 +487,16 @@ const Method = {
                 result: data.data,
               };
             } else {
-              showmessage("Something went wrong.");
+              showmessage("Something went wrong");
               return {
-                result: { message: "Something went wrong." },
+                result: { message: "Something went wrong" },
                 status: StatusCodes.Failure,
               };
             }
           } else {
-            showmessage("Something went wrong.");
+            showmessage("Something went wrong");
             return {
-              result: { message: "Something went wrong." },
+              result: { message: "Something went wrong" },
               status: StatusCodes.Failure,
             };
           }
@@ -518,7 +518,7 @@ const Method = {
             };
           } else {
             if (error.response.status == 400) {
-              showmessage("Something went wrong.");
+              showmessage("Something went wrong");
               return {
                 result: { msg: error.response.data.errors[0] },
                 status: StatusCodes.Failure,
@@ -533,9 +533,9 @@ const Method = {
                 status: StatusCodes.Unauthenticate,
               };
             } else if (error.response.status == 404) {
-              showmessage("Something went wrong.");
+              showmessage("Something went wrong");
               return {
-                result: { msg: "Something went wrong." },
+                result: { msg: "Something went wrong" },
                 status: StatusCodes.Unauthenticate,
               };
             } else if (error.response.status == 422) {
@@ -545,9 +545,9 @@ const Method = {
                 status: StatusCodes.Unauthenticate,
               };
             } else {
-              showmessage("Something went wrong.");
+              showmessage("Something went wrong");
               return {
-                result: { msg: "Something went wrong." },
+                result: { msg: "Something went wrong" },
                 status: StatusCodes.Failure,
               };
             }
@@ -583,16 +583,16 @@ const Method = {
                 result: data.data,
               };
             } else {
-              showmessage("Something went wrong.");
+              showmessage("Something went wrong");
               return {
-                result: { message: "Something went wrong." },
+                result: { message: "Something went wrong" },
                 status: StatusCodes.Failure,
               };
             }
           } else {
-            showmessage("Something went wrong.");
+            showmessage("Something went wrong");
             return {
-              result: { message: "Something went wrong." },
+              result: { message: "Something went wrong" },
               status: StatusCodes.Failure,
             };
           }
@@ -614,7 +614,7 @@ const Method = {
             };
           } else {
             if (error.response.status == 400) {
-              showmessage("Something went wrong.");
+              showmessage("Something went wrong");
               return {
                 result: { msg: error.response.data.errors[0] },
                 status: StatusCodes.Failure,
@@ -629,9 +629,9 @@ const Method = {
                 status: StatusCodes.Unauthenticate,
               };
             } else if (error.response.status == 404) {
-              showmessage("Something went wrong.");
+              showmessage("Something went wrong");
               return {
-                result: { msg: "Something went wrong." },
+                result: { msg: "Something went wrong" },
                 status: StatusCodes.Unauthenticate,
               };
             } else if (error.response.status == 422) {
@@ -641,9 +641,9 @@ const Method = {
                 status: StatusCodes.Unauthenticate,
               };
             } else {
-              showmessage("Something went wrong.");
+              showmessage("Something went wrong");
               return {
-                result: { msg: "Something went wrong." },
+                result: { msg: "Something went wrong" },
                 status: StatusCodes.Failure,
               };
             }
@@ -679,16 +679,16 @@ const Method = {
                 result: data.data,
               };
             } else {
-              showmessage("Something went wrong.");
+              showmessage("Something went wrong");
               return {
-                result: { message: "Something went wrong." },
+                result: { message: "Something went wrong" },
                 status: StatusCodes.Failure,
               };
             }
           } else {
-            showmessage("Something went wrong.");
+            showmessage("Something went wrong");
             return {
-              result: { message: "Something went wrong." },
+              result: { message: "Something went wrong" },
               status: StatusCodes.Failure,
             };
           }
@@ -710,7 +710,7 @@ const Method = {
             };
           } else {
             if (error.response.status == 400) {
-              showmessage("Something went wrong.");
+              showmessage("Something went wrong");
               return {
                 result: { msg: error.response.data.errors[0] },
                 status: StatusCodes.Failure,
@@ -725,9 +725,9 @@ const Method = {
                 status: StatusCodes.Unauthenticate,
               };
             } else if (error.response.status == 404) {
-              showmessage("Something went wrong.");
+              showmessage("Something went wrong");
               return {
-                result: { msg: "Something went wrong." },
+                result: { msg: "Something went wrong" },
                 status: StatusCodes.Unauthenticate,
               };
             } else if (error.response.status == 422) {
@@ -737,7 +737,7 @@ const Method = {
                 status: StatusCodes.Unauthenticate,
               };
             } else {
-              showmessage("Something went wrong.");
+              showmessage("Something went wrong");
               return {
                 result: { msg: "Something went wrong." },
                 status: StatusCodes.Failure,
@@ -769,14 +769,14 @@ const Method = {
                 result: data.data,
               };
             } else {
-              showmessage("Something went wrong.");
+              showmessage("Something went wrong");
               return {
-                result: { message: "Something went wrong." },
+                result: { message: "Something went wrong" },
                 status: StatusCodes.Failure,
               };
             }
           } else {
-            showmessage("Something went wrong.");
+            showmessage("Something went wrong");
             return {
               result: { message: "Something went wrong." },
               status: StatusCodes.Failure,
@@ -811,9 +811,9 @@ const Method = {
                 status: StatusCodes.Failure,
               };
             } else {
-              showmessage("Something went wrong.");
+              showmessage("Something went wrong");
               return {
-                result: { msg: "Something went wrong." },
+                result: { msg: "Something went wrong" },
                 status: StatusCodes.Failure,
               };
             }

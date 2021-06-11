@@ -39,6 +39,9 @@ export function* getAffirmationByIdSaga(action) {
         type: types.API_GETAFFIRMATION_BY_ID_SUCCESS,
         data: result.data,
       });
+      if (result?.data?.length == 0) {
+        action.navigation.goBack();
+      }
     } else {
       yield put({ type: types.API_GETAFFIRMATION_BY_ID_ERROR });
     }
@@ -57,7 +60,7 @@ export function* createAffirmationSaga(action) {
       yield put({
         type: types.API_CREATE_AFFIRMATION_SUCCESS,
       });
-      showmessage("Affirmation created successfully");
+      showmessage("Affirmation added successfully");
       action.navigation.navigate("AffirmationStack");
     } else {
       yield put({ type: types.API_CREATE_AFFIRMATION_ERROR });

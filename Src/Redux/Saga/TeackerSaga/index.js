@@ -62,6 +62,7 @@ export function* deleteTrackerEntrySaga(action) {
         type: types.API_DELETE_TRACKER_ENTRY_SUCCESS,
         selectedDate: action.payload.selectedDate,
       });
+      showmessage("Entry deleted successfully");
     } else {
       yield put({ type: types.API_DELETE_TRACKER_ENTRY_ERROR });
     }

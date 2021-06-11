@@ -122,17 +122,16 @@ const ViewProfile = ({ navigation, route }) => {
         <Text style={styles.profileName}>
           {!profileState?.userProfileData?.first_name ||
           !profileState?.userProfileData?.last_name
-            ? "No Name"
+            ? ""
             : profileState?.userProfileData?.first_name +
               " " +
               profileState?.userProfileData?.last_name}
         </Text>
         <Text style={styles.profileId}>
-          @
           {profileState?.userProfileData?.username == "" ||
           !profileState?.userProfileData?.username
-            ? "UserId"
-            : profileState?.userProfileData?.username}
+            ? ""
+            : "@" + profileState?.userProfileData?.username}
         </Text>
       </View>
       <View style={styles.menuContainer}>

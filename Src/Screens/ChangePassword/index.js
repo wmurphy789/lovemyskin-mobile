@@ -14,12 +14,13 @@ import {
 } from "../../Support/Validations";
 import { useDispatch } from "react-redux";
 import { changePasswordAction } from "../../Redux/Actions/ProfileActions";
+import { useSelector } from "react-redux";
 const ChangePassword = ({ navigation }) => {
   const dispatch = useDispatch();
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
-
+  const ProfileReducerState = useSelector((state) => state.ProfileReducer);
   function handlePasswordChange() {
     let data = {
       oldPassword: oldPassword?.trim(),
@@ -84,6 +85,7 @@ const ChangePassword = ({ navigation }) => {
             customStyles={styles.input}
           />
           <FullButton
+            disabled={ProfileReducerState?.isLoading}
             title={AppConstants.changePassword}
             onPress={() => handlePasswordChange()}
             customStyles={styles.button}

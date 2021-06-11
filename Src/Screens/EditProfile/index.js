@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
   Keyboard,
   ActivityIndicator,
+  Linking,
+  Alert,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { FullButton } from "../../Components/Button";
@@ -25,6 +27,12 @@ import * as ImagePicker from "expo-image-picker";
 import ImagePickerModal from "../../Components/ImagePickerModal";
 import { AppColors } from "../../Theme/AppColors";
 import { responsiveHeight } from "../../Theme/ResponsiveDimensions";
+import Constants from "expo-constants";
+import * as IntentLauncher from "expo-intent-launcher";
+const pkg = Constants.manifest.releaseChannel
+  ? Constants.manifest.android.package
+  : "host.exp.exponent";
+
 const EditProfile = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const [loadingImage, setLoadingImage] = useState(false);
@@ -56,13 +64,36 @@ const EditProfile = ({ navigation, route }) => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (permissionResult.granted === false) {
-      alert(
-        "You've refused to allow this application to access your Photos! Go to setting>>Applications>>LoveMySkin>>Storage permission>>allowed"
+      Alert.alert(
+        "",
+        "Please enable the library permission from the settings",
+        [
+          {
+            text: "Cancel",
+            onPress: () => console.log("Cancel Pressed"),
+            style: "cancel",
+          },
+          {
+            text: "Ok",
+            onPress: () => {
+              if (Platform.OS === "ios") {
+                Linking.openURL("app-settings:");
+              } else {
+                IntentLauncher.startActivityAsync(
+                  IntentLauncher.ACTION_APPLICATION_DETAILS_SETTINGS,
+                  { data: "package:" + pkg }
+                );
+              }
+            },
+          },
+        ]
       );
+
       return;
     }
     const result = await ImagePicker.launchImageLibraryAsync();
     if (!result.cancelled) {
+      setUserImage(result.uri);
       changeProfileImage(result.uri);
     }
   };
@@ -72,13 +103,31 @@ const EditProfile = ({ navigation, route }) => {
     const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
     console.log("permission--->>", permissionResult);
     if (permissionResult.granted === false) {
-      alert(
-        "You've refused to allow this application to access your camera! Go to setting>>Applications>>LoveMySkin>>Camera permission>>allowed"
-      );
+      Alert.alert("", "Please enable the camera permission from the settings", [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel",
+        },
+        {
+          text: "Ok",
+          onPress: () => {
+            if (Platform.OS === "ios") {
+              Linking.openURL("app-settings:");
+            } else {
+              IntentLauncher.startActivityAsync(
+                IntentLauncher.ACTION_APPLICATION_DETAILS_SETTINGS,
+                { data: "package:" + pkg }
+              );
+            }
+          },
+        },
+      ]);
       return;
     }
     const result = await ImagePicker.launchCameraAsync();
     if (!result.cancelled) {
+      setUserImage(result.uri);
       changeProfileImage(result.uri);
     }
   };
@@ -183,6 +232,7 @@ const EditProfile = ({ navigation, route }) => {
             <SimpleInput
               placeholder="First Name"
               text={fName}
+              maxLength={15}
               onChangeText={(text) => {
                 setFName(text);
               }}
@@ -190,6 +240,7 @@ const EditProfile = ({ navigation, route }) => {
             />
             <SimpleInput
               text={lName}
+              maxLength={15}
               onChangeText={(text) => {
                 setLName(text);
               }}
@@ -198,8 +249,9 @@ const EditProfile = ({ navigation, route }) => {
             />
             <SimpleInput
               text={userId}
+              maxLength={30}
               onChangeText={(text) => {
-                setUserId(text);
+                setUserId(text?.toLowerCase());
               }}
               placeholder="Username"
               customStyles={styles.input}
@@ -208,10 +260,11 @@ const EditProfile = ({ navigation, route }) => {
               text={userEmail}
               placeholder="Email Address"
               type={true}
-              onChangeText={(text) => {
-                setUserEmail(text);
-              }}
               editable={false}
+              onChangeText={(text) => {
+                // setUserEmail(text);
+              }}
+              // editable={false}
               customStyles={styles.input}
             />
             <TouchableOpacity
@@ -223,6 +276,7 @@ const EditProfile = ({ navigation, route }) => {
               </Text>
             </TouchableOpacity>
             <FullButton
+              disabled={profileState?.isLoading}
               title={AppConstants.saveChanges}
               onPress={() => saveChanges()}
             />
