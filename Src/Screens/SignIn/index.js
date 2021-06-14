@@ -55,20 +55,20 @@ const SignIn = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
   const authState = useSelector((state) => state.AuthReducer);
-  useEffect(() => {
-    const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-      () => {
-        console.log(navigationRef.current.getCurrentRoute());
-        let route = navigationRef.current.getCurrentRoute();
-        if (route.name == "SignIn") {
-          BackHandler.exitApp();
-          // return true
-        }
-        // return backHandler.remove();
-      }
-    );
-  }, []);
+  // useEffect(() => {
+  //   const backHandler = BackHandler.addEventListener(
+  //     "hardwareBackPress",
+  //     () => {
+  //       console.log(navigationRef.current.getCurrentRoute());
+  //       let route = navigationRef.current.getCurrentRoute();
+  //       if (route.name == "SignIn") {
+  //         BackHandler.exitApp();
+  //         // return true
+  //       }
+  //       // return backHandler.remove();
+  //     }
+  //   );
+  // }, []);
   useEffect(() => {
     const unsubscribe = navigation.addListener("blur", () => {
       setEmail("");
@@ -77,18 +77,18 @@ const SignIn = ({ navigation }) => {
 
     return unsubscribe;
   }, []);
-  useEffect(() => {
-    const unsubscribe1 = navigation.addListener("focus", () => {
-      console.log("in signin ");
-      DataManager.getUserId().then((token) => {
-        if (token) {
-          navigation.navigate("Tabs");
-        }
-      });
-    });
+  // useEffect(() => {
+  //   const unsubscribe1 = navigation.addListener("focus", () => {
+  //     console.log("in signin ");
+  //     DataManager.getUserId().then((token) => {
+  //       if (token) {
+  //         navigation.navigate("Tabs");
+  //       }
+  //     });
+  //   });
 
-    return unsubscribe1;
-  }, []);
+  //   return unsubscribe1;
+  // }, []);
 
   const signIn = () => {
     const validate = formikValidationLogin(email?.trim(), password?.trim());
@@ -109,69 +109,70 @@ const SignIn = ({ navigation }) => {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#fff" }}>
-      <Loader load={authState.onLoad} />
-      <ScrollView
-        bounces={false}
-        keyboardShouldPersistTaps="always"
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ backgroundColor: "#fff" }}
-      >
-        <View style={styles.container}>
-          <View style={styles.headerContainer}>
-            <ImageBackground
-              resizeMode="stretch"
-              style={styles.headerImage}
-              source={AppImages.curveBigHeaderImage}
-            >
-              <Image source={AppImages.logoIcon} style={styles.logoImage} />
-              <Text style={styles.welcomeBackText}>
-                {AppConstants.welcomeBack}
-              </Text>
-            </ImageBackground>
-          </View>
-          <View style={styles.mainView}>
-            <Text style={styles.introText}>{AppConstants.loremIpsum}</Text>
-            <View style={styles.inputView}>
-              <IconInput
-                type={true}
-                text={email}
-                image={AppImages.greenMailIcon}
-                placeholder={AppConstants.enterYourEmailAddress}
-                customStyles={styles.input}
-                onChangeText={(text) => setEmail(text)}
-              />
+    <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+      <View style={{ flex: 1, backgroundColor: "#fff" }}>
+        <Loader load={authState.onLoad} />
+        <ScrollView
+          bounces={false}
+          keyboardShouldPersistTaps="always"
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ backgroundColor: "#fff" }}
+        >
+          <View style={styles.container}>
+            <View style={styles.headerContainer}>
+              <ImageBackground
+                resizeMode="stretch"
+                style={styles.headerImage}
+                source={AppImages.curveBigHeaderImage}
+              >
+                <Image source={AppImages.logoIcon} style={styles.logoImage} />
+                <Text style={styles.welcomeBackText}>
+                  {AppConstants.welcomeBack}
+                </Text>
+              </ImageBackground>
             </View>
-            <View style={styles.inputView}>
-              <IconInput
-                secureInput={true}
-                text={password}
-                image={AppImages.greenLockSimpleIcon}
-                placeholder={AppConstants.enterYourPassword}
-                customStyles={styles.input}
-                onChangeText={(text) => setPassword(text)}
-              />
+            <View style={styles.mainView}>
+              <Text style={styles.introText}>{AppConstants.loremIpsum}</Text>
+              <View style={styles.inputView}>
+                <IconInput
+                  type={true}
+                  text={email}
+                  image={AppImages.greenMailIcon}
+                  placeholder={AppConstants.enterYourEmailAddress}
+                  customStyles={styles.input}
+                  onChangeText={(text) => setEmail(text)}
+                />
+              </View>
+              <View style={styles.inputView}>
+                <IconInput
+                  secureInput={true}
+                  text={password}
+                  image={AppImages.greenLockSimpleIcon}
+                  placeholder={AppConstants.enterYourPassword}
+                  customStyles={styles.input}
+                  onChangeText={(text) => setPassword(text)}
+                />
+              </View>
+              <TouchableOpacity
+                onPress={() => {
+                  Methods.navigate(navigation, "ForgotPassword");
+                }}
+                style={styles.forgotPasswordButton}
+              >
+                <Text style={styles.forgotPasswordText}>
+                  {AppConstants.forgotPassword}
+                </Text>
+              </TouchableOpacity>
+              <View style={styles.fullButton}>
+                <FullButton
+                  disabled={authState?.onLoad}
+                  title={AppConstants.signIn}
+                  onPress={() => signIn()}
+                />
+              </View>
             </View>
-            <TouchableOpacity
-              onPress={() => {
-                Methods.navigate(navigation, "ForgotPassword");
-              }}
-              style={styles.forgotPasswordButton}
-            >
-              <Text style={styles.forgotPasswordText}>
-                {AppConstants.forgotPassword}
-              </Text>
-            </TouchableOpacity>
-            <View style={styles.fullButton}>
-              <FullButton
-                disabled={authState?.onLoad}
-                title={AppConstants.signIn}
-                onPress={() => signIn()}
-              />
-            </View>
-          </View>
-          <View style={styles.socialLoginView}>
-            {/* <Text style={styles.orText}>OR</Text>
+            <View style={styles.socialLoginView}>
+              {/* <Text style={styles.orText}>OR</Text>
           <View style={styles.socialLoginButtonsView}>
             {socialLoginData.map((item) => (
               <TouchableOpacity
@@ -197,22 +198,23 @@ const SignIn = ({ navigation }) => {
             ))}
           </View>
          */}
-          </View>
+            </View>
 
-          <TouchableOpacity
-            disabled={authState.isDisable}
-            onPress={() => {
-              Methods.navigate(navigation, "SignUp");
-            }}
-            style={styles.dontHaveAccountButton}
-          >
-            <Text style={styles.dontHaveAccountText}>
-              {AppConstants.dontHaveAnAccount}
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
-    </View>
+            <TouchableOpacity
+              disabled={authState.isDisable}
+              onPress={() => {
+                Methods.navigate(navigation, "SignUp");
+              }}
+              style={styles.dontHaveAccountButton}
+            >
+              <Text style={styles.dontHaveAccountText}>
+                {AppConstants.dontHaveAnAccount}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      </View>
+    </KeyboardAvoidingView>
   );
 };
 

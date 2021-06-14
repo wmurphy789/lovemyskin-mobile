@@ -24,3 +24,18 @@ export const updateQuestionIdAction = (info, navigation) => {
   };
   return action;
 };
+
+export const setLoginStateAction = (info) => {
+  const action = {
+    type: types.SET_LOGIN_REDUCER_NAVIGATION,
+    payload: info,
+  };
+  return action;
+};
+export const setQuestionIdStateAction = (info) => {
+  const action = {
+    type: types.SET_QUESTION_ID_REDUCER_NAVIGATION,
+    payload: info,
+  };
+  return action;
+};

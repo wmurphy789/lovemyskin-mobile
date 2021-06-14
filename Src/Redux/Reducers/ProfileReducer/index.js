@@ -4,6 +4,7 @@ const INITIAL_STATE = {
   isLoading: false,
   userProfileData: {},
   id: null,
+  isImageUpdated: false,
 };
 
 export const ProfileReducer = (state = INITIAL_STATE, action) => {
@@ -45,6 +46,8 @@ export const ProfileReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         isLoading: false,
+        userProfileData: action.Result.result.data.attributes,
+        id: action.Result.result.data.id,
       };
     }
     case Actiontypes.UPDATE_PROFILE_FAIL: {
@@ -53,14 +56,31 @@ export const ProfileReducer = (state = INITIAL_STATE, action) => {
         isLoading: false,
       };
     }
-
+    //progile pic update
     case Actiontypes.UPDATE_PROFILE_IMAGE_LOAD: {
       return {
         ...state,
         isLoading: true,
-        imageUpdated: false,
+        isImageUpdated: true,
       };
     }
+    case Actiontypes.UPDATE_PROFILE_IMAGE_SUCESS: {
+      return {
+        ...state,
+        isLoading: false,
+        userProfileData: action.Result.result.data.attributes,
+        id: action.Result.result.data.id,
+        isImageUpdated: false,
+      };
+    }
+    case Actiontypes.UPDATE_PROFILE_IMAGE_FAIL: {
+      return {
+        ...state,
+        isLoading: false,
+        isImageUpdated: false,
+      };
+    }
+
     //************************************************>> CHANGE PASSWORD CASES <<**************************************************/
     case Actiontypes.CHANGE_PASSWORD_LOAD: {
       return {

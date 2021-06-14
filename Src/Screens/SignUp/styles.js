@@ -12,6 +12,7 @@ import {
 export default StyleSheet.create({
   container: {
     width: "100%",
+    flex: 1,
     backgroundColor: AppColors.white,
   },
   headerContainer: {

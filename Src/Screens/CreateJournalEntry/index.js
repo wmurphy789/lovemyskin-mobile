@@ -11,6 +11,8 @@ import {
   TouchableWithoutFeedback,
   Linking,
   Alert,
+  KeyboardAvoidingView,
+  Keyboard,
 } from "react-native";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
@@ -275,7 +277,7 @@ const CreateJournalEntry = (props) => {
           <View
             style={{
               position: "absolute",
-              top: 80,
+              top: 65,
               height: 150,
               backgroundColor: "#F0F9F7",
               width: "90%",
@@ -316,14 +318,29 @@ const CreateJournalEntry = (props) => {
         )}
       </View>
       <View>
-        <TextInput
+        {/* <TextInput
           multiline
           maxLength={500}
           placeholder={AppConstants.typeYourJournalEntryHere}
           style={styles.input}
+          selectionColor={AppColors.black}
           defaultValue={description}
           onChangeText={(text) => setDescription(text)}
-        />
+        /> */}
+        <View style={styles.inputBox}>
+          <TextInput
+            multiline
+            maxLength={500}
+            defaultValue={description}
+            selectionColor={AppColors.black}
+            placeholder={AppConstants.typeYourJournalEntryHere}
+            style={styles.input}
+            autoCapitalize="sentences"
+            // keyboardType="ascii-capable"
+            // returnKeyType="done"
+            onChangeText={(text) => setDescription(text)}
+          />
+        </View>
         {/* <Image
           source={AppImages.mike}
           style={styles.mikeImage}
@@ -363,7 +380,8 @@ const CreateJournalEntry = (props) => {
     </View>
   );
   return (
-    <>
+    // <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+    <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
       <CurvedHeader
         title={AppConstants.CreateJournalEntry}
         leftIcon={AppImages.backIcon}
@@ -382,14 +400,15 @@ const CreateJournalEntry = (props) => {
       />
       <ScrollView
         bounces={false}
-        keyboardShouldPersistTaps="always"
+        // keyboardShouldPersistTaps="always"
         showsVerticalScrollIndicator={false}
       >
         <TouchableWithoutFeedback onPress={() => setDropDrownOpen(false)}>
           {mainView()}
         </TouchableWithoutFeedback>
       </ScrollView>
-    </>
+    </KeyboardAvoidingView>
+    // </TouchableWithoutFeedback>
   );
 };
 

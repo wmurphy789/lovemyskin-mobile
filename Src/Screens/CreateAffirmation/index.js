@@ -11,6 +11,7 @@ import {
   ScrollView,
   ImageBackground,
   TouchableHighlight,
+  KeyboardAvoidingView,
 } from "react-native";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
@@ -23,6 +24,7 @@ import {
 } from "../../Redux/Actions/AffirmationAction";
 import Methods from "../../Support/Methods";
 import { showmessage } from "../../Support/Validations";
+import { AppColors } from "../../Theme/AppColors";
 import AppConstants from "../../Theme/AppConstants";
 import { AppImages } from "../../Theme/AppImages";
 import {
@@ -66,9 +68,10 @@ const CreateAffirmation = (props) => {
     Methods.goBack(props.navigation);
   }
   return (
-    <View style={styles.container}>
-      <Loader load={AffirmationState.onLoad} />
-      {/* <CurvedHeader
+    <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+      <View style={styles.container}>
+        <Loader load={AffirmationState.onLoad} />
+        {/* <CurvedHeader
         title={AppConstants.myAffirmation}
         leftIcon={AppImages.backIcon}
         infoText={AppConstants.createYourAffirmation}
@@ -76,118 +79,127 @@ const CreateAffirmation = (props) => {
           goBack();
         }}
       /> */}
-      <View style={styles.curveHeaderContainer}>
-        <ImageBackground
-          resizeMode="stretch"
-          source={AppImages.curveBigHeaderImage}
-          style={styles.curveHeaderImage}
-        >
-          <View style={styles.curveHeaderButtonsView}>
-            <TouchableHighlight
-              style={styles.curveheaderButton}
-              underlayColor={"rgba(33, 131, 129, 0.5)"}
-              activeOpacity={1}
-              onPress={() => props.navigation.goBack()}
-            >
-              <Image
-                source={AppImages.backIcon}
-                style={styles.curveHeaderIcon}
-              />
-            </TouchableHighlight>
-          </View>
-          <Text style={[styles.title, { marginTop: 12 }]}>
-            {AppConstants.myAffirmation}
-          </Text>
-        </ImageBackground>
-      </View>
-      <Text style={styles.infoText}>
-        {id ? "Update your affirmation" : AppConstants.createYourAffirmation}
-      </Text>
-      {/* <View style={{ height: 10, width: "100%", marginTop: 20, backgroundColor: "#fff" }} /> */}
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        bounces={false}
-        contentContainerStyle={{
-          marginBottom: responsiveHeight(5),
-          // marginTop: 20,
-        }}
-      >
-        <View
-          style={{
-            width: "100%",
-            marginLeft: responsiveWidth(3.5),
-            marginTop: 0,
-            marginBottom: 10,
-          }}
-        ></View>
-
-        <TextInput
-          multiline
-          maxLength={500}
-          defaultValue={description}
-          placeholder={AppConstants.typeYourAffirmationHere}
-          style={styles.input}
-          onChangeText={(text) => setDescription(text)}
-        />
-        <View style={styles.addMusicView}>
-          {/* <Text style={styles.addMusicText}>{}</Text> */}
-          <TextInput
-            style={styles.addMusicText}
-            placeholder={AppConstants.addMusicToYourAffirmation}
-          />
-          <TouchableOpacity>
-            <Image source={AppImages.searchIcon} style={styles.searchIcon} />
-          </TouchableOpacity>
-        </View>
-        <FlatList
-          data={AppConstants.dummyMusic}
-          keyExtractor={(item, index) => index.toString()}
-          contentContainerStyle={styles.musicflatlist}
-          renderItem={({ item, index }) => (
-            <View style={styles.musicView}>
-              <ImageBackground
-                source={{ uri: item.albumPoster }}
-                style={styles.musicAlbumPoster}
+        <View style={styles.curveHeaderContainer}>
+          <ImageBackground
+            resizeMode="stretch"
+            source={AppImages.curveBigHeaderImage}
+            style={styles.curveHeaderImage}
+          >
+            <View style={styles.curveHeaderButtonsView}>
+              <TouchableHighlight
+                style={styles.curveheaderButton}
+                underlayColor={"rgba(33, 131, 129, 0.5)"}
+                activeOpacity={1}
+                onPress={() => props.navigation.goBack()}
               >
-                {item.playing ? (
-                  <TouchableOpacity activeOpacity={0.8}>
-                    <Image
-                      source={AppImages.pauseGreenIcon}
-                      style={styles.playPauseButton}
-                    />
-                  </TouchableOpacity>
-                ) : (
-                  <TouchableOpacity activeOpacity={0.8}>
-                    <Image
-                      source={AppImages.playGreenIcon}
-                      style={styles.playPauseButton}
-                    />
-                  </TouchableOpacity>
-                )}
-              </ImageBackground>
-              <View style={styles.musicDetailsView}>
-                <View>
-                  <Text style={styles.musicAlbumTitle}>{item.albumTitle}</Text>
-                  <Text style={styles.musicAlbumSong}>{item.albumSong}</Text>
-                </View>
-                <TouchableOpacity style={styles.useThisAudioButton}>
-                  <Text style={styles.useThisAudio}>
-                    {AppConstants.useThisAudio}
-                  </Text>
-                </TouchableOpacity>
-              </View>
+                <Image
+                  source={AppImages.backIcon}
+                  style={styles.curveHeaderIcon}
+                />
+              </TouchableHighlight>
             </View>
-          )}
-        />
-        <FullButton
-          disabled={AffirmationState?.onLoad}
-          title={id ? "Update Affirmation" : AppConstants.createAffirmation}
-          customStyles={styles.button}
-          onPress={() => (id ? updateAffirmation() : createAffirmation())}
-        />
-      </ScrollView>
-      {/* </View> */}
-    </View>
+            <Text style={[styles.title, { marginTop: 12 }]}>
+              {AppConstants.myAffirmation}
+            </Text>
+          </ImageBackground>
+        </View>
+        <Text style={styles.infoText}>
+          {id ? "Update your affirmation" : AppConstants.createYourAffirmation}
+        </Text>
+        {/* <View style={{ height: 10, width: "100%", marginTop: 20, backgroundColor: "#fff" }} /> */}
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          bounces={false}
+          contentContainerStyle={{
+            marginBottom: responsiveHeight(5),
+            // marginTop: 20,
+          }}
+        >
+          <View
+            style={{
+              width: "100%",
+              marginLeft: responsiveWidth(3.5),
+              marginTop: 0,
+              marginBottom: 10,
+            }}
+          ></View>
+
+          <View style={styles.inputBox}>
+            <TextInput
+              multiline
+              maxLength={500}
+              defaultValue={description}
+              selectionColor={AppColors.black}
+              placeholder={AppConstants.typeYourAffirmationHere}
+              style={styles.input}
+              autoCapitalize="sentences"
+              // keyboardType="ascii-capable"
+              // returnKeyType="done"
+              onChangeText={(text) => setDescription(text)}
+            />
+          </View>
+          <View style={styles.addMusicView}>
+            {/* <Text style={styles.addMusicText}>{}</Text> */}
+            <TextInput
+              style={styles.addMusicText}
+              placeholder={AppConstants.addMusicToYourAffirmation}
+            />
+            <TouchableOpacity>
+              <Image source={AppImages.searchIcon} style={styles.searchIcon} />
+            </TouchableOpacity>
+          </View>
+          <FlatList
+            data={AppConstants.dummyMusic}
+            keyExtractor={(item, index) => index.toString()}
+            contentContainerStyle={styles.musicflatlist}
+            renderItem={({ item, index }) => (
+              <View style={styles.musicView}>
+                <ImageBackground
+                  source={{ uri: item.albumPoster }}
+                  style={styles.musicAlbumPoster}
+                >
+                  {item.playing ? (
+                    <TouchableOpacity activeOpacity={0.8}>
+                      <Image
+                        source={AppImages.pauseGreenIcon}
+                        style={styles.playPauseButton}
+                      />
+                    </TouchableOpacity>
+                  ) : (
+                    <TouchableOpacity activeOpacity={0.8}>
+                      <Image
+                        source={AppImages.playGreenIcon}
+                        style={styles.playPauseButton}
+                      />
+                    </TouchableOpacity>
+                  )}
+                </ImageBackground>
+                <View style={styles.musicDetailsView}>
+                  <View>
+                    <Text style={styles.musicAlbumTitle}>
+                      {item.albumTitle}
+                    </Text>
+                    <Text style={styles.musicAlbumSong}>{item.albumSong}</Text>
+                  </View>
+                  <TouchableOpacity style={styles.useThisAudioButton}>
+                    <Text style={styles.useThisAudio}>
+                      {AppConstants.useThisAudio}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            )}
+          />
+          <FullButton
+            disabled={AffirmationState?.onLoad}
+            title={id ? "Update Affirmation" : AppConstants.createAffirmation}
+            customStyles={styles.button}
+            onPress={() => (id ? updateAffirmation() : createAffirmation())}
+          />
+        </ScrollView>
+        {/* </View> */}
+      </View>
+    </KeyboardAvoidingView>
   );
 };
 

@@ -265,7 +265,10 @@ class CalendarStrip extends Component {
         </Text>
         <View style={{ marginRight: 5 }}>
           <View style={styles.calenderViewDateUpper}>
-            <TouchableOpacity onPress={() => changeMonth(-1)}>
+            <TouchableOpacity
+              onPress={() => changeMonth(-1)}
+              style={{ padding: 20, paddingRight: 5 }}
+            >
               <Image
                 resizeMode="contain"
                 source={AppImages.simpleLeftArrowdark}
@@ -281,7 +284,13 @@ class CalendarStrip extends Component {
               {getMonthInWord(new Date(this.props.selectedDate).getMonth())}{" "}
               {new Date(this.props.selectedDate).getFullYear()}
             </Text>
-            <TouchableOpacity onPress={() => changeMonth(1)}>
+            <TouchableOpacity
+              onPress={() => changeMonth(1)}
+              style={{
+                padding: 20,
+                paddingHorizontal: 5,
+              }}
+            >
               <Image
                 resizeMode="contain"
                 source={AppImages.simpleRightArrowdark}
@@ -477,7 +486,7 @@ const styles = StyleSheet.create({
   itemView: {
     justifyContent: "center",
     alignItems: "center",
-    paddingTop: 4,
+    // paddingTop: 4,
     width: 44,
     height: 44,
     borderRadius: 22,
@@ -502,7 +511,7 @@ const styles = StyleSheet.create({
   calendarImage: {
     width: 17,
     height: 16,
-    marginLeft: 5,
+    // marginLeft: 5,
   },
   simpleLeftArrowdarkImage: {
     width: 10,
@@ -513,7 +522,7 @@ const styles = StyleSheet.create({
     marginLeft: 3,
     color: AppColors.black,
     fontFamily: AppFonts.light,
-    marginRight: 5,
+    // marginRight: 5,
   },
   calenderViewDateUpper: {
     alignItems: "center",

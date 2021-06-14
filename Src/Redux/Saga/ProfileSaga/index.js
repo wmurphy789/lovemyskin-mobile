@@ -4,6 +4,8 @@ import Methods from "../../../Support/Methods";
 import { showmessage } from "../../../Support/Validations";
 import * as ActionType from "../../ActionTypes";
 import * as ApiMethods from "../../Api";
+import NetInfo from "@react-native-community/netinfo";
+import { setLoginStateAction } from "../../Actions/AuthActions";
 
 export function* fetchGetProfile({ param }) {
   // get doctor details Saga
@@ -17,7 +19,7 @@ export function* fetchGetProfile({ param }) {
         type: ActionType.GET_PROFILE_FAIL,
         Result: { msg: "Profile Not Found!" },
       });
-      showmessage("Something went wrong");
+      // showmessage("Something went wrong");
       // param.navigate("Auth")
       // showmessage("Profile not found! please login again.");
     }
@@ -36,12 +38,14 @@ export function* fetchUpdateProfile({ param }) {
     let response = yield call(ApiMethods.updateProfileApi, param);
     if (response.status == 1) {
       yield put({ type: ActionType.UPDATE_PROFILE_SUCCESS, Result: response });
-      Methods.goBack(param.navigation);
-      showmessage("Profile details updated successfully");
+      if (!param.photoUpdate) {
+        Methods.goBack(param.navigation);
+        showmessage("Profile details updated successfully");
+      }
     } else {
       yield put({ type: ActionType.UPDATE_PROFILE_FAIL, Result: response });
       // param.navigate("Auth");
-      showmessage("Something went wrong");
+      // showmessage("Something went wrong");
     }
   } catch (e) {
     showmessage("Something went wrong");
@@ -53,20 +57,32 @@ export function* fetchUpdateProfile({ param }) {
 }
 export function* fetchUpdateProfileImage({ param, navigation }) {
   // get doctor details Saga
+
   try {
-    let response = yield call(ApiMethods.updateProfileImageApi, param);
-    console.log(response, "response asdgahsj");
-    if (response.status == 1) {
-      yield put({ type: ActionType.UPDATE_PROFILE_SUCCESS, Result: response });
-      // Methods.goBack(navigation);
-      showmessage("Profile details updated successfully");
-    } else {
-      console.log(response);
-      yield put({ type: ActionType.UPDATE_PROFILE_FAIL, Result: response });
-      showmessage("Failed to update Profile Image");
+    const internetStatus = yield NetInfo.fetch();
+    if (internetStatus.isConnected) {
+      let response = yield call(ApiMethods.updateProfileImageApi, param.data);
+      console.log(response, "response asdgahsj", param);
+      if (response.status == 1) {
+        yield put({
+          type: ActionType.UPDATE_PROFILE_IMAGE_SUCESS,
+          Result: response,
+        });
+        if (param.update) {
+          Methods.goBack(navigation);
+          showmessage("Profile details updated successfully");
+        }
+      } else {
+        console.log(response);
+        yield put({
+          type: ActionType.UPDATE_PROFILE_IMAGE_FAIL,
+          Result: response,
+        });
+        // showmessage("Failed to update Profile Image");
+      }
     }
   } catch (e) {
-    showmessage("Failed to update Profile Image");
+    // showmessage("Failed to update Profile Image");
     yield put({
       type: ActionType.UNKNOWN_ERROR,
       message: "unknown error!",
@@ -82,14 +98,15 @@ export function* fetchChangePassword({ param }) {
     if (response.status == 1) {
       yield put({ type: ActionType.CHANGE_PASSWORD_SUCESS, Result: response });
       DataManager.clearLocalStorage();
-      showmessage("Password changed successfully. Login again");
-      Methods.navigate(param.navigation, "Auth");
+      showmessage("Password changed successfully, please login again");
+      // Methods.navigate(param.navigation, "Auth");
+      yield put(setLoginStateAction(false));
     } else if (response.status == 3) {
       yield put({ type: ActionType.CHANGE_PASSWORD_FAIL, Result: response });
-      showmessage("Old Password is wrong");
+      showmessage("Please enter correct old password");
     } else {
       yield put({ type: ActionType.CHANGE_PASSWORD_FAIL, Result: response });
-      showmessage("Something went wrong");
+      // showmessage("Something went wrong");
     }
   } catch (e) {
     showmessage("Something went wrong");

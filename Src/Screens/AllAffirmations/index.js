@@ -23,21 +23,22 @@ import styles from "./styles";
 const AllAffirmations = (props) => {
   const dispatch = useDispatch();
   const AffirmationState = useSelector((state) => state.AffirmationReducer);
+  // useEffect(() => {
+  //   const backHandler = BackHandler.addEventListener(
+  //     "hardwareBackPress",
+  //     () => {
+  //       console.log(navigationRef.current.getCurrentRoute());
+  //       let route = navigationRef.current.getCurrentRoute();
+  //       if (route.name == "AllAffirmations") {
+  //         BackHandler.exitApp();
+  //         // return true
+  //       }
+  //       // return backHandler.remove();
+  //     }
+  //   );
+  // }, []);
   useEffect(() => {
-    const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-      () => {
-        console.log(navigationRef.current.getCurrentRoute());
-        let route = navigationRef.current.getCurrentRoute();
-        if (route.name == "AllAffirmations") {
-          BackHandler.exitApp();
-          // return true
-        }
-        // return backHandler.remove();
-      }
-    );
-  }, []);
-  useEffect(() => {
+    dispatch(getAffirmationAction({}, props.navigation));
     const unsubscribe = props.navigation.addListener("focus", () => {
       dispatch(getAffirmationAction({}, props.navigation));
     });

@@ -42,3 +42,12 @@ export const updateAffirmationAction = (info, navigation) => {
   };
   return action;
 };
+
+export const cleardataDetailsReducerAction = (info, navigation) => {
+  const action = {
+    type: types.API_CLEAR_REDUCER_AFFIRMATION_START,
+    payload: info,
+    navigation,
+  };
+  return action;
+};

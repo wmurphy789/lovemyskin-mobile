@@ -15,6 +15,7 @@ import {
 import { useDispatch } from "react-redux";
 import { changePasswordAction } from "../../Redux/Actions/ProfileActions";
 import { useSelector } from "react-redux";
+import { useEffect } from "react";
 const ChangePassword = ({ navigation }) => {
   const dispatch = useDispatch();
   const [oldPassword, setOldPassword] = useState("");
@@ -38,11 +39,20 @@ const ChangePassword = ({ navigation }) => {
     if (validate) {
       // dispatch(updatetProfileAction(data));
       dispatch(changePasswordAction(data));
+      // setOldPassword("");
+      // setNewPassword("");
+      // setConfirmNewPassword("");
+    }
+  }
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("blur", () => {
       setOldPassword("");
       setNewPassword("");
       setConfirmNewPassword("");
-    }
-  }
+    });
+
+    return unsubscribe;
+  }, []);
   return (
     <View style={{ flex: 1, backgroundColor: AppColors.white }}>
       <CurvedHeader

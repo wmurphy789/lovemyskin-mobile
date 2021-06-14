@@ -26,6 +26,7 @@ export const IconInput = ({
         value={text}
         keyboardType={type ? "email-address" : "default"}
         ref={inputRef}
+        selectionColor={AppColors.black}
         secureTextEntry={secureInput}
         onChangeText={(text) =>
           secureInput
@@ -68,6 +69,7 @@ export const SimpleInput = ({
         editable={editable}
         maxLength={maxLength}
         defaultValue={defaultValue}
+        selectionColor={AppColors.black}
         onChangeText={(text) =>
           secureInput
             ? onChangeText(text?.trim())

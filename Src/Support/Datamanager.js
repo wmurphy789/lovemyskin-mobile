@@ -45,6 +45,19 @@ export const DataManager = {
       console.log("error----", error);
     }
   },
+  async setQuestionId(id) {
+    console.log(id, "decoded.question_id");
+    await AsyncStorage.setItem(localKey.questionId, id?.toString());
+  },
+
+  async getQuestionId() {
+    try {
+      const questionId = await AsyncStorage.getItem(localKey.questionId);
+      return questionId;
+    } catch (error) {
+      console.log("error----", error);
+    }
+  },
 
   async clearLocalStorage() {
     await AsyncStorage.clear();

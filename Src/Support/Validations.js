@@ -35,7 +35,7 @@ const formikValidation = (email, password, confirmPassword) => {
           }
         } else {
           showmessage(
-            "Password must be a minimum of 8 characters including number, Upper, Lower And one special character"
+            "Password must be a minimum of 8 characters including number, upper, lower and one special character"
           );
           return false;
         }
@@ -130,7 +130,7 @@ const formikValidationChangePassword = (
           }
         } else {
           showmessage(
-            "Password must be a minimum of 8 characters including number, Upper, Lower And one special character"
+            "Password must be a minimum of 8 characters including number, upper, lower and one special character"
           );
           return false;
         }

@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { Platform, StyleSheet } from "react-native";
 import { AppColors } from "../../Theme/AppColors";
 import { AppFonts } from "../../Theme/AppFonts";
 import {
@@ -32,7 +32,10 @@ export default StyleSheet.create({
   mainGreenTab: {
     height: responsiveWidth(19),
     width: responsiveWidth(19),
-    bottom: responsiveHeight(3.92),
+    bottom:
+      Platform.OS == "android"
+        ? responsiveHeight(3.92)
+        : responsiveHeight(3.52),
     left: responsiveWidth(0.1),
     borderRadius: responsiveWidth(100),
     backgroundColor: "#00CDA9",
@@ -76,7 +79,7 @@ export default StyleSheet.create({
     justifyContent: "center",
     borderRadius: responsiveWidth(5),
     position: "absolute",
-    bottom: -20,
+    bottom: Platform.OS == "android" ? -20 : 0,
     // left: 0,
     // bottom: responsiveHeight(0),
   },

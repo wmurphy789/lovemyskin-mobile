@@ -14,7 +14,7 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { FullButton } from "../../Components/Button";
 import { IconInput } from "../../Components/Input/Input";
-import Methods from "../../Support/Methods";
+import Methods, { navigationRef } from "../../Support/Methods";
 import { AppColors } from "../../Theme/AppColors";
 import AppConstants from "../../Theme/AppConstants";
 import { AppFonts } from "../../Theme/AppFonts";
@@ -25,25 +25,46 @@ import {
   responsiveWidth,
 } from "../../Theme/ResponsiveDimensions";
 import styles from "./styles";
-import { updateQuestionIdAction } from "../../Redux/Actions/AuthActions";
+import {
+  setQuestionIdStateAction,
+  updateQuestionIdAction,
+} from "../../Redux/Actions/AuthActions";
 import Loader from "../../Components/Loader";
 import { useEffect } from "react";
-
+import { DataManager } from "../../Support/Datamanager";
 const SkinPriorities = ({ navigation }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [loader, setloader] = useState(false);
+  const [view, setView] = useState(true);
   const dispatch = useDispatch();
   const AuthReducerState = useSelector((state) => state.AuthReducer);
+  useEffect(() => {
+    authenticateUser();
+  }, []);
+  const authenticateUser = async () => {
+    DataManager.getQuestionId().then((id) => {
+      console.log("user id---", id);
+      // if (id) {
+      setView(false);
+      // dispatch(setLoginStateAction(true));
+      // }
+      // setIntial(true);
+    });
+  };
   const updateQuestionId = () => {
+    setloader(true);
     dispatch(updateQuestionIdAction(selectedIndex, navigation));
+    setTimeout(() => {
+      setloader(false);
+    }, 800);
   };
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
       "hardwareBackPress",
       () => {
-        console.log(navigationRef.current.getCurrentRoute());
         let route = navigationRef.current.getCurrentRoute();
         if (route.name == "SkinPriorities") {
-          BackHandler.exitApp();
+          dispatch(setQuestionIdStateAction(5));
           // return true
         }
         // return backHandler.remove();
@@ -51,15 +72,17 @@ const SkinPriorities = ({ navigation }) => {
     );
   }, []);
 
-  return (
+  return !view ? (
     <View style={{ backgroundColor: AppColors.white, flex: 1 }}>
+      <Loader load={loader} />
       <TouchableHighlight
         style={styles.backButton}
         underlayColor="rgba(33, 131, 129, 0.5)"
         activeOpacity={1}
         onPress={() => {
+          dispatch(setQuestionIdStateAction(5));
           // navigation.goBack();
-          BackHandler.exitApp();
+          // BackHandler.exitApp();
         }}
       >
         <Image source={AppImages.backIcon} style={styles.backImage} />
@@ -111,7 +134,8 @@ const SkinPriorities = ({ navigation }) => {
           ))}
           <TouchableOpacity
             onPress={() => {
-              Methods.navigate(navigation, "Tabs");
+              // Methods.navigate(navigation, "Tabs");
+              dispatch(setQuestionIdStateAction(5));
             }}
             style={styles.dontAnswerButton}
           >
@@ -130,6 +154,10 @@ const SkinPriorities = ({ navigation }) => {
           </View>
         </View>
       </ScrollView>
+    </View>
+  ) : (
+    <View>
+      <Loader load={view} />
     </View>
   );
 };
