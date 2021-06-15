@@ -269,13 +269,17 @@ const MyTracker = (props) => {
           >
             {item.smile != 3 && (
               <View
-              // style={{
-              //   position: Platform.OS == "ios" ? "absolute" : "relative",
-              //   zIndex: Platform.OS == "ios" ? 99999 : 0,
-              // }}
+                style={
+                  Platform.OS == "ios"
+                    ? {
+                        position: "absolute",
+                        zIndex: 99999,
+                      }
+                    : {}
+                }
               >
                 <TouchableOpacity
-                  // style={{ padding: responsiveWidth(2) }}
+                  style={{ width: 50 }}
                   onPress={() => {
                     setPopUpIndexView(index);
                   }}
@@ -477,16 +481,30 @@ const MyTracker = (props) => {
         {TrackerState?.entry?.id ? (
           <View style={{ padding: responsiveWidth(3), paddingTop: 4 }}>
             <View
-              style={{
-                alignItems: "flex-end",
-                justifyContent: "center",
-                // position: Platform.OS == "ios" ? "absolute" : "relative",
-                // zIndex: Platform.OS == "ios" ? 99999 : 0,
-                // right: Platform.OS == "ios" ? 5 : 0,
-              }}
+              style={
+                Platform.OS == "android"
+                  ? {
+                      alignItems: "flex-end",
+                      justifyContent: "center",
+                      // position: Platform.OS == "ios" ? "absolute" : "relative",
+                      // zIndex: Platform.OS == "ios" ? 99999 : 0,
+                      // right: Platform.OS == "ios" ? 5 : 0,
+                    }
+                  : {
+                      alignItems: "flex-end",
+                      justifyContent: "center",
+                      position: "absolute",
+                      zIndex: 99999,
+                      right: 5,
+                    }
+              }
             >
               <TouchableOpacity
-                style={{ padding: responsiveWidth(2) }}
+                style={{
+                  padding: responsiveWidth(2),
+                  width: 50,
+                  alignItems: "flex-end",
+                }}
                 onPress={() => {
                   setShowPopUp(!showPopUp);
                 }}
@@ -578,9 +596,9 @@ const MyTracker = (props) => {
                     ? "#EF6586"
                     : "#5DB1CC",
                 marginTop:
-                  Platform.OS == "ios"
-                    ? responsiveHeight(3)
-                    : responsiveHeight(1),
+                  Platform.OS == "android"
+                    ? responsiveHeight(1)
+                    : responsiveHeight(3),
                 flexDirection: "row",
                 justifyContent: "space-between",
                 // paddingHorizontal: responsiveWidth(10),
@@ -826,13 +844,11 @@ const MyTracker = (props) => {
                         style={styles.editEntryImage}
                         resizeMode="contain"
                       />
-                      <View style={styles.percentageEntryTextView}>
-                        <Text style={styles.percentageEntryText}>
-                          {TrackerState?.totalEntry}{" "}
-                          {TrackerState?.totalEntry > 1 ? "Entries" : "Entry"}{" "}
-                          this month
-                        </Text>
-                      </View>
+                      <Text style={styles.percentageEntryText}>
+                        {TrackerState?.totalEntry}{" "}
+                        {TrackerState?.totalEntry > 1 ? "Entries" : "Entry"}{" "}
+                        this month
+                      </Text>
                     </View>
                   </View>
                 </ImageBackground>

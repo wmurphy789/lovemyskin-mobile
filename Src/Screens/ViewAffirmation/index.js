@@ -235,7 +235,7 @@ Description: ${item?.attributes?.description}`,
         <Text style={styles.itemtext}>{item?.attributes?.description}</Text>
       </View>
       {/* {item?.attributes?.song_id && ( */}
-      <View style={{ display: item?.attributes?.song_ig ? "flex" : "none" }}>
+      {/* <View style={{ display: item?.attributes?.song_id ? "flex" : "none" }}>
         <DummyMusicBar />
         <View style={styles.playerTimerView}>
           <Text style={styles.playerTime}>{timeElapsed}</Text>
@@ -249,7 +249,7 @@ Description: ${item?.attributes?.description}`,
           customStyles={styles.playerButtons}
           // onPress={() => { setisPlaying(!isPlaying) }}
         />
-      </View>
+      </View> */}
 
       <CustomIconButton
         icon={"share"}

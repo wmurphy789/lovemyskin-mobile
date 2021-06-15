@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, ScrollView, Keyboard } from "react-native";
+import { View, ScrollView, Keyboard, KeyboardAvoidingView } from "react-native";
 import { FullButton } from "../../Components/Button";
 import { CurvedHeader } from "../../Components/Header";
 import { SimpleInput } from "../../Components/Input/Input";
@@ -54,55 +54,57 @@ const ChangePassword = ({ navigation }) => {
     return unsubscribe;
   }, []);
   return (
-    <View style={{ flex: 1, backgroundColor: AppColors.white }}>
-      <CurvedHeader
-        title={AppConstants.changePassword}
-        leftIcon={AppImages.backIcon}
-        leftPress={() => {
-          Methods.goBack(navigation);
-        }}
-      />
-      <ScrollView
-        keyboardShouldPersistTaps="always"
-        showsVerticalScrollIndicator={false}
-      >
-        <View style={styles.container}>
-          <SimpleInput
-            placeholder={AppConstants.enterOldPassword}
-            secureInput={true}
-            text={oldPassword}
-            onChangeText={(text) => {
-              setOldPassword(text);
-            }}
-            customStyles={styles.input}
-          />
-          <SimpleInput
-            placeholder={AppConstants.enterNewPassword}
-            secureInput={true}
-            text={newPassword}
-            onChangeText={(text) => {
-              setNewPassword(text);
-            }}
-            customStyles={styles.input}
-          />
-          <SimpleInput
-            placeholder={AppConstants.confirmNewPassword}
-            secureInput={true}
-            text={confirmNewPassword}
-            onChangeText={(text) => {
-              setConfirmNewPassword(text);
-            }}
-            customStyles={styles.input}
-          />
-          <FullButton
-            disabled={ProfileReducerState?.isLoading}
-            title={AppConstants.changePassword}
-            onPress={() => handlePasswordChange()}
-            customStyles={styles.button}
-          />
-        </View>
-      </ScrollView>
-    </View>
+    <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+      <View style={{ flex: 1, backgroundColor: AppColors.white }}>
+        <CurvedHeader
+          title={AppConstants.changePassword}
+          leftIcon={AppImages.backIcon}
+          leftPress={() => {
+            Methods.goBack(navigation);
+          }}
+        />
+        <ScrollView
+          keyboardShouldPersistTaps="always"
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.container}>
+            <SimpleInput
+              placeholder={AppConstants.enterOldPassword}
+              secureInput={true}
+              text={oldPassword}
+              onChangeText={(text) => {
+                setOldPassword(text);
+              }}
+              customStyles={styles.input}
+            />
+            <SimpleInput
+              placeholder={AppConstants.enterNewPassword}
+              secureInput={true}
+              text={newPassword}
+              onChangeText={(text) => {
+                setNewPassword(text);
+              }}
+              customStyles={styles.input}
+            />
+            <SimpleInput
+              placeholder={AppConstants.confirmNewPassword}
+              secureInput={true}
+              text={confirmNewPassword}
+              onChangeText={(text) => {
+                setConfirmNewPassword(text);
+              }}
+              customStyles={styles.input}
+            />
+            <FullButton
+              disabled={ProfileReducerState?.isLoading}
+              title={AppConstants.changePassword}
+              onPress={() => handlePasswordChange()}
+              customStyles={styles.button}
+            />
+          </View>
+        </ScrollView>
+      </View>
+    </KeyboardAvoidingView>
   );
 };
 

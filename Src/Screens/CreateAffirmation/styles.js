@@ -67,6 +67,7 @@ export default StyleSheet.create({
     // paddingHorizontal: responsiveWidth(2),
     marginTop: responsiveHeight(3),
     alignItems: "center",
+    // backgroundColor: "red",
     paddingBottom: responsiveHeight(0.5),
   },
   addMusicText: {
@@ -81,6 +82,12 @@ export default StyleSheet.create({
     // width: responsiveWidth(5),
     height: 15,
     width: 15,
+  },
+  closeIcon: {
+    // height: responsiveWidth(5),
+    // width: responsiveWidth(5),
+    height: 20,
+    width: 20,
   },
   musicflatlist: {
     paddingTop: responsiveHeight(3),

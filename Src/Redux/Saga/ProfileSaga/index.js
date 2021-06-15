@@ -14,6 +14,13 @@ export function* fetchGetProfile({ param }) {
     console.log(param, "Nav");
     if (response.status == 1) {
       yield put({ type: ActionType.GET_PROFILE_SUCCESS, Result: response });
+    } else if (status === 3) {
+      yield put({
+        type: ActionType.GET_PROFILE_FAIL,
+        Result: { msg: "Profile Not Found!" },
+      });
+      DataManager.clearLocalStorage();
+      yield put(setLoginStateAction(false));
     } else {
       yield put({
         type: ActionType.GET_PROFILE_FAIL,
@@ -42,6 +49,10 @@ export function* fetchUpdateProfile({ param }) {
         Methods.goBack(param.navigation);
         showmessage("Profile details updated successfully");
       }
+    } else if (status === 3) {
+      yield put({ type: ActionType.UPDATE_PROFILE_FAIL, Result: response });
+      DataManager.clearLocalStorage();
+      yield put(setLoginStateAction(false));
     } else {
       yield put({ type: ActionType.UPDATE_PROFILE_FAIL, Result: response });
       // param.navigate("Auth");

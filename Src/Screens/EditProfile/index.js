@@ -36,6 +36,9 @@ import Constants from "expo-constants";
 import * as IntentLauncher from "expo-intent-launcher";
 import { useEffect } from "react";
 import NetInfo from "@react-native-community/netinfo";
+import * as Permissions from "expo-permissions";
+import Loader from "../../Components/Loader";
+
 const pkg = Constants.manifest.releaseChannel
   ? Constants.manifest.android.package
   : "host.exp.exponent";
@@ -68,78 +71,94 @@ const EditProfile = ({ navigation, route }) => {
 
   const openGallery = async () => {
     setImagePickerModal(false);
-    // Ask the user for the permission to access the media library
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-
-    if (permissionResult.granted === false) {
-      Alert.alert(
-        "",
-        "Please enable the library permission from the settings",
-        [
-          {
-            text: "Cancel",
-            onPress: () => console.log("Cancel Pressed"),
-            style: "cancel",
-          },
-          {
-            text: "Ok",
-            onPress: () => {
-              if (Platform.OS === "ios") {
-                Linking.openURL("app-settings:");
-              } else {
-                IntentLauncher.startActivityAsync(
-                  IntentLauncher.ACTION_APPLICATION_DETAILS_SETTINGS,
-                  { data: "package:" + pkg }
-                );
-              }
-            },
-          },
-        ]
+    setTimeout(async () => {
+      const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync(
+        Permissions.MEDIA_LIBRARY
       );
+      console.log("permission--->>", permissionResult);
+      if (permissionResult.granted === false) {
+        Alert.alert(
+          "",
+          "Please enable the library permission from the settings",
+          [
+            {
+              text: "Cancel",
+              onPress: () => console.log("Cancel Pressed"),
+              style: "cancel",
+            },
+            {
+              text: "Ok",
+              onPress: () => {
+                if (Platform.OS === "ios") {
+                  Linking.openURL("app-settings:");
+                } else {
+                  IntentLauncher.startActivityAsync(
+                    IntentLauncher.ACTION_APPLICATION_DETAILS_SETTINGS,
+                    { data: "package:" + pkg }
+                  );
+                }
+              },
+            },
+          ]
+        );
 
-      return;
-    }
-    const result = await ImagePicker.launchImageLibraryAsync();
-    if (!result.cancelled) {
-      setUserImage(result.uri);
-      setImage(true);
-      // changeProfileImage(result.uri);
-    }
+        return;
+      }
+      // setTimeout(() => {
+      // }, 600);
+      const result = await ImagePicker.launchImageLibraryAsync();
+
+      if (!result.cancelled) {
+        setUserImage(result.uri);
+        setImage(true);
+        // changeProfileImage(result.uri);
+      }
+    }, 300);
+    // Ask the user for the permission to access the media library
   };
   const openCamera = async () => {
     setImagePickerModal(false);
-    // Ask the user for the permission to access the camera
-    const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
-    console.log("permission--->>", permissionResult);
-    if (permissionResult.granted === false) {
-      Alert.alert("", "Please enable the camera permission from the settings", [
-        {
-          text: "Cancel",
-          onPress: () => console.log("Cancel Pressed"),
-          style: "cancel",
-        },
-        {
-          text: "Ok",
-          onPress: () => {
-            if (Platform.OS === "ios") {
-              Linking.openURL("app-settings:");
-            } else {
-              IntentLauncher.startActivityAsync(
-                IntentLauncher.ACTION_APPLICATION_DETAILS_SETTINGS,
-                { data: "package:" + pkg }
-              );
-            }
-          },
-        },
-      ]);
-      return;
-    }
-    const result = await ImagePicker.launchCameraAsync();
-    if (!result.cancelled) {
-      setUserImage(result.uri);
-      setImage(true);
-      // changeProfileImage(result.uri);
-    }
+
+    setTimeout(async () => {
+      // Ask the user for the permission to access the camera
+      const permissionResult = await ImagePicker.requestCameraPermissionsAsync(
+        Permissions.CAMERA
+      );
+      console.log("permission--->>", permissionResult);
+      if (permissionResult.granted === false) {
+        Alert.alert(
+          "",
+          "Please enable the camera permission from the settings",
+          [
+            {
+              text: "Cancel",
+              onPress: () => console.log("Cancel Pressed"),
+              style: "cancel",
+            },
+            {
+              text: "Ok",
+              onPress: () => {
+                if (Platform.OS === "ios") {
+                  Linking.openURL("app-settings:");
+                } else {
+                  IntentLauncher.startActivityAsync(
+                    IntentLauncher.ACTION_APPLICATION_DETAILS_SETTINGS,
+                    { data: "package:" + pkg }
+                  );
+                }
+              },
+            },
+          ]
+        );
+        return;
+      }
+      const result = await ImagePicker.launchCameraAsync();
+      if (!result.cancelled) {
+        setUserImage(result.uri);
+        setImage(true);
+        // changeProfileImage(result.uri);
+      }
+    }, 300);
   };
   async function saveChanges() {
     const internetStatus = await NetInfo.fetch();
@@ -183,6 +202,7 @@ const EditProfile = ({ navigation, route }) => {
   }
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+      <Loader load={profileState?.isLoading || profileState?.isImageUpdated} />
       <View style={styles.container}>
         <ImagePickerModal
           load={imagePickerModal}

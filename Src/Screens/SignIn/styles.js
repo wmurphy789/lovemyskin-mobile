@@ -65,6 +65,7 @@ export default StyleSheet.create({
     alignSelf: "center",
     marginRight: responsiveWidth(4),
     marginVertical: responsiveHeight(2),
+    marginBottom: responsiveHeight(5),
   },
   dontHaveAccountText: {
     fontFamily: AppFonts.regular,

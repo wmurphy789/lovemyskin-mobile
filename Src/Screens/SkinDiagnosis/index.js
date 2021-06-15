@@ -31,6 +31,8 @@ import Loader from "../../Components/Loader";
 import { useEffect } from "react";
 import Constants from "expo-constants";
 import * as IntentLauncher from "expo-intent-launcher";
+import * as Permissions from "expo-permissions";
+
 const pkg = Constants.manifest.releaseChannel
   ? Constants.manifest.android.package
   : "host.exp.exponent";
@@ -50,78 +52,91 @@ const SkinDiagnosis = ({ navigation }) => {
   }, []);
   const openGallery = async () => {
     setImagePickerModal(false);
-    // Ask the user for the permission to access the media library
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
-    if (permissionResult.granted === false) {
-      Alert.alert(
-        "",
-        "Please enable the library permission from the settings",
-        [
-          {
-            text: "Cancel",
-            onPress: () => console.log("Cancel Pressed"),
-            style: "cancel",
-          },
-          {
-            text: "Ok",
-            onPress: () => {
-              if (Platform.OS === "ios") {
-                Linking.openURL("app-settings:");
-              } else {
-                IntentLauncher.startActivityAsync(
-                  IntentLauncher.ACTION_APPLICATION_DETAILS_SETTINGS,
-                  { data: "package:" + pkg }
-                );
-              }
-            },
-          },
-        ]
+    setTimeout(async () => {
+      // Ask the user for the permission to access the media library
+      const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync(
+        Permissions.MEDIA_LIBRARY
       );
-      return;
-    }
 
-    const result = await ImagePicker.launchImageLibraryAsync();
+      if (permissionResult.granted === false) {
+        Alert.alert(
+          "",
+          "Please enable the library permission from the settings",
+          [
+            {
+              text: "Cancel",
+              onPress: () => console.log("Cancel Pressed"),
+              style: "cancel",
+            },
+            {
+              text: "Ok",
+              onPress: () => {
+                if (Platform.OS === "ios") {
+                  Linking.openURL("app-settings:");
+                } else {
+                  IntentLauncher.startActivityAsync(
+                    IntentLauncher.ACTION_APPLICATION_DETAILS_SETTINGS,
+                    { data: "package:" + pkg }
+                  );
+                }
+              },
+            },
+          ]
+        );
+        return;
+      }
 
-    if (!result.cancelled) {
-      setPhoto(result.uri);
-    }
+      const result = await ImagePicker.launchImageLibraryAsync();
+
+      if (!result.cancelled) {
+        setPhoto(result.uri);
+      }
+    }, 300);
   };
 
   const openCamera = async () => {
     setImagePickerModal(false);
-    // Ask the user for the permission to access the camera
-    const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+    setTimeout(async () => {
+      // Ask the user for the permission to access the camera
+      const permissionResult = await ImagePicker.requestCameraPermissionsAsync(
+        Permissions.CAMERA
+      );
 
-    if (permissionResult.granted === false) {
-      Alert.alert("", "Please enable the camera permission from the settings", [
-        {
-          text: "Cancel",
-          onPress: () => console.log("Cancel Pressed"),
-          style: "cancel",
-        },
-        {
-          text: "Ok",
-          onPress: () => {
-            if (Platform.OS === "ios") {
-              Linking.openURL("app-settings:");
-            } else {
-              IntentLauncher.startActivityAsync(
-                IntentLauncher.ACTION_APPLICATION_DETAILS_SETTINGS,
-                { data: "package:" + pkg }
-              );
-            }
-          },
-        },
-      ]);
-      return;
-    }
+      if (permissionResult.granted === false) {
+        Alert.alert(
+          "",
+          "Please enable the camera permission from the settings",
+          [
+            {
+              text: "Cancel",
+              onPress: () => console.log("Cancel Pressed"),
+              style: "cancel",
+            },
+            {
+              text: "Ok",
+              onPress: () => {
+                if (Platform.OS === "ios") {
+                  Linking.openURL("app-settings:");
+                } else {
+                  IntentLauncher.startActivityAsync(
+                    IntentLauncher.ACTION_APPLICATION_DETAILS_SETTINGS,
+                    { data: "package:" + pkg }
+                  );
+                }
+              },
+            },
+          ]
+        );
+        return;
+      }
 
-    const result = await ImagePicker.launchCameraAsync();
+      const result = await ImagePicker.launchCameraAsync();
 
-    if (!result.cancelled) {
-      setPhoto(result.uri);
-    }
+      if (!result.cancelled) {
+        setPhoto(result.uri);
+      }
+    }, 300);
   };
   const submitFeedback = () => {
     if (photo) {

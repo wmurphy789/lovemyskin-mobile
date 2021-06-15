@@ -73,7 +73,7 @@ const Method = {
               error.response.status == 403 ||
               error.response.status == 401
             ) {
-              showmessage("Unauthenticated");
+              showmessage("Unauthenticated! Please login again");
               return {
                 result: { msg: "Unauthenticated" },
                 status: StatusCodes.Unauthenticate,
@@ -169,7 +169,7 @@ const Method = {
               error.response.status == 403 ||
               error.response.status == 401
             ) {
-              showmessage("Unauthenticated");
+              showmessage("Unauthenticated! Please login again");
               return {
                 result: { msg: "Unauthenticated" },
                 status: StatusCodes.Unauthenticate,
@@ -335,7 +335,7 @@ const Method = {
               error.response.status == 403 ||
               error.response.status == 401
             ) {
-              showmessage("Unauthenticated");
+              showmessage("Unauthenticated! Please login again");
               return {
                 result: { msg: "Unauthenticated" },
                 status: StatusCodes.Unauthenticate,
@@ -431,7 +431,7 @@ const Method = {
               error.response.status == 403 ||
               error.response.status == 401
             ) {
-              showmessage("Unauthenticated");
+              showmessage("Unauthenticated! Please login again");
               return {
                 result: { msg: "Unauthenticated" },
                 status: StatusCodes.Unauthenticate,
@@ -527,7 +527,7 @@ const Method = {
               error.response.status == 403 ||
               error.response.status == 401
             ) {
-              showmessage("Unauthenticated");
+              showmessage("Unauthenticated! Please login again");
               return {
                 result: { msg: "Unauthenticated" },
                 status: StatusCodes.Unauthenticate,
@@ -623,7 +623,7 @@ const Method = {
               error.response.status == 403 ||
               error.response.status == 401
             ) {
-              showmessage("Unauthenticated");
+              showmessage("Unauthenticated! Please login again");
               return {
                 result: { msg: "Unauthenticated" },
                 status: StatusCodes.Unauthenticate,
@@ -719,7 +719,7 @@ const Method = {
               error.response.status == 403 ||
               error.response.status == 401
             ) {
-              showmessage("Unauthenticated");
+              showmessage("Unauthenticated! Please login again");
               return {
                 result: { msg: "Unauthenticated" },
                 status: StatusCodes.Unauthenticate,

@@ -4,6 +4,7 @@ import * as types from "../../ActionTypes";
 import { loginApi, signupApi, updtaeQuestionIdApi } from "../../Api";
 import jwt_decode from "jwt-decode";
 import { showmessage } from "../../../Support/Validations";
+import { setLoginStateAction } from "../../Actions/AuthActions";
 // LOGIN SAGA
 export function* loginSaga(action) {
   yield put({ type: types.API_LOGIN_START });
@@ -13,9 +14,9 @@ export function* loginSaga(action) {
     if (status === 1) {
       const token = result.jwt;
       var decoded = jwt_decode(token);
-      DataManager.setAccessToken(result.jwt);
-      DataManager.setUserId(decoded.id);
-      DataManager.setQuestionId(decoded.question_id);
+      DataManager.setAccessToken(result?.jwt);
+      DataManager.setUserId(decoded?.id);
+      decoded?.question_id && DataManager.setQuestionId(decoded?.question_id);
       yield put({
         type: types.API_LOGIN_SUCCESS,
         questionId: decoded.question_id?.toString(),
@@ -71,6 +72,10 @@ export function* updateQuestionIdSaga(action) {
         questionId: result.data.attributes?.question_id?.toString(),
       });
       // action.navigation.navigate("Tabs");
+    } else if (status === 3) {
+      yield put({ type: types.API_UPDATE_QUESTION_ID_ERROR });
+      DataManager.clearLocalStorage();
+      yield put(setLoginStateAction(false));
     } else {
       yield put({ type: types.API_UPDATE_QUESTION_ID_ERROR });
     }
