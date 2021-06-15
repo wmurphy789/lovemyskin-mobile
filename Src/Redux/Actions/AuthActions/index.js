@@ -8,6 +8,14 @@ export const loginAction = (info, navigation) => {
   };
   return action;
 };
+export const omniauthAction = (info, navigation) => {
+  const action = {
+    type: types.API_OMNIAUTH_LOAD,
+    payload: info,
+    navigation,
+  };
+  return action;
+};
 export const signupAction = (info, navigation) => {
   const action = {
     type: types.API_SIGNUP_LOAD,
@@ -19,6 +27,15 @@ export const signupAction = (info, navigation) => {
 export const updateQuestionIdAction = (info, navigation) => {
   const action = {
     type: types.API_UPDATE_QUESTION_ID_LOAD,
+    payload: info,
+    navigation,
+  };
+  return action;
+};
+
+export const updateMobileToken = (info, navigation) => {
+  const action = {
+    type: types.API_UPDATE_MOBILE_TOKEN,
     payload: info,
     navigation,
   };

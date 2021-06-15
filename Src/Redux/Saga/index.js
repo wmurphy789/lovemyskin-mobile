@@ -7,7 +7,7 @@ import {
   getAffirmationSaga,
   updateAffirmationSaga,
 } from "./AffirmationSaga";
-import { loginSaga, signupSaga, updateQuestionIdSaga } from "./AuthSaga";
+import { loginSaga, signupSaga, updateQuestionIdSaga, updateMobileToken, omniauthSaga } from "./AuthSaga";
 import { submitFeedbackAutodrumSaga } from "./SkinDiagonseSaga";
 import {
   createTrackerEntrySaga,
@@ -34,7 +34,9 @@ import {
 function* rootSaga() {
   //Auth
   yield takeEvery(types.API_LOGIN_LOAD, loginSaga);
+  yield takeEvery(types.API_OMNIAUTH_LOAD, omniauthSaga);
   yield takeEvery(types.API_SIGNUP_LOAD, signupSaga);
+  yield takeEvery(types.API_UPDATE_MOBILE_TOKEN, updateMobileToken)
   yield takeEvery(types.API_UPDATE_QUESTION_ID_LOAD, updateQuestionIdSaga);
 
   //affirmations

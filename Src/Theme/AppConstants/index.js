@@ -1,5 +1,9 @@
 export default AppConstants = {
   SERVER_URL: "https://lovemyskin-dev.herokuapp.com/api/v1/",
+  ANDROID_GOOGLE_CLIENT_ID: "872639005284-j6jjpgti3qsa5q61tvun5i5ttvaht9tj.apps.googleusercontent.com",
+  APPLE_GOOGLE_CLIENt_ID: "4c1c2d4d-898b-4fbc-84df-da6f4acdc017",
+  FACEBOOK_APP_ID: "582287613161347",
+  AMPLITUDE_API_KEY: "",
   dummyAnswers: [
     "Lentigo",
     "Seborrhoeic Keratosis",

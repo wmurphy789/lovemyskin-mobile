@@ -14,6 +14,14 @@ export const AuthReducer = (state = initialState, action) => {
       return { ...state, isDisable: false, onLoad: false };
     case types.API_LOGIN_ERROR:
       return { ...state, isDisable: false, onLoad: false };
+    
+    //Omniauth
+    case types.API_OMNIAUTH_START:
+      return { ...state, isDisable: true, onLoad: true };
+    case types.API_OMNIAUTH_SUCCESS:
+      return { ...state, isDisable: false, onLoad: false };
+    case types.API_OMNIAUTH_ERROR:
+      return { ...state, isDisable: false, onLoad: false };
 
     //Signup
     case types.API_SIGNUP_START:

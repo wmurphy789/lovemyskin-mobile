@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import * as Notifications from 'expo-notifications';
+import Constants from 'expo-constants';
 import {
   View,
   Text,
@@ -25,11 +27,12 @@ import {
   responsiveWidth,
 } from "../../Theme/ResponsiveDimensions";
 import styles from "./styles";
-import { updateQuestionIdAction } from "../../Redux/Actions/AuthActions";
+import { updateQuestionIdAction, updateMobileToken } from "../../Redux/Actions/AuthActions";
 import Loader from "../../Components/Loader";
 import { useEffect } from "react";
 
 const SkinPriorities = ({ navigation }) => {
+  const [expoPushToken, setExpoPushToken] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
   const dispatch = useDispatch();
   const AuthReducerState = useSelector((state) => state.AuthReducer);
@@ -37,6 +40,8 @@ const SkinPriorities = ({ navigation }) => {
     dispatch(updateQuestionIdAction(selectedIndex, navigation));
   };
   useEffect(() => {
+    registerForPushNotificationsAsync().then(token => dispatch(updateMobileToken(token, navigation)));
+    
     const backHandler = BackHandler.addEventListener(
       "hardwareBackPress",
       () => {
@@ -50,6 +55,38 @@ const SkinPriorities = ({ navigation }) => {
       }
     );
   }, []);
+
+  async function registerForPushNotificationsAsync() {
+    let token;
+    if (Constants.isDevice) {
+      const { status: existingStatus } = await Notifications.getPermissionsAsync();
+      let finalStatus = existingStatus;
+      if (existingStatus !== 'granted') {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+      }
+      if (finalStatus !== 'granted') {
+        alert('Failed to get push token for push notification!');
+        return;
+      }
+      token = (await Notifications.getExpoPushTokenAsync()).data;
+      
+      console.log(token);
+    } else {
+      console.log('Must use physical device for Push Notifications');
+    }
+  
+    if (Platform.OS === 'android') {
+      Notifications.setNotificationChannelAsync('default', {
+        name: 'default',
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: '#FF231F7C',
+      });
+    }
+    
+    return token;
+  }
 
   return (
     <View style={{ backgroundColor: AppColors.white, flex: 1 }}>
