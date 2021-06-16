@@ -133,7 +133,7 @@ const SignIn = ({ navigation }) => {
       if(provider === "google") {
         const result = await Google.logInAsync({
           androidClientId: AppConstants.ANDROID_GOOGLE_CLIENT_ID,
-          iosClientId: AppConstants.APPLE_GOOGLE_CLIENt_ID,
+          iosClientId: AppConstants.APPLE_GOOGLE_CLIENT_ID,
           scopes: ['profile', 'email'],
         });  
         success = result["type"] === 'success'
@@ -159,12 +159,18 @@ const SignIn = ({ navigation }) => {
           email   = (await response.json()).email
         }
       } else if(provider == "apple") {
-        const result = await AppleAuthentication.signInAsync({
+        const response = await AppleAuthentication.signInAsync({
           requestedScopes: [
             AppleAuthentication.AppleAuthenticationScope.EMAIL,
+            AppleAuthentication.AppleAuthenticationScope.FULL_NAME
           ],
         });
-        console.log(result)
+ 
+        if(response) {
+          success = true
+          token   = response["user"]
+          email   = response["email"]
+        }
       }
     
       if (success) {

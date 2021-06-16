@@ -22,27 +22,36 @@ import { formikValidation } from "../../Support/Validations";
 import AppConstants from "../../Theme/AppConstants";
 import { AppImages } from "../../Theme/AppImages";
 import styles from "./styles";
+import * as Google from 'expo-google-app-auth';
+import * as Facebook from 'expo-facebook';
+import { requestTrackingPermissionsAsync } from 'expo-tracking-transparency';
+import * as AppleAuthentication from 'expo-apple-authentication';
+
 const socialLoginData = [
   {
     image: AppImages.googleIcon,
     text: "Sign In with Google",
     visible: true,
     id: 0,
+    provider: "google"
   },
   {
     image: AppImages.fbIcon,
     text: "Sign In with Facebook",
     visible: true,
     id: 1,
+    provider: "facebook"
   },
   {
     image: AppImages.appleIcon,
     text: "Sign In with Apple",
     visible: Platform.OS == "ios" ? true : false,
     id: 2,
+    provider: "apple"
   },
 ];
 const SignUp = ({ navigation }) => {
+  const [trackingStatus, setStatus] = useState({});
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -56,6 +65,14 @@ const SignUp = ({ navigation }) => {
       setConfirmPassword("");
     });
     return unsubscribe;
+  }, []);
+  useEffect(() => {
+    (async () => {
+      const { status } = await requestTrackingPermissionsAsync();
+      if (status === 'granted') {
+        setStatus('authorized')
+      }
+    })();
   }, []);
   const signUp = () => {
     const validate = formikValidation(
@@ -79,6 +96,70 @@ const SignUp = ({ navigation }) => {
       // setConfirmPassword("");
     }
   };
+
+  async function signInWithAsync(provider) {
+    try {
+      var success = false;
+      var email, token   = null;
+
+      if(provider === "google") {
+        const result = await Google.logInAsync({
+          androidClientId: AppConstants.ANDROID_GOOGLE_CLIENT_ID,
+          iosClientId: AppConstants.APPLE_GOOGLE_CLIENT_ID,
+          scopes: ['profile', 'email'],
+        });  
+        success = result["type"] === 'success'
+
+        if(success) {
+          email = result["user"]["email"]
+          token = result["accessToken"]
+        }
+      } else if(provider == "facebook") {
+        await Facebook.initializeAsync({
+          appId: AppConstants.FACEBOOK_APP_ID,
+        });
+        const {
+          type,
+          token
+        } = await Facebook.logInWithReadPermissionsAsync({
+          permissions: ['public_profile','email'],
+        });
+        
+        if(type === 'success') {
+          const response = await fetch(`https://graph.facebook.com/me?access_token=${token}&fields=email`);
+          success = type === "success"
+          email   = (await response.json()).email
+        }
+      } else if(provider == "apple") {
+        const response = await AppleAuthentication.signInAsync({
+          requestedScopes: [
+            AppleAuthentication.AppleAuthenticationScope.EMAIL,
+          ],
+        });
+ 
+        if(response) {
+          success = true
+          token   = response["user"]
+          email   = response["email"]
+        }
+      }
+    
+      if (success) {
+        dispatch(
+          omniauthAction(
+            { email: email, provider: provider, token: token },
+            navigation
+          )
+        )
+      } else {
+        return { cancelled: true };
+      }
+    } catch (e) {
+      console.log(e)
+      return { error: true };
+    }
+  }
+
   return (
     <View style={{ flex: 1, backgroundColor: "#fff" }}>
       <Loader load={authState.onLoad} />
@@ -140,34 +221,36 @@ const SignUp = ({ navigation }) => {
               />
             </View>
           </View>
-          <View style={styles.socialLoginView}>
-            {/* <Text style={styles.orText}>OR</Text>
-          <View style={styles.socialLoginButtonsView}>
-            {socialLoginData.map((item) => (
-              <TouchableOpacity
-                key={item.id}
-                activeOpacity={1}
-                style={[
-                  styles.socialLoginButton,
-                  { display: item.visible ? "flex" : "none" },
-                ]}
-              >
-                <View style={styles.centerView}>
-                  <View style={styles.socialLoginButtonsImageView}>
-                    <Image
-                      source={item.image}
-                      style={styles.socialLoginImage}
-                    />
-                  </View>
-                  <View style={styles.socialLoginButtonsTextView}>
-                    <Text style={styles.socialLoginText}>{item.text}</Text>
-                  </View>
-                </View>
-              </TouchableOpacity>
-            ))}
-          </View>
-        */}
-          </View>
+          {trackingStatus === "authorized" &&
+            <View style={styles.socialLoginView}>
+              <Text style={styles.orText}>OR</Text>
+              <View style={styles.socialLoginButtonsView}>
+                {socialLoginData.map((item) => (
+                  <TouchableOpacity
+                    key={item.id}
+                    activeOpacity={1}
+                    onPress={() => signInWithAsync(item.provider)}
+                    style={[
+                      styles.socialLoginButton,
+                      { display: item.visible ? "flex" : "none" },
+                    ]}
+                  >
+                    <View style={styles.centerView}>
+                      <View style={styles.socialLoginButtonsImageView}>
+                        <Image
+                          source={item.image}
+                          style={styles.socialLoginImage}
+                        />
+                      </View>
+                      <View style={styles.socialLoginButtonsTextView}>
+                        <Text style={styles.socialLoginText}>{item.text}</Text>
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
+          }
           <TouchableOpacity
             onPress={() => {
               Methods.goBack(navigation);
