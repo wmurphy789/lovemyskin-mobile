@@ -63,7 +63,7 @@ const SkinPriorities = ({ navigation }) => {
     }, 800);
   };
   useEffect(() => {
-    registerForPushNotificationsAsync().then(token => dispatch(updateMobileToken(token, navigation)));
+    registerForPushNotificationsAsync().then(token => dispatch(updateMobileToken(token)));
     
     const backHandler = BackHandler.addEventListener(
       "hardwareBackPress",

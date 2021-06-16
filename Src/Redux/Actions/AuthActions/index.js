@@ -47,11 +47,10 @@ export const setQuestionIdStateAction = (info) => {
   };
   return action;
 };
-export const updateMobileToken = (info, navigation) => {
+export const updateMobileToken = (info) => {
   const action = {
     type: types.API_UPDATE_MOBILE_TOKEN,
-    payload: info,
-    navigation,
+    payload: info
   }
   return action;
 };
