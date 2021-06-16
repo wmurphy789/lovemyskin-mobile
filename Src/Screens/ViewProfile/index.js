@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Alert,
+  RefreshControl,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../../Components/Loader";
@@ -19,11 +20,15 @@ import AppConstants from "../../Theme/AppConstants";
 import { AppFonts } from "../../Theme/AppFonts";
 import { AppImages } from "../../Theme/AppImages";
 import ConfirmPopupModal from "../../Components/ConfirmPopup";
+import { StackActions } from "@react-navigation/native";
 import {
   responsiveFontSize,
   responsiveHeight,
 } from "../../Theme/ResponsiveDimensions";
 import styles from "./styles";
+import NetInfo from "@react-native-community/netinfo";
+import { showmessage } from "../../Support/Validations";
+import { setLoginStateAction } from "../../Redux/Actions/AuthActions";
 const options = [
   {
     image: AppImages.lightGreenEditIcon,
@@ -58,43 +63,38 @@ const ViewProfile = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const profileState = useSelector((state) => state?.ProfileReducer);
   useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", () => {
+    const unsubscribe = navigation.addListener("focus", async () => {
+      // const internetStatus = await NetInfo.fetch();
+      // if (!internetStatus.isConnected) {
+      // showmessage("Please check your internet connection");
       dispatch(getProfileAction(navigation));
+      // }
     });
 
-    // Return the function to unsubscribe from the event so it gets removed on unmount
     return unsubscribe;
-  }, [route]);
+    // Return the function to unsubscribe from the event so it gets removed on unmount
+  }, []);
 
   const ItemPressed = (item) => {
     if (item.title == AppConstants.logout) {
       setShowLogoutModal(true);
-      // Alert.alert("", "Are you sure you want to logout.", [
-      //   {
-      //     text: "No",
-      //     onPress: () => console.log("pressed no"),
-      //     style: "cancel",
-      //   },
-      //   {
-      //     text: "Yes",
-      //     onPress: () => {
-      //       DataManager.clearLocalStorage();
-      //       Methods.navigate(navigation, "Auth");
-      //     },
-      //   },
-      // ]);
     } else {
       Methods.navigate(navigation, item.navigate);
     }
   };
-  const logout = () => {
+  const logout = async () => {
     setShowLogoutModal(false);
-    DataManager.clearLocalStorage();
-    Methods.navigate(navigation, "Auth");
+    const internetStatus = await NetInfo.fetch();
+    if (!internetStatus.isConnected) {
+      showmessage("Please check your internet connection");
+    } else {
+      DataManager.clearLocalStorage();
+      dispatch(setLoginStateAction(false));
+    }
   };
   const mainView = () => (
     <View style={styles.container}>
-      <Loader load={profileState?.isLoading} />
+      <Loader load={profileState?.isLoading || profileState?.isImageUpdated} />
       <View style={styles.profileContainer}>
         <>
           <Image
@@ -142,6 +142,9 @@ const ViewProfile = ({ navigation, route }) => {
           contentContainerStyle={{
             paddingVertical: 30,
           }}
+          // refreshControl={
+          //   <RefreshControl refreshing={true} onRefresh={alert("njkjln")} />
+          // }
         >
           {options.map((item, index) => (
             <TouchableOpacity

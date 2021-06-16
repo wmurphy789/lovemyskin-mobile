@@ -25,6 +25,7 @@ export default StyleSheet.create({
   answerText: {
     fontFamily: AppFonts.light,
     fontSize: responsiveFontSize(1.6),
+    width: responsiveWidth(60),
   },
   pillIcon: {
     width: responsiveWidth(5),

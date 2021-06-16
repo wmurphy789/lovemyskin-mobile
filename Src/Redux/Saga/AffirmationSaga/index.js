@@ -1,6 +1,8 @@
 import { put, call } from "redux-saga/effects";
 import { DataManager } from "../../../Support/Datamanager";
+import { navigationRef } from "../../../Support/Methods";
 import { showmessage } from "../../../Support/Validations";
+import { setLoginStateAction } from "../../Actions/AuthActions";
 import * as types from "../../ActionTypes";
 import {
   createAffirmationApi,
@@ -21,6 +23,10 @@ export function* getAffirmationSaga(action) {
         type: types.API_GETAFFIRMATION_SUCCESS,
         data: result,
       });
+    } else if (status === 3) {
+      yield put({ type: types.API_GETAFFIRMATION_ERROR });
+      DataManager.clearLocalStorage();
+      yield put(setLoginStateAction(false));
     } else {
       yield put({ type: types.API_GETAFFIRMATION_ERROR });
     }
@@ -42,6 +48,10 @@ export function* getAffirmationByIdSaga(action) {
       if (result?.data?.length == 0) {
         action.navigation.goBack();
       }
+    } else if (status === 3) {
+      yield put({ type: types.API_GETAFFIRMATION_BY_ID_ERROR });
+      DataManager.clearLocalStorage();
+      yield put(setLoginStateAction(false));
     } else {
       yield put({ type: types.API_GETAFFIRMATION_BY_ID_ERROR });
     }
@@ -62,6 +72,10 @@ export function* createAffirmationSaga(action) {
       });
       showmessage("Affirmation added successfully");
       action.navigation.navigate("AffirmationStack");
+    } else if (status === 3) {
+      yield put({ type: types.API_CREATE_AFFIRMATION_ERROR });
+      DataManager.clearLocalStorage();
+      yield put(setLoginStateAction(false));
     } else {
       yield put({ type: types.API_CREATE_AFFIRMATION_ERROR });
     }
@@ -87,6 +101,10 @@ export function* deleteAffirmationSaga(action) {
       });
       showmessage("Affirmation deleted successfully");
       // action.navigation.goBack();
+    } else if (status === 3) {
+      yield put({ type: types.API_DELETE_AFFIRMATION_ERROR });
+      DataManager.clearLocalStorage();
+      yield put(setLoginStateAction(false));
     } else {
       yield put({ type: types.API_DELETE_AFFIRMATION_ERROR });
     }
@@ -106,7 +124,15 @@ export function* updateAffirmationSaga(action) {
         type: types.API_UPDATE_AFFIRMATION_SUCCESS,
       });
       showmessage("Affirmation updated successfully");
-      action.navigation.goBack();
+      let route = navigationRef.current.getCurrentRoute();
+      if(route.name != "ViewAffirmation"){
+
+        action.navigation.goBack();
+      }
+    } else if (status === 3) {
+      yield put({ type: types.API_UPDATE_AFFIRMATION_ERROR });
+      DataManager.clearLocalStorage();
+      yield put(setLoginStateAction(false));
     } else {
       yield put({ type: types.API_UPDATE_AFFIRMATION_ERROR });
     }

@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { Platform, StyleSheet } from "react-native";
 import { Colors } from "react-native/Libraries/NewAppScreen";
 import { AppColors } from "../../Theme/AppColors";
 import { AppFonts } from "../../Theme/AppFonts";
@@ -62,7 +62,7 @@ export default StyleSheet.create({
   editEntryImage: {
     width: responsiveWidth(7.8),
     height: responsiveWidth(8.5),
-    marginRight: responsiveWidth(5),
+    // marginRight: responsiveWidth(5),
   },
   optionView: {
     alignItems: "center",
@@ -138,20 +138,23 @@ export default StyleSheet.create({
   percentageEntryView: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
-    // width: responsiveWidth(43),
+    // justifyContent: "center",
+    width: responsiveWidth(60),
+    paddingHorizontal: responsiveWidth(2),
+    // backgroundColor: "red",
     marginTop: responsiveHeight(2),
   },
   percentageEntryText: {
     color: AppColors.white,
     fontSize: responsiveFontSize(1.9),
     textAlign: "center",
-    marginLeft: -responsiveWidth(7.5),
+    width: responsiveWidth(30),
+    // marginLeft: Platform.OS == "android" ? -responsiveWidth(7.5) : -40,
     // alignSelf: "center",
     // height: responsiveWidth(8.5),
 
     fontFamily: AppFonts.regular,
-    width: responsiveWidth(35),
+    // width: Platform.OS == "android" ? responsiveWidth(35) : 150,
   },
   percentageEntryTextView: {
     // height: responsiveWidth(8.5),

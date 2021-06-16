@@ -145,6 +145,16 @@ export const AffirmationReducer = (state = initialState, action) => {
         isEdited: false,
       };
 
+    //clear affirmation reducer
+    case types.API_CLEAR_REDUCER_AFFIRMATION_START:
+      return {
+        ...state,
+        isDisable: false,
+        onLoad: false,
+        isEdited: false,
+        isDeleted: false,
+        dataDetails: [],
+      };
     default:
       return { ...state };
   }
@@ -163,15 +173,3 @@ const filterEntryMyAffirmation = (data) => {
   });
   return newArray.length > 0 ? newArray[0] : {};
 };
-
-// const filterdata = (arr) => {
-//   const new_index = 0;
-//   if (new_index >= arr.length) {
-//     var k = new_index - arr.length + 1;
-//     while (k--) {
-//       arr.push(undefined);
-//     }
-//   }
-//   arr.splice(new_index, 0, arr.splice(3, 1)[0]);
-//   return arr;
-// };

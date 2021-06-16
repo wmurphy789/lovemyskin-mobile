@@ -12,12 +12,6 @@ export default StyleSheet.create({
     backgroundColor: AppColors.white,
     // backgroundColor: "#f11"
   },
-  info:{
-    textAlign:'center',alignSelf:'center',marginTop:responsiveHeight(5),
-    color: AppColors.main,
-                fontSize: responsiveFontSize(1.7),
-                fontFamily: AppFonts.light,
-  },
   lineHiderView: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -68,7 +62,7 @@ export default StyleSheet.create({
     borderColor:"#00CDA9",
     backgroundColor: "#00CDA9",
     alignItems: "center",
-    borderRadius: 13,
+    borderRadius: 10,
     marginRight: responsiveWidth(2.5),
   },
   itemImage: {
@@ -175,6 +169,7 @@ export default StyleSheet.create({
     flex: 1,
   },
   pillerHeading: {
+    paddingBottom:10,
     fontFamily: AppFonts.semiBold,
     color: AppColors.main,
   },
@@ -246,19 +241,5 @@ export default StyleSheet.create({
     paddingTop: 25,
     paddingBottom:110,
     backgroundColor: AppColors.white,
-  },
-  selected: {
-    color: AppColors.main,
-    fontFamily: AppFonts.semiBold,
-    width: responsiveWidth(18),
-    fontSize: responsiveFontSize(1.6),
-    textAlign: "center",
-  },
-  notSelected: {
-    color: AppColors.black,
-    fontFamily: AppFonts.light,
-    width: responsiveWidth(18),
-    fontSize: responsiveFontSize(1.6),
-    textAlign: "center",
   },
 });

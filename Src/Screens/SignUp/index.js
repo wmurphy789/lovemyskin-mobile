@@ -161,64 +161,68 @@ const SignUp = ({ navigation }) => {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#fff" }}>
-      <Loader load={authState.onLoad} />
-      <ScrollView
-        bounces={false}
-        keyboardShouldPersistTaps="always"
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ backgroundColor: "#fff" }}
-      >
-        <View style={styles.container}>
-          <View style={styles.headerContainer}>
-            <ImageBackground
-              resizeMode="stretch"
-              style={styles.headerImage}
-              source={AppImages.curveBigHeaderImage}
-            >
-              <Image source={AppImages.logoIcon} style={styles.logoImage} />
-              <Text style={styles.welcomeBackText}>{AppConstants.welcome}</Text>
-            </ImageBackground>
-          </View>
-          <View style={styles.mainView}>
-            <Text style={styles.introText}>{AppConstants.loremIpsum}</Text>
-            <View style={styles.inputView}>
-              <IconInput
-                type={true}
-                image={AppImages.greenMailIcon}
-                text={email}
-                placeholder={AppConstants.enterYourEmailAddress}
-                customStyles={styles.input}
-                onChangeText={(text) => setEmail(text)}
-              />
+    <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+      <View style={{ flex: 1, backgroundColor: "#fff" }}>
+        <Loader load={authState.onLoad} />
+        <ScrollView
+          bounces={false}
+          keyboardShouldPersistTaps="always"
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ backgroundColor: "#fff" }}
+        >
+          <View style={styles.container}>
+            <View style={styles.headerContainer}>
+              <ImageBackground
+                resizeMode="stretch"
+                style={styles.headerImage}
+                source={AppImages.curveBigHeaderImage}
+              >
+                <Image source={AppImages.logoIcon} style={styles.logoImage} />
+                <Text style={styles.welcomeBackText}>
+                  {AppConstants.welcome}
+                </Text>
+              </ImageBackground>
             </View>
-            <View style={styles.inputView}>
-              <IconInput
-                image={AppImages.greenLockSimpleIcon}
-                secureInput={true}
-                text={password}
-                placeholder={AppConstants.enterYourPassword}
-                customStyles={styles.input}
-                onChangeText={(text) => setPassword(text)}
-              />
-            </View>
-            <View style={styles.inputView}>
-              <IconInput
-                image={AppImages.greenLockSimpleIcon}
-                secureInput={true}
-                text={confirmPassword}
-                placeholder={AppConstants.confirmYourPassword}
-                customStyles={styles.input}
-                onChangeText={(text) => setConfirmPassword(text)}
-              />
-            </View>
-            <View style={styles.fullButton}>
-              <FullButton
-                disabled={authState?.onLoad}
-                title={AppConstants.signUp}
-                onPress={() => signUp()}
-                // onPress={() => Methods.navigate(navigation, "SkinPriorities")}
-              />
+            <View style={styles.mainView}>
+              <Text style={styles.introText}>{AppConstants.loremIpsum}</Text>
+              <View style={styles.inputView}>
+                <IconInput
+                  type={true}
+                  image={AppImages.greenMailIcon}
+                  text={email}
+                  placeholder={AppConstants.enterYourEmailAddress}
+                  customStyles={styles.input}
+                  onChangeText={(text) => setEmail(text)}
+                />
+              </View>
+              <View style={styles.inputView}>
+                <IconInput
+                  image={AppImages.greenLockSimpleIcon}
+                  secureInput={true}
+                  text={password}
+                  placeholder={AppConstants.enterYourPassword}
+                  customStyles={styles.input}
+                  onChangeText={(text) => setPassword(text)}
+                />
+              </View>
+              <View style={styles.inputView}>
+                <IconInput
+                  image={AppImages.greenLockSimpleIcon}
+                  secureInput={true}
+                  text={confirmPassword}
+                  placeholder={AppConstants.confirmYourPassword}
+                  customStyles={styles.input}
+                  onChangeText={(text) => setConfirmPassword(text)}
+                />
+              </View>
+              <View style={styles.fullButton}>
+                <FullButton
+                  disabled={authState?.onLoad}
+                  title={AppConstants.signUp}
+                  onPress={() => signUp()}
+                  // onPress={() => Methods.navigate(navigation, "SkinPriorities")}
+                />
+              </View>
             </View>
           </View>
           {trackingStatus === "authorized" &&
@@ -261,7 +265,6 @@ const SignUp = ({ navigation }) => {
               {AppConstants.haveAnAccount}
             </Text>
           </TouchableOpacity>
-        </View>
       </ScrollView>
     </View>
     // </KeyboardAvoidingView>

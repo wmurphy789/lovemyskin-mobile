@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { Platform, StyleSheet } from "react-native";
 import { AppColors } from "../../Theme/AppColors";
 import { AppFonts } from "../../Theme/AppFonts";
 import {
@@ -18,7 +18,7 @@ export default StyleSheet.create({
     marginLeft: responsiveWidth(6),
     marginTop: responsiveHeight(2.5),
   },
-  input: {
+  inputBox: {
     width: responsiveWidth(90),
     alignSelf: "center",
     // alignItems: "center",
@@ -28,11 +28,41 @@ export default StyleSheet.create({
     borderRadius: 10,
     justifyContent: "center",
     // textAlign: "center",
-    textAlignVertical: "top",
-    padding: responsiveWidth(4),
+    // textAlignVertical: "top",
+    // padding: responsiveWidth(4),
     fontFamily: AppFonts.light,
     marginTop: responsiveHeight(4),
   },
+  input: {
+    width: responsiveWidth(85),
+    alignSelf: "center",
+    // alignItems: "center",
+    height: responsiveHeight(23),
+    // borderWidth: 2,
+    // borderColor: AppColors.lightGrey,
+    // borderRadius: 10,
+    // justifyContent: "center",
+    // textAlign: "center",
+    textAlignVertical: Platform.OS == "android" ? "top" : "auto",
+    // padding: responsiveWidth(4),
+    fontFamily: AppFonts.light,
+    // marginTop: responsiveHeight(4),
+  },
+  // input: {
+  //   width: responsiveWidth(90),
+  //   alignSelf: "center",
+  //   // alignItems: "center",
+  //   height: responsiveHeight(25),
+  //   borderWidth: 2,
+  //   borderColor: AppColors.lightGrey,
+  //   borderRadius: 10,
+  //   justifyContent: "center",
+  //   // textAlign: "center",
+  //   textAlignVertical: "top",
+  //   padding: responsiveWidth(4),
+  //   fontFamily: AppFonts.light,
+  //   marginTop: responsiveHeight(4),
+  // },
   addMusicView: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -92,7 +122,7 @@ export default StyleSheet.create({
     textAlign: "center",
   },
   button: {
-    marginBottom: responsiveHeight(5),
+    marginBottom: responsiveHeight(10),
     marginTop: responsiveHeight(5),
   },
   dropDown: {

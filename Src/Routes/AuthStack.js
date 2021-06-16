@@ -34,11 +34,11 @@ const AuthStack = () => {
         component={ForgotPassword}
         options={{ headerShown: false }}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name="SkinPriorities"
         component={SkinPriorities}
         options={{ headerShown: false }}
-      />
+      /> */}
     </Stack.Navigator>
   );
 };

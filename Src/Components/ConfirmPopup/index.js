@@ -8,6 +8,7 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 import { AppColors } from "../../Theme/AppColors";
+import { responsiveWidth } from "../../Theme/ResponsiveDimensions";
 
 const ConfirmPopupModal = (props) => {
   return (
@@ -29,7 +30,7 @@ const ConfirmPopupModal = (props) => {
           style={{
             backgroundColor: AppColors.white,
             // height: 150,
-            width: 250,
+            width: responsiveWidth(80),
             borderRadius: 10,
           }}
         >

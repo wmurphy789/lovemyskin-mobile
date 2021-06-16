@@ -52,14 +52,18 @@ export const getAffirmationByIdApi = (info) => {
   return ApiMethod.GET(`affirmations/${info.id}`, null);
 };
 export const createAffirmationApi = (info) => {
+ 
   let body = {
     data: {
       type: "affirmation",
       attributes: {
         description: info.description,
+        song_id:info.songId
       },
     },
   };
+
+
   return ApiMethod.POST("affirmations", body);
 };
 export const getTrackerEntryApi = (info) => {
@@ -104,6 +108,7 @@ export const updateAffirmationApi = (info) => {
       type: "affirmation",
       attributes: {
         description: info?.description,
+        song_id:info.songId
       },
     },
   };
@@ -148,11 +153,7 @@ export const wellbeingCategoriesApi = (info) => {
   return ApiMethod.GET("resources");
 };
 export const wellbeingCategoriesPostsApi = (info) => {
-  let url =
-    "resources/" +
-    info.id +
-    "?page[number]=1&page[size]=20&resoure_type=" +
-    info.type;
+  let url = 'resources/' + info.id + '?page[number]=1&page[size]=20&resource_type=' + info.type
   return ApiMethod.GET(url);
 };
 

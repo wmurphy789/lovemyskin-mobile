@@ -15,10 +15,12 @@ const WellbeingTabs = ({
     videosEvent,
     podcastsEvent,
     storiesEvent }) => {
+
     // material Top tab nav
     const tabData = useSelector(state => state.WellbeingReducer.wellbeingPosts)
     return (
         <Tab.Navigator
+
             tabBarOptions={{
                 indicatorStyle: styles.indicator,
                 pressColor: AppColors.white,

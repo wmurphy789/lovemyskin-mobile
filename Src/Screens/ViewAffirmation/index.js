@@ -15,6 +15,7 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import ConfirmPopupModal from "../../Components/ConfirmPopup";
 import {
+  cleardataDetailsReducerAction,
   deleteAffirmationAction,
   getAffirmationByIdAction,
 } from "../../Redux/Actions/AffirmationAction";
@@ -45,6 +46,12 @@ const ViewAffirmation = ({ navigation, route }) => {
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
       dispatch(getAffirmationByIdAction({ id }, navigation));
+    });
+    return unsubscribe;
+  }, []);
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("blur", () => {
+      dispatch(cleardataDetailsReducerAction({ id }, navigation));
     });
     return unsubscribe;
   }, []);
@@ -224,28 +231,26 @@ Description: ${item?.attributes?.description}`,
           />
         </View>
       </View>
-      <View>
-        <View style={styles.itemtextView}>
-          <Text style={styles.itemtext}>{item?.attributes?.description}</Text>
-        </View>
-        {item?.attributes?.song_id && (
-          <View>
-            <DummyMusicBar />
-            <View style={styles.playerTimerView}>
-              <Text style={styles.playerTime}>{timeElapsed}</Text>
-              <Text style={styles.playerTime}>-{timeRemaining}</Text>
-            </View>
-            <CustomIconButton
-              // icon={
-              //  isPlaying ? AppImages.pauseWhiteIcon : AppImages.playWhiteIcon
-              // }
-              icon={AppImages.pauseWhiteIcon}
-              customStyles={styles.playerButtons}
-              // onPress={() => { setisPlaying(!isPlaying) }}
-            />
-          </View>
-        )}
+      <View style={styles.itemtextView}>
+        <Text style={styles.itemtext}>{item?.attributes?.description}</Text>
       </View>
+      {/* {item?.attributes?.song_id && ( */}
+      {/* <View style={{ display: item?.attributes?.song_id ? "flex" : "none" }}>
+        <DummyMusicBar />
+        <View style={styles.playerTimerView}>
+          <Text style={styles.playerTime}>{timeElapsed}</Text>
+          <Text style={styles.playerTime}>-{timeRemaining}</Text>
+        </View>
+        <CustomIconButton
+          // icon={
+          //  isPlaying ? AppImages.pauseWhiteIcon : AppImages.playWhiteIcon
+          // }
+          icon={"home"}
+          customStyles={styles.playerButtons}
+          // onPress={() => { setisPlaying(!isPlaying) }}
+        />
+      </View> */}
+
       <CustomIconButton
         icon={"share"}
         onPress={async () => {
@@ -273,8 +278,9 @@ Description: ${item?.attributes?.description}`,
     //     />
     //   );
     // } else {
-    return (
+    return AffirmationState?.dataDetails?.length > 0 ? (
       <FlatList
+        // data={[]}
         data={AffirmationState.dataDetails}
         extraData={AffirmationState}
         bounces={false}
@@ -291,33 +297,12 @@ Description: ${item?.attributes?.description}`,
         ListHeaderComponent={() => <Header />}
         keyExtractor={(item, index) => index.toString()}
         renderItem={_renderMyAffirmations}
-        // ListEmptyComponent={() => (
-        //   <View
-        //     style={{
-        //       alignItems: "center",
-        //       justifyContent: "center",
-        //       // flex: 1,
-        //       paddingTop: responsiveHeight(35),
-        //       // backgroundColor: screenColor,
-        //     }}
-        //   >
-        //     <Text
-        //       style={{
-        //         color: screenColor,
-        //         fontFamily: AppFonts.light,
-        //         fontSize: responsiveFontSize(1.6),
-        //       }}
-        //     >
-        //       No affirmation found
-        //     </Text>
-        //   </View>
-        // )}
       />
-      // <>
-      //   <Header />
-      //   {_renderMyAffirmations()}
-      //   {/* {_renderMyAffirmations()} */}
-      // </>
+    ) : (
+      <>
+        <Header />
+        <View style={{ backgroundColor: screenColor, flex: 1 }} />
+      </>
     );
     // }
   };

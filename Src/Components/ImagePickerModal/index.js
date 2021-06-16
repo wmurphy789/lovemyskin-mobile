@@ -29,7 +29,7 @@ const ImagePickerModal = (props) => {
         <View
           style={{
             backgroundColor: AppColors.white,
-            height: 150,
+            height: 135,
             width: 250,
             borderRadius: 10,
           }}

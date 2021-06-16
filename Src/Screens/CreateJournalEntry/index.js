@@ -11,6 +11,10 @@ import {
   TouchableWithoutFeedback,
   Linking,
   Alert,
+  KeyboardAvoidingView,
+  Keyboard,
+  Platform,
+  Dimensions,
 } from "react-native";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
@@ -38,7 +42,8 @@ import ImagePickerModal from "../../Components/ImagePickerModal";
 import { useEffect } from "react";
 import Constants from "expo-constants";
 import * as IntentLauncher from "expo-intent-launcher";
-
+import * as Permissions from "expo-permissions";
+const { height, width } = Dimensions.get("window");
 const pkg = Constants.manifest.releaseChannel
   ? Constants.manifest.android.package
   : "host.exp.exponent";
@@ -170,78 +175,91 @@ const CreateJournalEntry = (props) => {
 
   const openGallery = async () => {
     setImagePickerModal(false);
-    // Ask the user for the permission to access the media library
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
-    if (permissionResult.granted === false) {
-      Alert.alert(
-        "",
-        "Please enable the library permission from the settings",
-        [
-          {
-            text: "Cancel",
-            onPress: () => console.log("Cancel Pressed"),
-            style: "cancel",
-          },
-          {
-            text: "Ok",
-            onPress: () => {
-              if (Platform.OS === "ios") {
-                Linking.openURL("app-settings:");
-              } else {
-                IntentLauncher.startActivityAsync(
-                  IntentLauncher.ACTION_APPLICATION_DETAILS_SETTINGS,
-                  { data: "package:" + pkg }
-                );
-              }
-            },
-          },
-        ]
+    setTimeout(async () => {
+      // Ask the user for the permission to access the media library
+      const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync(
+        Permissions.MEDIA_LIBRARY
       );
-      return;
-    }
 
-    const result = await ImagePicker.launchImageLibraryAsync();
+      if (permissionResult.granted === false) {
+        Alert.alert(
+          "",
+          "Please enable the library permission from the settings",
+          [
+            {
+              text: "Cancel",
+              onPress: () => console.log("Cancel Pressed"),
+              style: "cancel",
+            },
+            {
+              text: "Ok",
+              onPress: () => {
+                if (Platform.OS === "ios") {
+                  Linking.openURL("app-settings:");
+                } else {
+                  IntentLauncher.startActivityAsync(
+                    IntentLauncher.ACTION_APPLICATION_DETAILS_SETTINGS,
+                    { data: "package:" + pkg }
+                  );
+                }
+              },
+            },
+          ]
+        );
+        return;
+      }
 
-    if (!result.cancelled) {
-      setPhoto(result.uri);
-    }
+      const result = await ImagePicker.launchImageLibraryAsync();
+
+      if (!result.cancelled) {
+        setPhoto(result.uri);
+      }
+    }, 300);
   };
 
   const openCamera = async () => {
     setImagePickerModal(false);
-    // Ask the user for the permission to access the camera
-    const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+    setTimeout(async () => {
+      // Ask the user for the permission to access the camera
+      const permissionResult = await ImagePicker.requestCameraPermissionsAsync(
+        Permissions.CAMERA
+      );
 
-    if (permissionResult.granted === false) {
-      Alert.alert("", "Please enable the camera permission from the settings", [
-        {
-          text: "Cancel",
-          onPress: () => console.log("Cancel Pressed"),
-          style: "cancel",
-        },
-        {
-          text: "Ok",
-          onPress: () => {
-            if (Platform.OS === "ios") {
-              Linking.openURL("app-settings:");
-            } else {
-              IntentLauncher.startActivityAsync(
-                IntentLauncher.ACTION_APPLICATION_DETAILS_SETTINGS,
-                { data: "package:" + pkg }
-              );
-            }
-          },
-        },
-      ]);
-      return;
-    }
+      if (permissionResult.granted === false) {
+        Alert.alert(
+          "",
+          "Please enable the camera permission from the settings",
+          [
+            {
+              text: "Cancel",
+              onPress: () => console.log("Cancel Pressed"),
+              style: "cancel",
+            },
+            {
+              text: "Ok",
+              onPress: () => {
+                if (Platform.OS === "ios") {
+                  Linking.openURL("app-settings:");
+                } else {
+                  IntentLauncher.startActivityAsync(
+                    IntentLauncher.ACTION_APPLICATION_DETAILS_SETTINGS,
+                    { data: "package:" + pkg }
+                  );
+                }
+              },
+            },
+          ]
+        );
+        return;
+      }
 
-    const result = await ImagePicker.launchCameraAsync();
+      const result = await ImagePicker.launchCameraAsync();
 
-    if (!result.cancelled) {
-      setPhoto(result.uri);
-    }
+      if (!result.cancelled) {
+        setPhoto(result.uri);
+      }
+    }, 300);
   };
 
   const mainView = () => (
@@ -271,18 +289,18 @@ const CreateJournalEntry = (props) => {
             />
           </View>
         </TouchableOpacity>
-        {dropDrownOpen && (
+        {dropDrownOpen && Platform.OS == "android" && (
           <View
             style={{
               position: "absolute",
-              top: 80,
+              top: 65,
               height: 150,
               backgroundColor: "#F0F9F7",
               width: "90%",
               alignSelf: "center",
               borderBottomLeftRadius: 10,
               borderBottomRightRadius: 10,
-              zIndex: 9999,
+              zIndex: 99999,
               // borderTopWidth: 0.2,
               // paddingHorizontal: responsiveWidth(8),
               // display: "none",
@@ -302,7 +320,7 @@ const CreateJournalEntry = (props) => {
                     key={item.id}
                     style={{
                       paddingVertical: responsiveWidth(3.5),
-                      borderTopWidth: 0.2,
+                      borderTopWidth: 0.25,
                       borderColor: AppColors.mediumGrey,
                       paddingHorizontal: responsiveWidth(8),
                     }}
@@ -316,14 +334,29 @@ const CreateJournalEntry = (props) => {
         )}
       </View>
       <View>
-        <TextInput
+        {/* <TextInput
           multiline
           maxLength={500}
           placeholder={AppConstants.typeYourJournalEntryHere}
           style={styles.input}
+          selectionColor={AppColors.black}
           defaultValue={description}
           onChangeText={(text) => setDescription(text)}
-        />
+        /> */}
+        <View style={styles.inputBox}>
+          <TextInput
+            multiline
+            maxLength={500}
+            defaultValue={description}
+            selectionColor={AppColors.main}
+            placeholder={AppConstants.typeYourJournalEntryHere}
+            style={styles.input}
+            autoCapitalize="sentences"
+            // keyboardType="ascii-capable"
+            // returnKeyType="done"
+            onChangeText={(text) => setDescription(text)}
+          />
+        </View>
         {/* <Image
           source={AppImages.mike}
           style={styles.mikeImage}
@@ -360,10 +393,55 @@ const CreateJournalEntry = (props) => {
         customStyles={styles.button}
         onPress={() => (id ? updateEntry() : createEntry())}
       />
+      {dropDrownOpen && Platform.OS == "ios" && (
+        <View
+          style={{
+            position: "absolute",
+            top: height > 800 ? responsiveHeight(13) : responsiveHeight(14),
+            height:
+              height > 800 ? responsiveHeight(16.8) : responsiveHeight(20.5),
+            backgroundColor: "#F0F9F7",
+            width: "90%",
+            alignSelf: "center",
+            borderBottomLeftRadius: 10,
+            borderBottomRightRadius: 10,
+            zIndex: 99999,
+            // borderTopWidth: 0.2,
+            // paddingHorizontal: responsiveWidth(8),
+            // display: "none",
+          }}
+        >
+          {dropDownoption.map((item) => {
+            return (
+              <TouchableOpacity
+                activeOpacity={1}
+                onPress={() => {
+                  setDropDrownOpen(false);
+                  setFelling(item.feeling);
+                }}
+                key={item.id}
+              >
+                <View
+                  key={item.id}
+                  style={{
+                    paddingVertical: responsiveWidth(3.5),
+                    borderTopWidth: 0.25,
+                    borderColor: AppColors.mediumGrey,
+                    paddingHorizontal: responsiveWidth(8),
+                  }}
+                >
+                  <Text style={styles.dropDownText}>{item.title}</Text>
+                </View>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+      )}
     </View>
   );
   return (
-    <>
+    // <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+    <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
       <CurvedHeader
         title={AppConstants.CreateJournalEntry}
         leftIcon={AppImages.backIcon}
@@ -382,14 +460,15 @@ const CreateJournalEntry = (props) => {
       />
       <ScrollView
         bounces={false}
-        keyboardShouldPersistTaps="always"
+        // keyboardShouldPersistTaps="always"
         showsVerticalScrollIndicator={false}
       >
         <TouchableWithoutFeedback onPress={() => setDropDrownOpen(false)}>
           {mainView()}
         </TouchableWithoutFeedback>
       </ScrollView>
-    </>
+    </KeyboardAvoidingView>
+    // </TouchableWithoutFeedback>
   );
 };
 

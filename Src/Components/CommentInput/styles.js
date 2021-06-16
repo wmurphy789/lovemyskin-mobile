@@ -12,12 +12,6 @@ export default StyleSheet.create({
     backgroundColor: AppColors.white,
     // backgroundColor: "#f11"
   },
-  info:{
-    textAlign:'center',alignSelf:'center',marginTop:responsiveHeight(5),
-    color: AppColors.main,
-                fontSize: responsiveFontSize(1.7),
-                fontFamily: AppFonts.light,
-  },
   lineHiderView: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -64,11 +58,11 @@ export default StyleSheet.create({
     marginRight: responsiveWidth(2.5),
   },
   selectedItemView: {
-    borderWidth:2,
-    borderColor:"#00CDA9",
+    borderWidth: 2,
+    borderColor: "#00CDA9",
     backgroundColor: "#00CDA9",
     alignItems: "center",
-    borderRadius: 13,
+    borderRadius: 10,
     marginRight: responsiveWidth(2.5),
   },
   itemImage: {
@@ -132,15 +126,16 @@ export default StyleSheet.create({
     borderRadius: 50,
   },
   sendButtonIcon: {
-    height: 30,
-    width: 30,
+    height: 31.5,
+    width: 31.5,
     borderRadius: 50,
     // backgroundColor: "#f11",
   },
   commentInput: {
     // flex: 1,
     // backgroundColor:'red',
-    width:responsiveWidth(50),
+    height: 30,
+    width: responsiveWidth(53),
     paddingHorizontal: 10,
     fontFamily: AppFonts.light,
     fontSize: responsiveFontSize(1.2),
@@ -149,9 +144,9 @@ export default StyleSheet.create({
     backgroundColor: "rgba(103, 198, 175, 0.5)",
     marginHorizontal: responsiveWidth(5),
     paddingHorizontal: responsiveWidth(3),
-    paddingVertical:responsiveHeight(1.7),
+    paddingVertical: responsiveHeight(1.7),
     borderRadius: 10,
-    marginBottom: responsiveHeight(2)
+    marginBottom: responsiveHeight(2),
   },
   PillarItemView: {
     // will change borderradius later
@@ -244,21 +239,7 @@ export default StyleSheet.create({
   },
   tabsContentFlatlist: {
     paddingTop: 25,
-    paddingBottom:110,
+    paddingBottom: 110,
     backgroundColor: AppColors.white,
-  },
-  selected: {
-    color: AppColors.main,
-    fontFamily: AppFonts.semiBold,
-    width: responsiveWidth(18),
-    fontSize: responsiveFontSize(1.6),
-    textAlign: "center",
-  },
-  notSelected: {
-    color: AppColors.black,
-    fontFamily: AppFonts.light,
-    width: responsiveWidth(18),
-    fontSize: responsiveFontSize(1.6),
-    textAlign: "center",
   },
 });

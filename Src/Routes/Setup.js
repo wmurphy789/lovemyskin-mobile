@@ -18,21 +18,26 @@ import { useState } from "react";
 import { useEffect } from "react";
 import Loader from "../Components/Loader";
 import { navigationRef } from "../Support/Methods";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { setLoginStateAction } from "../Redux/Actions/AuthActions";
+import Main from "./BottomTabNavigator";
 
 const Stack = createStackNavigator();
 const Setup = () => {
-  const [Intial, setIntial] = useState(null);
+  const [Intial, setIntial] = useState(false);
+  const AuthReducerState = useSelector((state) => state.AuthReducer);
+  const dispatch = useDispatch();
   useEffect(() => {
     authenticateUser();
   }, []);
   const authenticateUser = async () => {
-    DataManager.getUserId().then((token) => {
-      console.log("token---", token);
-      if (token) {
-        setIntial("Tabs");
-      } else {
-        setIntial("Auth");
+    DataManager.getUserId().then((id) => {
+      console.log("user id---", id);
+      if (id) {
+        dispatch(setLoginStateAction(true));
       }
+      setIntial(true);
     });
   };
 
@@ -44,61 +49,21 @@ const Setup = () => {
           animationEnabled: true,
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
         }}
-        initialRouteName={Intial}
+        // initialRouteName={Intial}
       >
-        <Stack.Screen
-          name="Auth"
-          component={AuthStack}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Tabs"
-          component={BottomTabNavigator}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="TermsCondition"
-          component={TermsCondition}
-          options={{
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen
-          name="PrivacyPolicy"
-          component={PrivacyPolicy}
-          options={{
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen
-          name="ChangePassword"
-          component={ChangePassword}
-          options={{
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen
-          name="EditProfile"
-          component={EditProfile}
-          options={{
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen
-          name="CreateJournalEntry"
-          component={CreateJournalEntry}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="CreateAffirmation"
-          component={CreateAffirmation}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="ViewAffirmation"
-          component={ViewAffirmation}
-          options={{ headerShown: false }}
-        />
+        {AuthReducerState?.isLogin ? (
+          <Stack.Screen
+            name="Main"
+            component={Main}
+            options={{ headerShown: false }}
+          />
+        ) : (
+          <Stack.Screen
+            name="Auth"
+            component={AuthStack}
+            options={{ headerShown: false }}
+          />
+        )}
       </Stack.Navigator>
     </NavigationContainer>
   ) : (

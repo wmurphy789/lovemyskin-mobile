@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
   Linking,
   Alert,
+  KeyboardAvoidingView,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { FullButton } from "../../Components/Button";
@@ -19,16 +20,25 @@ import AppConstants from "../../Theme/AppConstants";
 import { AppImages } from "../../Theme/AppImages";
 import styles from "./styles";
 import {
+  getProfileAction,
   updateProfileImageAction,
   updatetProfileAction,
 } from "../../Redux/Actions/ProfileActions";
-import { formikValidationProfile } from "../../Support/Validations";
+import {
+  formikValidationProfile,
+  showmessage,
+} from "../../Support/Validations";
 import * as ImagePicker from "expo-image-picker";
 import ImagePickerModal from "../../Components/ImagePickerModal";
 import { AppColors } from "../../Theme/AppColors";
 import { responsiveHeight } from "../../Theme/ResponsiveDimensions";
 import Constants from "expo-constants";
 import * as IntentLauncher from "expo-intent-launcher";
+import { useEffect } from "react";
+import NetInfo from "@react-native-community/netinfo";
+import * as Permissions from "expo-permissions";
+import Loader from "../../Components/Loader";
+
 const pkg = Constants.manifest.releaseChannel
   ? Constants.manifest.android.package
   : "host.exp.exponent";
@@ -56,235 +66,265 @@ const EditProfile = ({ navigation, route }) => {
   const [userImage, setUserImage] = useState(
     profileState?.userProfileData?.photo || null
   );
+  const [ImageSet, setImage] = useState(false);
   const [imagePickerModal, setImagePickerModal] = useState(false);
 
   const openGallery = async () => {
     setImagePickerModal(false);
-    // Ask the user for the permission to access the media library
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-
-    if (permissionResult.granted === false) {
-      Alert.alert(
-        "",
-        "Please enable the library permission from the settings",
-        [
-          {
-            text: "Cancel",
-            onPress: () => console.log("Cancel Pressed"),
-            style: "cancel",
-          },
-          {
-            text: "Ok",
-            onPress: () => {
-              if (Platform.OS === "ios") {
-                Linking.openURL("app-settings:");
-              } else {
-                IntentLauncher.startActivityAsync(
-                  IntentLauncher.ACTION_APPLICATION_DETAILS_SETTINGS,
-                  { data: "package:" + pkg }
-                );
-              }
-            },
-          },
-        ]
+    setTimeout(async () => {
+      const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync(
+        Permissions.MEDIA_LIBRARY
       );
+      console.log("permission--->>", permissionResult);
+      if (permissionResult.granted === false) {
+        Alert.alert(
+          "",
+          "Please enable the library permission from the settings",
+          [
+            {
+              text: "Cancel",
+              onPress: () => console.log("Cancel Pressed"),
+              style: "cancel",
+            },
+            {
+              text: "Ok",
+              onPress: () => {
+                if (Platform.OS === "ios") {
+                  Linking.openURL("app-settings:");
+                } else {
+                  IntentLauncher.startActivityAsync(
+                    IntentLauncher.ACTION_APPLICATION_DETAILS_SETTINGS,
+                    { data: "package:" + pkg }
+                  );
+                }
+              },
+            },
+          ]
+        );
 
-      return;
-    }
-    const result = await ImagePicker.launchImageLibraryAsync();
-    if (!result.cancelled) {
-      setUserImage(result.uri);
-      changeProfileImage(result.uri);
-    }
+        return;
+      }
+      // setTimeout(() => {
+      // }, 600);
+      const result = await ImagePicker.launchImageLibraryAsync();
+
+      if (!result.cancelled) {
+        setUserImage(result.uri);
+        setImage(true);
+        // changeProfileImage(result.uri);
+      }
+    }, 300);
+    // Ask the user for the permission to access the media library
   };
   const openCamera = async () => {
     setImagePickerModal(false);
-    // Ask the user for the permission to access the camera
-    const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
-    console.log("permission--->>", permissionResult);
-    if (permissionResult.granted === false) {
-      Alert.alert("", "Please enable the camera permission from the settings", [
-        {
-          text: "Cancel",
-          onPress: () => console.log("Cancel Pressed"),
-          style: "cancel",
-        },
-        {
-          text: "Ok",
-          onPress: () => {
-            if (Platform.OS === "ios") {
-              Linking.openURL("app-settings:");
-            } else {
-              IntentLauncher.startActivityAsync(
-                IntentLauncher.ACTION_APPLICATION_DETAILS_SETTINGS,
-                { data: "package:" + pkg }
-              );
-            }
-          },
-        },
-      ]);
-      return;
-    }
-    const result = await ImagePicker.launchCameraAsync();
-    if (!result.cancelled) {
-      setUserImage(result.uri);
-      changeProfileImage(result.uri);
-    }
+
+    setTimeout(async () => {
+      // Ask the user for the permission to access the camera
+      const permissionResult = await ImagePicker.requestCameraPermissionsAsync(
+        Permissions.CAMERA
+      );
+      console.log("permission--->>", permissionResult);
+      if (permissionResult.granted === false) {
+        Alert.alert(
+          "",
+          "Please enable the camera permission from the settings",
+          [
+            {
+              text: "Cancel",
+              onPress: () => console.log("Cancel Pressed"),
+              style: "cancel",
+            },
+            {
+              text: "Ok",
+              onPress: () => {
+                if (Platform.OS === "ios") {
+                  Linking.openURL("app-settings:");
+                } else {
+                  IntentLauncher.startActivityAsync(
+                    IntentLauncher.ACTION_APPLICATION_DETAILS_SETTINGS,
+                    { data: "package:" + pkg }
+                  );
+                }
+              },
+            },
+          ]
+        );
+        return;
+      }
+      const result = await ImagePicker.launchCameraAsync();
+      if (!result.cancelled) {
+        setUserImage(result.uri);
+        setImage(true);
+        // changeProfileImage(result.uri);
+      }
+    }, 300);
   };
-  function saveChanges() {
-    const data = {
-      id: profileState?.id,
-      fName: fName?.trim(),
-      lName: lName?.trim(),
-      userId: userId?.trim(),
-      navigation,
-    };
-    Keyboard.dismiss();
-    const validate = formikValidationProfile(
-      fName?.trim(),
-      lName?.trim(),
-      userId?.trim()
-    );
-    if (validate) {
-      dispatch(updatetProfileAction(data));
+  async function saveChanges() {
+    const internetStatus = await NetInfo.fetch();
+    // alert(internetStatus);
+    if (!internetStatus.isConnected) {
+      showmessage("Please check your internet connection");
+    } else {
+      const data = {
+        id: profileState?.id,
+        fName: fName?.trim(),
+        lName: lName?.trim(),
+        userId: userId?.toLowerCase()?.trim(),
+        photoUpdate: ImageSet ? true : false,
+        navigation,
+      };
+      Keyboard.dismiss();
+      const validate = formikValidationProfile(
+        fName?.trim(),
+        lName?.trim(),
+        userId?.trim()
+      );
+      if (validate) {
+        if (ImageSet) {
+          changeProfileImage();
+        }
+        dispatch(updatetProfileAction(data));
+      }
     }
-    // fName.trim() != "" && userId.trim() != ""
-    //   ? fName.length > 2 && userId.length > 2
-    //     ?
-    //     : showmessage("Name and UserName length should be atleast two.")
-    //   : showmessage("Fill all details");
-    // Methods.goBack(navigation)
   }
-  function changeProfileImage(imageUrl) {
+  function changeProfileImage() {
+    const imageUrl = userImage;
     var data = new FormData();
     data.append("avatar", {
       type: "image/jpg",
       uri: imageUrl,
       name: imageUrl.slice(imageUrl.lastIndexOf("/") + 1, imageUrl.length),
     });
-    dispatch(updateProfileImageAction(data, navigation));
+    dispatch(
+      updateProfileImageAction({ data: data, update: true }, navigation)
+    );
   }
   return (
-    <View style={styles.container}>
-      <ImagePickerModal
-        load={imagePickerModal}
-        onClose={() => {
-          setImagePickerModal(false);
-        }}
-        openCamera={() => openCamera()}
-        openGallery={() => openGallery()}
-      />
-      <CurvedHeader
-        title={AppConstants.editProfile}
-        leftIcon={AppImages.backIcon}
-        leftPress={() => {
-          Methods.goBack(navigation);
-        }}
-      />
+    <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+      <Loader load={profileState?.isLoading || profileState?.isImageUpdated} />
       <View style={styles.container}>
-        {/* <KeyboardAvoidingView
+        <ImagePickerModal
+          load={imagePickerModal}
+          onClose={() => {
+            setImagePickerModal(false);
+          }}
+          openCamera={() => openCamera()}
+          openGallery={() => openGallery()}
+        />
+        <CurvedHeader
+          title={AppConstants.editProfile}
+          leftIcon={AppImages.backIcon}
+          leftPress={() => {
+            Methods.goBack(navigation);
+          }}
+        />
+        <View style={styles.container}>
+          {/* <KeyboardAvoidingView
           style={{ flex: 1, backgroundColor: "#fff" }}
           behavior="padding"
         > */}
-        <View style={{ flex: 1, backgroundColor: "#fff" }}>
-          <ScrollView
-            bounces={false}
-            keyboardShouldPersistTaps="always"
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{ paddingTop: 20, paddingBottom: 50 }}
-          >
-            <View style={styles.profileImageContainer}>
-              <Image
-                onLoadStart={() => {
-                  setLoadingImage(true);
-                }}
-                onLoadEnd={() => {
-                  setLoadingImage(false);
-                }}
-                style={styles.profileImage}
-                source={userImage ? { uri: userImage } : AppImages.userDummy}
-              />
-              {loadingImage && (
-                <View
-                  style={{
-                    position: "absolute",
-                    alignSelf: "center",
-                    bottom: responsiveHeight(12),
-                  }}
-                >
-                  <ActivityIndicator color={AppColors.main} size="small" />
-                </View>
-              )}
-              {!loadingImage && (
-                <TouchableOpacity
-                  style={styles.editButton}
-                  onPress={() => {
-                    setImagePickerModal(true);
-                  }}
-                >
-                  <Image
-                    source={AppImages.darkGreenEditIcon}
-                    style={styles.editImage}
-                  />
-                </TouchableOpacity>
-              )}
-            </View>
-            <SimpleInput
-              placeholder="First Name"
-              text={fName}
-              maxLength={15}
-              onChangeText={(text) => {
-                setFName(text);
-              }}
-              customStyles={styles.input}
-            />
-            <SimpleInput
-              text={lName}
-              maxLength={15}
-              onChangeText={(text) => {
-                setLName(text);
-              }}
-              placeholder="Last Name"
-              customStyles={styles.input}
-            />
-            <SimpleInput
-              text={userId}
-              maxLength={30}
-              onChangeText={(text) => {
-                setUserId(text?.toLowerCase());
-              }}
-              placeholder="Username"
-              customStyles={styles.input}
-            />
-            <SimpleInput
-              text={userEmail}
-              placeholder="Email Address"
-              type={true}
-              editable={false}
-              onChangeText={(text) => {
-                // setUserEmail(text);
-              }}
-              // editable={false}
-              customStyles={styles.input}
-            />
-            <TouchableOpacity
-              onPress={() => Methods.navigate(navigation, "ChangePassword")}
-              style={styles.changePasswordButton}
+          <View style={{ flex: 1, backgroundColor: "#fff" }}>
+            <ScrollView
+              bounces={false}
+              keyboardShouldPersistTaps="always"
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{ paddingTop: 20, paddingBottom: 50 }}
             >
-              <Text style={styles.changePasswordText}>
-                {AppConstants.changePassword}
-              </Text>
-            </TouchableOpacity>
-            <FullButton
-              disabled={profileState?.isLoading}
-              title={AppConstants.saveChanges}
-              onPress={() => saveChanges()}
-            />
-          </ScrollView>
+              <View style={styles.profileImageContainer}>
+                <Image
+                  onLoadStart={() => {
+                    setLoadingImage(true);
+                  }}
+                  onLoadEnd={() => {
+                    setLoadingImage(false);
+                  }}
+                  style={styles.profileImage}
+                  source={userImage ? { uri: userImage } : AppImages.userDummy}
+                />
+                {loadingImage && (
+                  <View
+                    style={{
+                      position: "absolute",
+                      alignSelf: "center",
+                      bottom: responsiveHeight(12),
+                    }}
+                  >
+                    <ActivityIndicator color={AppColors.main} size="small" />
+                  </View>
+                )}
+                {!loadingImage && (
+                  <TouchableOpacity
+                    style={styles.editButton}
+                    onPress={() => {
+                      setImagePickerModal(true);
+                    }}
+                  >
+                    <Image
+                      source={AppImages.darkGreenEditIcon}
+                      style={styles.editImage}
+                    />
+                  </TouchableOpacity>
+                )}
+              </View>
+              <SimpleInput
+                placeholder="First Name"
+                text={fName}
+                maxLength={15}
+                onChangeText={(text) => {
+                  setFName(text);
+                }}
+                customStyles={styles.input}
+              />
+              <SimpleInput
+                text={lName}
+                maxLength={15}
+                onChangeText={(text) => {
+                  setLName(text);
+                }}
+                placeholder="Last Name"
+                customStyles={styles.input}
+              />
+              <SimpleInput
+                text={userId}
+                maxLength={30}
+                onChangeText={(text) => {
+                  setUserId(text);
+                }}
+                placeholder="Username"
+                customStyles={styles.input}
+              />
+              <SimpleInput
+                text={userEmail}
+                placeholder="Email Address"
+                type={true}
+                editable={false}
+                onChangeText={(text) => {
+                  // setUserEmail(text);
+                }}
+                // editable={false}
+                customStyles={styles.input}
+              />
+              <TouchableOpacity
+                onPress={() => Methods.navigate(navigation, "ChangePassword")}
+                style={styles.changePasswordButton}
+              >
+                <Text style={styles.changePasswordText}>
+                  {AppConstants.changePassword}
+                </Text>
+              </TouchableOpacity>
+              <FullButton
+                disabled={profileState?.isLoading}
+                title={AppConstants.saveChanges}
+                onPress={() => saveChanges()}
+                customStyles={{ marginBottom: responsiveHeight(5) }}
+              />
+            </ScrollView>
+          </View>
+          {/* </KeyboardAvoidingView> */}
         </View>
-        {/* </KeyboardAvoidingView> */}
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 

@@ -56,10 +56,10 @@ const App = () => {
             }}
           />
           <StatusBar barStyle="light-content" />
-          <SafeAreaView style={{ flex: 1 }}>
-            <Setup />
-            <FlashMessage position="top" />
-          </SafeAreaView>
+          {/* <SafeAreaView style={{ flex: 1 }}> */}
+          <Setup />
+          <FlashMessage position="top" />
+          {/* </SafeAreaView> */}
         </Provider>
       )}
     </>

@@ -12,6 +12,7 @@ import {
 export default StyleSheet.create({
   container: {
     width: "100%",
+    flex: 1,
     backgroundColor: AppColors.white,
   },
   headerContainer: {
@@ -64,6 +65,7 @@ export default StyleSheet.create({
     alignSelf: "center",
     marginRight: responsiveWidth(4),
     marginVertical: responsiveHeight(2),
+    marginBottom: responsiveHeight(5),
   },
   dontHaveAccountText: {
     fontFamily: AppFonts.regular,

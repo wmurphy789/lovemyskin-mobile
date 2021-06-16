@@ -1,6 +1,7 @@
 import { put, call } from "redux-saga/effects";
 import { DataManager } from "../../../Support/Datamanager";
 import { showmessage } from "../../../Support/Validations";
+import { setLoginStateAction } from "../../Actions/AuthActions";
 import * as types from "../../ActionTypes";
 import {
   getTrackerAllEntryApi,
@@ -21,6 +22,10 @@ export function* getTrackerEntrySaga(action) {
         type: types.API_GET_TRACKER_ENTRY_SUCCESS,
         data: result.data,
       });
+    } else if (status === 3) {
+      yield put({ type: types.API_GET_TRACKER_ENTRY_ERROR });
+      DataManager.clearLocalStorage();
+      yield put(setLoginStateAction(false));
     } else {
       yield put({ type: types.API_GET_TRACKER_ENTRY_ERROR });
     }
@@ -42,6 +47,10 @@ export function* getTrackerAllEntrySaga(action) {
         selectedDate: action.payload.selectedDate,
         meta: result.meta,
       });
+    } else if (status === 3) {
+      yield put({ type: types.API_GET_TRACKER_ALL_ENTRY_ERROR });
+      DataManager.clearLocalStorage();
+      yield put(setLoginStateAction(false));
     } else {
       yield put({ type: types.API_GET_TRACKER_ALL_ENTRY_ERROR });
     }
@@ -63,6 +72,10 @@ export function* deleteTrackerEntrySaga(action) {
         selectedDate: action.payload.selectedDate,
       });
       showmessage("Entry deleted successfully");
+    } else if (status === 3) {
+      yield put({ type: types.API_DELETE_TRACKER_ENTRY_ERROR });
+      DataManager.clearLocalStorage();
+      yield put(setLoginStateAction(false));
     } else {
       yield put({ type: types.API_DELETE_TRACKER_ENTRY_ERROR });
     }
@@ -84,6 +97,10 @@ export function* createTrackerEntrySaga(action) {
       });
       showmessage("Entry created successfully");
       action.navigation.navigate("MyTracker");
+    } else if (status === 3) {
+      yield put({ type: types.API_CREATE_TRACKER_ENTRY_ERROR });
+      DataManager.clearLocalStorage();
+      yield put(setLoginStateAction(false));
     } else {
       yield put({ type: types.API_CREATE_TRACKER_ENTRY_ERROR });
     }
@@ -104,6 +121,10 @@ export function* editTrackerEntrySaga(action) {
       });
       showmessage("Entry updated successfully");
       action.navigation.navigate("MyTracker");
+    } else if (status === 3) {
+      yield put({ type: types.API_EDIT_TRACKER_ENTRY_ERROR });
+      DataManager.clearLocalStorage();
+      yield put(setLoginStateAction(false));
     } else {
       yield put({ type: types.API_EDIT_TRACKER_ENTRY_ERROR });
     }
