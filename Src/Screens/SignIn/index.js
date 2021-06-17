@@ -190,8 +190,6 @@ const SignIn = ({ navigation }) => {
     }
   }
 
-  console.log(trackingStatus)
-
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
       <View style={{ flex: 1, backgroundColor: "#fff" }}>

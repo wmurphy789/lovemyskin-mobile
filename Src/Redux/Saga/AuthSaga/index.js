@@ -42,21 +42,17 @@ export function* omniauthSaga(action) {
   try {
     let response = yield call(omniauthApi, action.payload);
     let { result, status } = response;
-    console.log("t---->", response);
     if (status === 1) {
       const token = result.jwt;
       var decoded = jwt_decode(token);
+      DataManager.setAccessToken(result?.jwt);
+      DataManager.setUserId(decoded?.id);
+      decoded?.question_id && DataManager.setQuestionId(decoded?.question_id);
       yield put({
         type: types.API_OMNIAUTH_SUCCESS,
+        questionId: decoded.question_id?.toString(),
       });
-      DataManager.setAccessToken(result.jwt);
-      DataManager.setUserId(decoded.id);
       showmessage("Login successfully");
-      if (decoded.question_id) {
-        action.navigation.navigate("Tabs");
-      } else {
-        action.navigation.navigate("SkinPriorities");
-      }
     } else {
       yield put({ type: types.API_OMNIAUTH_ERROR });
     }
