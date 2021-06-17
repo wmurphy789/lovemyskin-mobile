@@ -16,7 +16,7 @@ import { useDispatch } from "react-redux";
 import { FullButton } from "../../Components/Button";
 import { IconInput } from "../../Components/Input/Input";
 import Loader from "../../Components/Loader";
-import { signupAction } from "../../Redux/Actions/AuthActions";
+import { signupAction, omniauthAction } from "../../Redux/Actions/AuthActions";
 import Methods from "../../Support/Methods";
 import { formikValidation } from "../../Support/Validations";
 import AppConstants from "../../Theme/AppConstants";
@@ -106,6 +106,8 @@ const SignUp = ({ navigation }) => {
         const result = await Google.logInAsync({
           androidClientId: AppConstants.ANDROID_GOOGLE_CLIENT_ID,
           iosClientId: AppConstants.APPLE_GOOGLE_CLIENT_ID,
+          iosStandaloneAppClientId: AppConstants.APPLE_GOOGLE_PROD_CLIENT_ID,
+          androidStandaloneAppClientId: AppConstants.ANDROID_GOOGLE_PROD_CLIENT_ID,
           scopes: ['profile', 'email'],
         });  
         success = result["type"] === 'success'
@@ -220,7 +222,6 @@ const SignUp = ({ navigation }) => {
                   disabled={authState?.onLoad}
                   title={AppConstants.signUp}
                   onPress={() => signUp()}
-                  // onPress={() => Methods.navigate(navigation, "SkinPriorities")}
                 />
               </View>
             </View>
@@ -267,7 +268,7 @@ const SignUp = ({ navigation }) => {
           </TouchableOpacity>
       </ScrollView>
     </View>
-    // </KeyboardAvoidingView>
+  </KeyboardAvoidingView>
   );
 };
 

@@ -133,6 +133,8 @@ const SignIn = ({ navigation }) => {
         const result = await Google.logInAsync({
           androidClientId: AppConstants.ANDROID_GOOGLE_CLIENT_ID,
           iosClientId: AppConstants.APPLE_GOOGLE_CLIENT_ID,
+          iosStandaloneAppClientId: AppConstants.APPLE_GOOGLE_PROD_CLIENT_ID,
+          androidStandaloneAppClientId: AppConstants.ANDROID_GOOGLE_PROD_CLIENT_ID,
           scopes: ['profile', 'email'],
         });  
         success = result["type"] === 'success'
