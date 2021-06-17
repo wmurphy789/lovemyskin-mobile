@@ -35,6 +35,7 @@ const App = () => {
     <>
       {assets && fonts && fontLoad && (
         <Provider store={store}>
+          <FlashMessage position="top" />
           <View
             style={{
               height: getStatusBarHeight(),
@@ -45,7 +46,6 @@ const App = () => {
           <StatusBar barStyle="light-content" />
           {/* <SafeAreaView style={{ flex: 1 }}> */}
           <Setup />
-          <FlashMessage position="top" />
           {/* </SafeAreaView> */}
         </Provider>
       )}
