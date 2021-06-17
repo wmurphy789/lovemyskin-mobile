@@ -75,7 +75,7 @@ export default StyleSheet.create({
     // flex: 1,
     // paddingHorizontal: responsiveWidth(5),
     // paddingVertical: responsiveHeight(2),
-    paddingHorizontal: 30,
+    paddingHorizontal: responsiveWidth(5),
     paddingVertical: 30,
     justifyContent: "space-between",
   },
@@ -126,10 +126,12 @@ export default StyleSheet.create({
   playerTimerView: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginHorizontal: responsiveWidth(6),
+    marginHorizontal: responsiveWidth(5),
   },
   playerButtons: {
     alignSelf: "center",
+    backgroundColor : '#fff',
+    color : AppColors.darkGrey
   },
   playerTime: {
     marginTop: responsiveHeight(0.5),

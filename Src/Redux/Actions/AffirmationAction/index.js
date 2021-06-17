@@ -51,3 +51,13 @@ export const cleardataDetailsReducerAction = (info, navigation) => {
   };
   return action;
 };
+
+
+export const setSongsInReducerAction = (songs) => {
+  const action = {
+    type: types.SET_SONGS_IN_REDUCER,
+    songs
+  };
+  return action;
+};
+

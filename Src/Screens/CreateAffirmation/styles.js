@@ -70,6 +70,12 @@ export default StyleSheet.create({
     // backgroundColor: "red",
     paddingBottom: responsiveHeight(0.5),
   },
+  info:{
+    textAlign:'center',alignSelf:'center',marginTop:responsiveHeight(5),
+    color: AppColors.main,
+                fontSize: responsiveFontSize(1.7),
+                fontFamily: AppFonts.light,
+  },
   addMusicText: {
     color: "#000",
     flex: 1,

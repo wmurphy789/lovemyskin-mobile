@@ -101,7 +101,6 @@ const SkinWellbeing = ({navigation}) => {
   const [postsData, setPostsData] = useState(null);
   const dispatch = useDispatch();
   const state = useSelector(state => state.WellbeingReducer);
-  console.log('all state', state);
   const isLoading = state.isLoading;
 
   useEffect(() => {
@@ -449,6 +448,8 @@ const SkinWellbeing = ({navigation}) => {
               activeTextStyle={styles.selected}>
               <ScrollView 
               showsVerticalScrollIndicator={false}
+              keyboardShouldPersistTaps="always"
+
               >
                 {state.wellbeingPosts.length > 0 ? (
                   <FlatList
@@ -477,6 +478,7 @@ const SkinWellbeing = ({navigation}) => {
               activeTextStyle={styles.selected}>
               <ScrollView
                             showsVerticalScrollIndicator={false}
+                            keyboardShouldPersistTaps="always"
 
               >
                 {state.wellbeingPosts.length > 0 ? (
@@ -507,6 +509,7 @@ const SkinWellbeing = ({navigation}) => {
               activeTextStyle={styles.selected}>
               <ScrollView
                             showsVerticalScrollIndicator={false}
+                            keyboardShouldPersistTaps="always"
 
               >
                 {state.wellbeingPosts.length > 0 ? (
@@ -536,6 +539,7 @@ const SkinWellbeing = ({navigation}) => {
               activeTextStyle={styles.selected}>
               <ScrollView
                             showsVerticalScrollIndicator={false}
+                            keyboardShouldPersistTaps="always"
 
               >
                 {state.wellbeingPosts.length > 0 ? (

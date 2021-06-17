@@ -18,39 +18,39 @@ import {
   cleardataDetailsReducerAction,
   deleteAffirmationAction,
   getAffirmationByIdAction,
+  setSongsInReducerAction,
 } from "../../Redux/Actions/AffirmationAction";
 import Methods from "../../Support/Methods";
 import { AppColors } from "../../Theme/AppColors";
 import AppConstants from "../../Theme/AppConstants";
 import { AppFonts } from "../../Theme/AppFonts";
 import { AppImages } from "../../Theme/AppImages";
-import {
-  responsiveFontSize,
-  responsiveHeight,
-} from "../../Theme/ResponsiveDimensions";
 import styles from "./styles";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import AffirmationCard from "../../Components/AffirmationCard";
+import { getSongsWithAlbumIds } from "../../Support/NapsterApi";
+import { Audio } from "expo-av";
 
 const ViewAffirmation = ({ navigation, route }) => {
   const [id, setscreenTitle] = useState(route?.params?.id); // will be recieved from routes params
   const [screenColor, setScreenColor] = useState(route?.params?.screenColor); // same as above
-  const [isPlaying, setisPlaying] = useState(false);
-  const [timeElapsed, settimeElapsed] = useState("0:54");
-  const [timeRemaining, setTimeRemaining] = useState("2:34");
+
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [Item, setItem] = useState({});
   const [openShare, setOpenShare] = useState(false);
-  // create dummy data just for UI purpose
+  const [stopAudio, setStopAudio] = useState(false);
+  const [playIndex,setPlayIndex] = useState(null)
+
   const dispatch = useDispatch();
   const AffirmationState = useSelector((state) => state.AffirmationReducer);
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
+      Audio.setIsEnabledAsync(true);
       dispatch(getAffirmationByIdAction({ id }, navigation));
     });
     return unsubscribe;
   }, []);
   useEffect(() => {
-    const unsubscribe = navigation.addListener("blur", () => {
+    const unsubscribe = navigation.addListener("blur", () => {      
       dispatch(cleardataDetailsReducerAction({ id }, navigation));
     });
     return unsubscribe;
@@ -59,43 +59,29 @@ const ViewAffirmation = ({ navigation, route }) => {
     if (AffirmationState?.isDeleted || AffirmationState?.isEdited)
       dispatch(getAffirmationByIdAction({ id }, navigation));
   }, [AffirmationState?.isDeleted, AffirmationState?.isEdited]);
-  const DummyMusicBar = () => (
-    // dummy UI of Music SeekBar
-    <View
-      style={{
-        flexDirection: "row",
-        marginTop: 15,
-        alignItems: "center",
-        marginHorizontal: 25,
-      }}
-    >
-      <View
-        style={{
-          flex: 0.4,
-          height: 5,
-          backgroundColor: "#fff",
-          borderRadius: 10,
-        }}
-      />
-      <View
-        style={{
-          flex: 0.6,
-          height: 2,
-          backgroundColor: "#fff",
-          borderRadius: 10,
-        }}
-      />
-    </View>
-  );
+  
+  useEffect(() => {
+    getSongsWithAlbumIds()
+      .then((res) => {                
+        if (res.tracks.length > 0) {          
+          dispatch(setSongsInReducerAction(res.tracks))
+        }
+      })
+      .catch((err) => {        
+        console.log("errrs", err);
+      });
+  },[])
 
   function goBack() {
     Methods.goBack(navigation);
+    setStopAudio(true);
+    Audio.setIsEnabledAsync(false);
   }
   const onShare = async (item) => {
     try {
       const result = await Share.share({
         message: `${item?.attributes?.category_name}
-Description: ${item?.attributes?.description}`,
+        Description: ${item?.attributes?.description}`,
       });
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
@@ -112,6 +98,7 @@ Description: ${item?.attributes?.description}`,
   };
   const deleteAffirmation = () => {
     setShowDeleteModal(false);
+    
     dispatch(deleteAffirmationAction({ id: Item.id, itemId: id }, navigation));
   };
 
@@ -154,133 +141,10 @@ Description: ${item?.attributes?.description}`,
     </View>
   );
 
-  const CustomIconButton = ({ icon, onPress, customStyles }) => (
-    <TouchableOpacity
-      disabled={openShare}
-      activeOpacity={0.5}
-      style={[styles.itemImage, customStyles]}
-      onPress={onPress}
-    >
-      <MaterialCommunityIcons name={icon} size={25} color="#fff" />
-      {/* <Image source={icon} resizeMode="contain" style={styles.itemImage} /> */}
-    </TouchableOpacity>
-  );
-
-  // render all affirmations
-  // const _renderAffirmations = ({ item, index }) => (
-  //   <View
-  //     style={[
-  //       styles.ItemView,
-  //       {
-  //         backgroundColor: screenColor,
-  //         marginBottom:
-  //           index == AffirmationState.dataDetails.length - 1 ? 0 : 12,
-  //       },
-  //     ]}
-  //   >
-  //     <Text style={styles.itemTitle}>
-  //       {AffirmationState.dataDetails?.attributes?.category_name}
-  //     </Text>
-  //     <Text style={styles.itemtext}>
-  //       {AffirmationState.dataDetails?.attributes?.description}
-  //     </Text>
-  //     {/* <CustomIconButton
-  //       icon={AppImages.shareBlackIcon}
-  //       // onPress={() => {
-  //       //   alert("Share!");
-  //       // }}
-  //     /> */}
-  //   </View>
-  // );
-  //render my affirmations    #note : created seprately because myaffirmations may containe music
-  const _renderMyAffirmations = ({ item, index }) => (
-    <View
-      style={[
-        styles.ItemView,
-        {
-          backgroundColor: screenColor,
-          flex: 1,
-          marginBottom:
-            AffirmationState.dataDetails.length - 1 == index ? 0 : 12,
-        },
-      ]}
-    >
-      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-        <Text style={styles.itemTitle}>{item?.attributes?.category_name}</Text>
-        <View
-          style={{
-            display:
-              item?.attributes?.category_name == "My Affirmations"
-                ? "flex"
-                : "none",
-          }}
-        >
-          <CustomIconButton
-            icon={"pencil"}
-            onPress={() =>
-              navigation.navigate("CreateAffirmation", { item: item })
-            }
-          />
-          <CustomIconButton
-            icon={"delete"}
-            customStyles={styles.customStylesDeleteButton}
-            onPress={() => {
-              setShowDeleteModal(true);
-              setItem(item);
-            }}
-          />
-        </View>
-      </View>
-      <View style={styles.itemtextView}>
-        <Text style={styles.itemtext}>{item?.attributes?.description}</Text>
-      </View>
-      {/* {item?.attributes?.song_id && ( */}
-      {/* <View style={{ display: item?.attributes?.song_id ? "flex" : "none" }}>
-        <DummyMusicBar />
-        <View style={styles.playerTimerView}>
-          <Text style={styles.playerTime}>{timeElapsed}</Text>
-          <Text style={styles.playerTime}>-{timeRemaining}</Text>
-        </View>
-        <CustomIconButton
-          // icon={
-          //  isPlaying ? AppImages.pauseWhiteIcon : AppImages.playWhiteIcon
-          // }
-          icon={"home"}
-          customStyles={styles.playerButtons}
-          // onPress={() => { setisPlaying(!isPlaying) }}
-        />
-      </View> */}
-
-      <CustomIconButton
-        icon={"share"}
-        onPress={async () => {
-          await setOpenShare(true);
-          onShare(item);
-          setTimeout(() => {
-            setOpenShare(false);
-          }, 300);
-        }}
-      />
-    </View>
-  );
-
   const mainView = () => {
-    // if (screenTitle == AppConstants.myAffirmations) {
-    //   return (
-    //     <FlatList
-    //       data={myAffirmationData}
-    //       bounces={false}
-    //       stickyHeaderIndices={[0]}
-    //       showsVerticalScrollIndicator={false}
-    //       ListHeaderComponent={() => <Header />}
-    //       keyExtractor={(item, index) => index.toString()}
-    //       renderItem={_renderMyAffirmations}
-    //     />
-    //   );
-    // } else {
+
     return AffirmationState?.dataDetails?.length > 0 ? (
-      <FlatList
-        // data={[]}
+      <FlatList       
         data={AffirmationState.dataDetails}
         extraData={AffirmationState}
         bounces={false}
@@ -288,15 +152,28 @@ Description: ${item?.attributes?.description}`,
         stickyHeaderIndices={[0]}
         style={{
           flex: 1,
-          // backgroundColor: screenColor,
-        }}
-        // contentContainerStyle={{
-        //   justifyContent: "center",
-        //   alignItems: "center",
-        // }}
+        }}    
         ListHeaderComponent={() => <Header />}
         keyExtractor={(item, index) => index.toString()}
-        renderItem={_renderMyAffirmations}
+        renderItem={({item, index}) => {
+          return <AffirmationCard item={item} 
+                                  screenColor={screenColor} 
+                                  AffirmationState={AffirmationState}
+                                  index={index}
+                                  onPlay={(i) => setPlayIndex(i)}                                        
+                                  playedIndex={playIndex}
+                                  onShare={() => onShare(item)}
+                                  deleteAffirmation={() => {
+                                    setShowDeleteModal(true)
+                                    setItem(item);
+                                  }}
+                                  editAffirmation={() => {                          
+                                      Audio.setIsEnabledAsync(false);
+                                      navigation.navigate('CreateAffirmation', { item: item });
+                                  }}
+                                  navigation={navigation}
+                                  stopAudio={stopAudio}
+                                  />}}
       />
     ) : (
       <>
@@ -304,7 +181,6 @@ Description: ${item?.attributes?.description}`,
         <View style={{ backgroundColor: screenColor, flex: 1 }} />
       </>
     );
-    // }
   };
 
   return (
@@ -326,13 +202,7 @@ Description: ${item?.attributes?.description}`,
         text="Are you sure, you want to delete the affirmation?"
         onAction={() => deleteAffirmation()}
       />
-      {/* <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ backgroundColor: screenColor }}
-      > */}
       {mainView()}
-      {/* </ScrollView> */}
-      {/* <Header /> */}
     </View>
   );
 };

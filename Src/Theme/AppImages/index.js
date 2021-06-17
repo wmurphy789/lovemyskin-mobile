@@ -80,6 +80,7 @@ export const AppImages = {
   userDummy: require("../../Assets/Images/userDummy.png"),
   commentDummy: require("../../Assets/Images/profilecomment.png"),
   postDummy: require("../../Assets/Images/postdummy.png"),
+  musicIcon: require("../../Assets/Images/musicList.png"),
 };
 
 export const AppImagesExpo = [
@@ -164,4 +165,5 @@ export const AppImagesExpo = [
   require("../../Assets/Images/userDummy.png"),
   require("../../Assets/Images/profilecomment.png"),
   require("../../Assets/Images/postdummy.png"),
+  require("../../Assets/Images/musicList.png"),
 ];

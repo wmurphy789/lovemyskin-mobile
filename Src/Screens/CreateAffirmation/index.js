@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import { useEffect } from "react";
+import { useEffect ,useRef} from "react";
 import {
   View,
   Text,
@@ -14,6 +14,9 @@ import {
   Keyboard,
   Modal,
   KeyboardAvoidingView,
+  Alert,
+  StatusBar,
+  SafeAreaView,
 } from "react-native";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
@@ -37,6 +40,7 @@ import {
 import styles from "./styles";
 import { Audio } from "expo-av";
 import { color } from "react-native-reanimated";
+import ConfirmPopupModal from "../../Components/ConfirmPopup";
 
 const CreateAffirmation = (props) => {
   const id = props?.route?.params?.item?.id;
@@ -49,6 +53,7 @@ const CreateAffirmation = (props) => {
   const [load, setLoader] = useState(false);
   const [song, setSong] = useState("");
   const [playerState, setPlayerState] = useState(false);
+  const [showRemoveModal, toggleRemoveModal]= useState(false)
   var isPlaying = false;
   const [songs, setSongs] = useState([]);
   const [filterSongs, setFilterSongs] = useState([]);
@@ -59,6 +64,7 @@ const CreateAffirmation = (props) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [loading, setLoding] = React.useState(false);
   const [searchText, setSearchText] = useState("");
+  let textinputref= useRef()
   // const events = [
   //   TrackPlayerEvents.PLAYBACK_STATE,
   //   TrackPlayerEvents.PLAYBACK_ERROR
@@ -120,6 +126,7 @@ const CreateAffirmation = (props) => {
   }, [selectedSong, songs]);
 
   useEffect(() => {
+    Audio.setIsEnabledAsync(true);
     setLoader(true);
     getSongsWithAlbumIds()
       .then((res) => {
@@ -217,6 +224,9 @@ const CreateAffirmation = (props) => {
   const removeSong = () => {
     setPrevSelected([]);
     setSelectedSongId(null);
+    stopSound()
+    toggleRemoveModal(false);
+
   };
 
   const selectSongAction = (id) => {
@@ -225,7 +235,7 @@ const CreateAffirmation = (props) => {
     setSearch("");
   };
   const closeModal = () => {
-    // stopSound();
+    stopSound();
     setModalVisible(false);
     setSearch("");
   };
@@ -264,6 +274,7 @@ const CreateAffirmation = (props) => {
         {/* <View style={{ height: 10, width: "100%", marginTop: 20, backgroundColor: "#fff" }} /> */}
         <ScrollView
           // onPress={()=> Keyboard.dismiss()}
+          keyboardShouldPersistTaps={'handled'}
           onScroll={() => Keyboard.dismiss()}
           showsVerticalScrollIndicator={false}
           bounces={false}
@@ -301,18 +312,43 @@ const CreateAffirmation = (props) => {
                 onChangeText={(text) => setDescription(text)}
               />
             </View>
+          
+            <TouchableOpacity
+              onPress={() => {
+                setModalVisible(true),
+                stopSound();
+                setTimeout(() => {
+                  textinputref.current.focus()
+                }, 1000);
+              }}
+              style={styles.addMusicView}
+            >
+              {/* <Text style={styles.addMusicText}>{}</Text> */}
+              {/* <TextInput
+              style={styles.addMusicText}
+              editable={false}
+              onPress={() => setModalVisible(true)}
+              placeholder={AppConstants.addMusicToYourAffirmation}
+              // onChangeText={(t)=>setSearch(t)}
+            /> */}
+              <Text style={([styles.addMusicText], { color: "#ccc" })}>
+                {AppConstants.addMusicToYourAffirmation}
+              </Text>
+
+              {/* <TouchableOpacity> */}
+              <Image source={AppImages.searchIcon} style={styles.searchIcon} />
+              {/* </TouchableOpacity> */}
+            </TouchableOpacity>
             <View>
               <FlatList
                 data={prevSelected}
+                keyboardShouldPersistTaps={'handled'}
                 keyExtractor={(item, index) => index.toString()}
                 contentContainerStyle={styles.musicflatlist}
                 renderItem={({ item, index }) => (
                   <View style={styles.musicView}>
                     <ImageBackground
-                      source={{
-                        uri:
-                          "https://i1.sndcdn.com/artworks-000488445579-f9p3bc-t500x500.jpg",
-                      }}
+                        source={AppImages.musicIcon}
                       style={styles.musicAlbumPoster}
                     >
                       {item.previewURL == song ? (
@@ -347,7 +383,7 @@ const CreateAffirmation = (props) => {
                       <TouchableOpacity
                         onPress={() =>
                           selectedSong == item.id
-                            ? removeSong()
+                            ? toggleRemoveModal(true)
                             : setSelectedSongId(item.id)
                         }
                         style={styles.useThisAudioButton}
@@ -359,28 +395,6 @@ const CreateAffirmation = (props) => {
                 )}
               />
             </View>
-            <TouchableOpacity
-              onPress={() => {
-                setModalVisible(true), stopSound();
-              }}
-              style={styles.addMusicView}
-            >
-              {/* <Text style={styles.addMusicText}>{}</Text> */}
-              {/* <TextInput
-              style={styles.addMusicText}
-              editable={false}
-              onPress={() => setModalVisible(true)}
-              placeholder={AppConstants.addMusicToYourAffirmation}
-              // onChangeText={(t)=>setSearch(t)}
-            /> */}
-              <Text style={([styles.addMusicText], { color: "#ccc" })}>
-                {AppConstants.addMusicToYourAffirmation}
-              </Text>
-
-              {/* <TouchableOpacity> */}
-              <Image source={AppImages.searchIcon} style={styles.searchIcon} />
-              {/* </TouchableOpacity> */}
-            </TouchableOpacity>
             <Modal
               animationType="slide"
               // transparent={true}
@@ -389,12 +403,15 @@ const CreateAffirmation = (props) => {
                 // Alert.alert("Modal has been closed.");
                 setModalVisible(!modalVisible);
               }}
+            >        
+              <StatusBar barStyle={'dark-content'} />
+            <SafeAreaView style={{flex:1 , backgroundColor : 'white'}}
+            keyboardShouldPersistTaps={'always'}
             >
-              <>
                 <TouchableOpacity
                   style={{
                     marginVertical: responsiveHeight(2),
-                    marginTop:responsiveHeight(5),
+                    // marginTop:responsiveHeight(5),
                     marginHorizontal: responsiveWidth(5),
                   }}
                   onPress={() => closeModal()}
@@ -408,6 +425,8 @@ const CreateAffirmation = (props) => {
                     placeholder={AppConstants.addMusicToYourAffirmation}
                     onChangeText={(t) => setSearch(t)}
                     selectionColor={AppColors.main}
+                    // autoFocus={true}
+                    ref={textinputref}
                   />
 
                   <TouchableOpacity>
@@ -417,17 +436,17 @@ const CreateAffirmation = (props) => {
                     />
                   </TouchableOpacity>
                 </View>
+
                 <FlatList
-                  data={filterSongs}
+                  data={searchText.length >0? filterSongs:songs }
                   keyExtractor={(item, index) => index.toString()}
+                  keyboardShouldPersistTaps={'handled'}
                   contentContainerStyle={styles.musicflatlist}
+                  ListEmptyComponent={<Text style={styles.info}>No songs found</Text>}
                   renderItem={({ item, index }) => (
                     <View style={styles.musicView}>
                       <ImageBackground
-                        source={{
-                          uri:
-                            "https://i1.sndcdn.com/artworks-000488445579-f9p3bc-t500x500.jpg",
-                        }}
+                        source={AppImages.musicIcon}
                         style={styles.musicAlbumPoster}
                       >
                         {item.previewURL == song ? (
@@ -478,8 +497,16 @@ const CreateAffirmation = (props) => {
                     </View>
                   )}
                 />
-              </>
+              </SafeAreaView>
             </Modal>
+            <ConfirmPopupModal
+        load={showRemoveModal}
+        onClose={() => {
+          toggleRemoveModal(false);
+        }}
+        text="Are you sure, you want to remove the selected song?"
+        onAction={() => removeSong()}
+      />
             <FullButton
               disabled={AffirmationState?.isLoad || loading}
               title={id ? "Update Affirmation" : AppConstants.createAffirmation}

@@ -13,8 +13,9 @@ import {
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import Loader from "../../Components/Loader";
-import { getAffirmationAction } from "../../Redux/Actions/AffirmationAction";
+import { getAffirmationAction, setSongsInReducerAction } from "../../Redux/Actions/AffirmationAction";
 import Methods, { navigationRef } from "../../Support/Methods";
+import { getSongsWithAlbumIds } from "../../Support/NapsterApi";
 import AppConstants from "../../Theme/AppConstants";
 import { AppImages } from "../../Theme/AppImages";
 import { responsiveHeight } from "../../Theme/ResponsiveDimensions";
@@ -46,6 +47,18 @@ const AllAffirmations = (props) => {
     return unsubscribe;
   }, []);
 
+  useEffect(() => {
+    getSongsWithAlbumIds()
+      .then((res) => {                
+        if (res.tracks.length > 0) {          
+          dispatch(setSongsInReducerAction(res.tracks))
+        }
+      })
+      .catch((err) => {        
+        console.log("errrs", err);
+      });
+  },[])
+  
   function createAffirmation() {
     Methods.navigate(props.navigation, "CreateAffirmation");
   }

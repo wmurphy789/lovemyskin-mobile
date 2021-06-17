@@ -380,7 +380,8 @@ const MyTracker = (props) => {
                       : styles.calendarLsitViewContentText
                   }
                 >
-                  {item?.text || "No Entry on this Day"}
+                  {item?.text?.charAt(0).toUpperCase() + item?.text?.slice(1) ||
+                    "No Entry on this Day"}
                 </Text>
                 {item.smile != 3 && (
                   <View style={styles.smileView}>

@@ -8,6 +8,7 @@ const initialState = {
   myAffirmation: {},
   isDeleted: false,
   isEdited: false,
+  songs : []
 };
 
 export const AffirmationReducer = (state = initialState, action) => {
@@ -154,6 +155,12 @@ export const AffirmationReducer = (state = initialState, action) => {
         isEdited: false,
         isDeleted: false,
         dataDetails: [],
+      };
+        // set songs
+    case types.SET_SONGS_IN_REDUCER:
+      return {
+        ...state,
+        songs: action.songs,
       };
     default:
       return { ...state };
