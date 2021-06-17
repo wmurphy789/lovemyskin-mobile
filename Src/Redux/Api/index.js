@@ -10,6 +10,21 @@ export const loginApi = (info) => {
   return ApiMethod.POST("user_token", body);
 };
 
+// Signin via apple, google, facebook
+export const omniauthApi = (info) => {
+  let body = {
+    data: {
+      type: "user",
+      attributes: {
+        provider: info.provider,
+        email: info.email,
+        token: info.token
+      }
+    },
+  };
+  return ApiMethod.POST("omniauth_callbacks", body);
+};
+
 export const signupApi = (info) => {
   let body = {
     email: info.email,
@@ -165,4 +180,17 @@ export const setPostCommentsApi = (info) => {
     },
   };
   return ApiMethod.POST(url, body);
+};
+
+// Push Notification
+export const createTokenApi = (token) => {
+  let body = {
+    data: {
+      type: "user",
+      attributes: {
+        token: token
+      },
+    },
+  };
+  return ApiMethod.POST("mobile_tokens", body);
 };

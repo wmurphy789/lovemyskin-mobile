@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import { useEffect ,useRef} from "react";
+import { useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -53,7 +53,7 @@ const CreateAffirmation = (props) => {
   const [load, setLoader] = useState(false);
   const [song, setSong] = useState("");
   const [playerState, setPlayerState] = useState(false);
-  const [showRemoveModal, toggleRemoveModal]= useState(false)
+  const [showRemoveModal, toggleRemoveModal] = useState(false);
   var isPlaying = false;
   const [songs, setSongs] = useState([]);
   const [filterSongs, setFilterSongs] = useState([]);
@@ -64,7 +64,7 @@ const CreateAffirmation = (props) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [loading, setLoding] = React.useState(false);
   const [searchText, setSearchText] = useState("");
-  let textinputref= useRef()
+  let textinputref = useRef();
   // const events = [
   //   TrackPlayerEvents.PLAYBACK_STATE,
   //   TrackPlayerEvents.PLAYBACK_ERROR
@@ -224,9 +224,8 @@ const CreateAffirmation = (props) => {
   const removeSong = () => {
     setPrevSelected([]);
     setSelectedSongId(null);
-    stopSound()
+    stopSound();
     toggleRemoveModal(false);
-
   };
 
   const selectSongAction = (id) => {
@@ -274,7 +273,7 @@ const CreateAffirmation = (props) => {
         {/* <View style={{ height: 10, width: "100%", marginTop: 20, backgroundColor: "#fff" }} /> */}
         <ScrollView
           // onPress={()=> Keyboard.dismiss()}
-          keyboardShouldPersistTaps={'handled'}
+          keyboardShouldPersistTaps={"handled"}
           onScroll={() => Keyboard.dismiss()}
           showsVerticalScrollIndicator={false}
           bounces={false}
@@ -312,13 +311,12 @@ const CreateAffirmation = (props) => {
                 onChangeText={(text) => setDescription(text)}
               />
             </View>
-          
+
             <TouchableOpacity
               onPress={() => {
-                setModalVisible(true),
-                stopSound();
+                setModalVisible(true), stopSound();
                 setTimeout(() => {
-                  textinputref.current.focus()
+                  textinputref.current.focus();
                 }, 1000);
               }}
               style={styles.addMusicView}
@@ -342,13 +340,19 @@ const CreateAffirmation = (props) => {
             <View>
               <FlatList
                 data={prevSelected}
-                keyboardShouldPersistTaps={'handled'}
+                keyboardShouldPersistTaps={"handled"}
                 keyExtractor={(item, index) => index.toString()}
                 contentContainerStyle={styles.musicflatlist}
                 renderItem={({ item, index }) => (
                   <View style={styles.musicView}>
                     <ImageBackground
-                        source={AppImages.musicIcon}
+                      // source={AppImages.musicIcon}
+                      source={{
+                        uri:
+                          "http://direct.rhapsody.com/imageserver/v2/albums/" +
+                          item.albumId +
+                          "/images/300x300.jpg",
+                      }}
                       style={styles.musicAlbumPoster}
                     >
                       {item.previewURL == song ? (
@@ -403,11 +407,12 @@ const CreateAffirmation = (props) => {
                 // Alert.alert("Modal has been closed.");
                 setModalVisible(!modalVisible);
               }}
-            >        
-              <StatusBar barStyle={'dark-content'} />
-            <SafeAreaView style={{flex:1 , backgroundColor : 'white'}}
-            keyboardShouldPersistTaps={'always'}
             >
+              <StatusBar barStyle={"dark-content"} />
+              <SafeAreaView
+                style={{ flex: 1, backgroundColor: "white" }}
+                keyboardShouldPersistTaps={"always"}
+              >
                 <TouchableOpacity
                   style={{
                     marginVertical: responsiveHeight(2),
@@ -438,15 +443,23 @@ const CreateAffirmation = (props) => {
                 </View>
 
                 <FlatList
-                  data={searchText.length >0? filterSongs:songs }
+                  data={searchText.length > 0 ? filterSongs : songs}
                   keyExtractor={(item, index) => index.toString()}
-                  keyboardShouldPersistTaps={'handled'}
+                  keyboardShouldPersistTaps={"handled"}
                   contentContainerStyle={styles.musicflatlist}
-                  ListEmptyComponent={<Text style={styles.info}>No songs found</Text>}
+                  ListEmptyComponent={
+                    <Text style={styles.info}>No songs found</Text>
+                  }
                   renderItem={({ item, index }) => (
                     <View style={styles.musicView}>
                       <ImageBackground
-                        source={AppImages.musicIcon}
+                        // source={AppImages.musicIcon}
+                        source={{
+                          uri:
+                            "http://direct.rhapsody.com/imageserver/v2/albums/" +
+                            item.albumId +
+                            "/images/300x300.jpg",
+                        }}
                         style={styles.musicAlbumPoster}
                       >
                         {item.previewURL == song ? (
@@ -500,13 +513,13 @@ const CreateAffirmation = (props) => {
               </SafeAreaView>
             </Modal>
             <ConfirmPopupModal
-        load={showRemoveModal}
-        onClose={() => {
-          toggleRemoveModal(false);
-        }}
-        text="Are you sure, you want to remove the selected song?"
-        onAction={() => removeSong()}
-      />
+              load={showRemoveModal}
+              onClose={() => {
+                toggleRemoveModal(false);
+              }}
+              text="Are you sure, you want to remove the selected song?"
+              onAction={() => removeSong()}
+            />
             <FullButton
               disabled={AffirmationState?.isLoad || loading}
               title={id ? "Update Affirmation" : AppConstants.createAffirmation}

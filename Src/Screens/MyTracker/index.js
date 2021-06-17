@@ -76,6 +76,10 @@ const MyTracker = (props) => {
     var changedDate = selected_Date.setMonth(selected_Date.getMonth() + value);
     // setSelectedDate(moment(changedDate));
     ApiHit(moment(changedDate));
+    setPopupIndex([]);
+    setShowPopUpListView(false);
+    setShowPopUp(false);
+    setExpandIndex([]);
   };
   useEffect(() => {
     const unsubscribe = props.navigation.addListener("focus", () => {
@@ -476,6 +480,10 @@ const MyTracker = (props) => {
           onPressDate={(date) => {
             // setSelectedDate(moment(date));
             ApiHit(moment(date));
+            setPopupIndex([]);
+            setShowPopUpListView(false);
+            setShowPopUp(false);
+            setExpandIndex([]);
           }}
           markedDate={[]}
         />
@@ -797,6 +805,12 @@ const MyTracker = (props) => {
         bounces={false}
         keyboardShouldPersistTaps="always"
         showsVerticalScrollIndicator={false}
+        onScrollBeginDrag={() => {
+          setPopupIndex([]);
+          setShowPopUpListView(false);
+          setShowPopUp(false);
+          setExpandIndex([]);
+        }}
       >
         <TouchableWithoutFeedback
           onPress={() => {

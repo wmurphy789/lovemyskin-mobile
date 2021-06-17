@@ -389,7 +389,7 @@ const CreateJournalEntry = (props) => {
 
       <FullButton
         disabled={TrackerState?.onLoad}
-        title={id ? "Update Affirmation" : AppConstants.createAffirmation}
+        title={id ? "Update Journal Entry" : "Create Journal Entry"}
         customStyles={styles.button}
         onPress={() => (id ? updateEntry() : createEntry())}
       />
@@ -443,7 +443,7 @@ const CreateJournalEntry = (props) => {
     // <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
     <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
       <CurvedHeader
-        title={AppConstants.CreateJournalEntry}
+        title={id ? "Update Journal Entry" : "Create Journal Entry"}
         leftIcon={AppImages.backIcon}
         leftPress={() => {
           props.navigation.goBack();

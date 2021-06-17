@@ -2,7 +2,7 @@
   "expo": {
     "name": "Love My Skin",
     "slug": "lovemyskin",
-    "version": "1.0.0",
+    "version": "0.9.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -14,11 +14,23 @@
       "fallbackToCacheTimeout": 0
     },
     "assetBundlePatterns": ["**/*"],
+    "facebookScheme":"fb582287613161347",
+    "facebookAppId":"582287613161347",
+    "facebookDisplayName":"LoveMySkin",
     "ios": {
+      "usesAppleSignIn": true,
       "supportsTablet": true,
-      "bundleIdentifier": "com.lovemyskin",
-      "buildNumber": "1.0.0",      
-      "userInterfaceStyle" : "light"
+      "bundleIdentifier": "dev.lovemyskin",
+      "buildNumber": "0.9.1",
+      "userInterfaceStyle" : "light",
+      "infoPlist": {
+        "NSUserTrackingUsageDescription": "Tracking for Facebook login"
+      },
+      "config": {
+        "googleSignIn": {
+          "reservedClientId":"com.googleusercontent.apps.872639005284-s9p42p0ngnr2rtg6u7e4c00scv765oom"
+        }
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -26,9 +38,14 @@
         "backgroundColor": "#218381"
       },
       "userInterfaceStyle": "light",
-      "package": "com.lovemyskin",
+      "package": "dev.lovemyskin",
       "versionCode": 1,
-      "softwareKeyboardLayoutMode": "pan"
+      "softwareKeyboardLayoutMode": "pan",
+      "config": {
+        "googleSignIn": {
+          "certificateHash":"69C3476D46F5880F8C9055544C1156A2912EC7D45F2B7E3B6C7EBCFDADDFB0D5"
+        }
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"

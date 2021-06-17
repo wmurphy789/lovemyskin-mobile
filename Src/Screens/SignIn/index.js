@@ -24,10 +24,14 @@ import {
   formikValidationLogin,
 } from "../../Support/Validations";
 import { showMessage } from "react-native-flash-message";
-import { loginAction } from "../../Redux/Actions/AuthActions";
+import { loginAction, omniauthAction } from "../../Redux/Actions/AuthActions";
 import Loader from "../../Components/Loader";
 import { useEffect } from "react";
 import { DataManager } from "../../Support/Datamanager";
+import * as Google from "expo-google-app-auth";
+import * as Facebook from "expo-facebook";
+import { requestTrackingPermissionsAsync } from "expo-tracking-transparency";
+import * as AppleAuthentication from "expo-apple-authentication";
 
 const socialLoginData = [
   {
@@ -35,26 +39,38 @@ const socialLoginData = [
     text: "Sign In with Google",
     visible: true,
     id: 0,
+    provider: "google",
   },
   {
     image: AppImages.fbIcon,
     text: "Sign In with Facebook",
     visible: true,
     id: 1,
+    provider: "facebook",
   },
   {
     image: AppImages.appleIcon,
     text: "Sign In with Apple",
     visible: Platform.OS == "ios" ? true : false,
     id: 2,
+    provider: "apple",
   },
 ];
 
 const SignIn = ({ navigation }) => {
+  const [trackingStatus, setStatus] = useState({});
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
   const authState = useSelector((state) => state.AuthReducer);
+  useEffect(() => {
+    (async () => {
+      const { status } = await requestTrackingPermissionsAsync();
+      if (status === "granted") {
+        setStatus("authorized");
+      }
+    })();
+  }, []);
   // useEffect(() => {
   //   const backHandler = BackHandler.addEventListener(
   //     "hardwareBackPress",
@@ -107,6 +123,73 @@ const SignIn = ({ navigation }) => {
       // setPassword("");
     }
   };
+
+  async function signInWithAsync(provider) {
+    try {
+      var success = false;
+      var email,
+        token = null;
+
+      if (provider === "google") {
+        const result = await Google.logInAsync({
+          androidClientId: AppConstants.ANDROID_GOOGLE_CLIENT_ID,
+          iosClientId: AppConstants.APPLE_GOOGLE_CLIENT_ID,
+          iosStandaloneAppClientId: AppConstants.APPLE_GOOGLE_PROD_CLIENT_ID,
+          androidStandaloneAppClientId:
+            AppConstants.ANDROID_GOOGLE_PROD_CLIENT_ID,
+          scopes: ["profile", "email"],
+        });
+        success = result["type"] === "success";
+
+        if (success) {
+          email = result["user"]["email"];
+          token = result["accessToken"];
+        }
+      } else if (provider == "facebook") {
+        await Facebook.initializeAsync({
+          appId: AppConstants.FACEBOOK_APP_ID,
+        });
+        const { type, token } = await Facebook.logInWithReadPermissionsAsync({
+          permissions: ["public_profile", "email"],
+        });
+
+        if (type === "success") {
+          const response = await fetch(
+            `https://graph.facebook.com/me?access_token=${token}&fields=email`
+          );
+          success = type === "success";
+          email = (await response.json()).email;
+        }
+      } else if (provider == "apple") {
+        const response = await AppleAuthentication.signInAsync({
+          requestedScopes: [
+            AppleAuthentication.AppleAuthenticationScope.EMAIL,
+            AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+          ],
+        });
+
+        if (response) {
+          success = true;
+          token = response["user"];
+          email = response["email"];
+        }
+      }
+
+      if (success) {
+        dispatch(
+          omniauthAction(
+            { email: email, provider: provider, token: token },
+            navigation
+          )
+        );
+      } else {
+        return { cancelled: true };
+      }
+    } catch (e) {
+      console.log(e);
+      return { error: true };
+    }
+  }
 
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
@@ -170,48 +253,50 @@ const SignIn = ({ navigation }) => {
                   onPress={() => signIn()}
                 />
               </View>
-            </View>
-            <View style={styles.socialLoginView}>
-              {/* <Text style={styles.orText}>OR</Text>
-          <View style={styles.socialLoginButtonsView}>
-            {socialLoginData.map((item) => (
               <TouchableOpacity
-                key={item.id}
-                activeOpacity={1}
-                style={[
-                  styles.socialLoginButton,
-                  { display: item.visible ? "flex" : "none" },
-                ]}
+                disabled={authState.isDisable}
+                onPress={() => {
+                  Methods.navigate(navigation, "SignUp");
+                }}
+                style={styles.dontHaveAccountButton}
               >
-                <View style={styles.centerView}>
-                  <View style={styles.socialLoginButtonsImageView}>
-                    <Image
-                      source={item.image}
-                      style={styles.socialLoginImage}
-                    />
-                  </View>
-                  <View style={styles.socialLoginButtonsTextView}>
-                    <Text style={styles.socialLoginText}>{item.text}</Text>
-                  </View>
-                </View>
+                <Text style={styles.dontHaveAccountText}>
+                  {AppConstants.dontHaveAnAccount}
+                </Text>
               </TouchableOpacity>
-            ))}
-          </View>
-         */}
             </View>
-
-            <TouchableOpacity
-              disabled={authState.isDisable}
-              onPress={() => {
-                Methods.navigate(navigation, "SignUp");
-              }}
-              style={styles.dontHaveAccountButton}
-            >
-              <Text style={styles.dontHaveAccountText}>
-                {AppConstants.dontHaveAnAccount}
-              </Text>
-            </TouchableOpacity>
           </View>
+
+          {trackingStatus === "authorized" && (
+            <View style={styles.socialLoginView}>
+              <Text style={styles.orText}>OR</Text>
+              <View style={styles.socialLoginButtonsView}>
+                {socialLoginData.map((item) => (
+                  <TouchableOpacity
+                    key={item.id}
+                    activeOpacity={1}
+                    onPress={() => signInWithAsync(item.provider)}
+                    style={[
+                      styles.socialLoginButton,
+                      { display: item.visible ? "flex" : "none" },
+                    ]}
+                  >
+                    <View style={styles.centerView}>
+                      <View style={styles.socialLoginButtonsImageView}>
+                        <Image
+                          source={item.image}
+                          style={styles.socialLoginImage}
+                        />
+                      </View>
+                      <View style={styles.socialLoginButtonsTextView}>
+                        <Text style={styles.socialLoginText}>{item.text}</Text>
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
+          )}
         </ScrollView>
       </View>
     </KeyboardAvoidingView>

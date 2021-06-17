@@ -63,9 +63,9 @@ export default StyleSheet.create({
   },
   dontHaveAccountButton: {
     alignSelf: "center",
-    marginRight: responsiveWidth(4),
+    // marginRight: responsiveWidth(4),
     marginVertical: responsiveHeight(2),
-    marginBottom: responsiveHeight(5),
+    // marginBottom: responsiveHeight(5),
   },
   dontHaveAccountText: {
     fontFamily: AppFonts.regular,
@@ -78,9 +78,17 @@ export default StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: responsiveHeight(2),
-    marginTop: responsiveHeight(1),
+    marginTop: responsiveHeight(1.5),
+
     borderRadius: responsiveWidth(2),
-    elevation: 0.5,
+    // borderWidth: 0.5,
+    // borderColor: "#ccc",
+    // elevation: 0.5,
+    elevation: 2,
+    shadowColor: "#000000",
+    shadowOffset: { width: 0, height: 1 }, // change this for more shadow
+    shadowOpacity: 0.1,
+    shadowRadius: 1,
   },
   socialLoginImage: {
     height: responsiveWidth(6),
@@ -95,12 +103,20 @@ export default StyleSheet.create({
     color: AppColors.darkGrey,
     fontFamily: AppFonts.light,
     marginLeft: responsiveWidth(5),
-    fontSize: responsiveFontSize(1.5),
+    fontSize: responsiveFontSize(1.7),
   },
-  fullButton: { marginTop: responsiveHeight(8) },
-  socialLoginView: { marginTop: responsiveHeight(5), alignItems: "center" },
+  fullButton: { marginTop: responsiveHeight(4) },
+  socialLoginView: {
+    marginTop: responsiveHeight(3),
+    alignItems: "center",
+    marginBottom: responsiveHeight(5),
+  },
   socialLoginButtonsView: { marginVertical: responsiveHeight(2) },
-  centerView: { flexDirection: "row", alignItems: "center" },
+  centerView: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
   inputView: { marginTop: responsiveHeight(3) },
   mainView: {
     paddingHorizontal: responsiveWidth(5),

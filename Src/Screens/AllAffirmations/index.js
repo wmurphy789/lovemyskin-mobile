@@ -13,7 +13,10 @@ import {
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import Loader from "../../Components/Loader";
-import { getAffirmationAction, setSongsInReducerAction } from "../../Redux/Actions/AffirmationAction";
+import {
+  getAffirmationAction,
+  setSongsInReducerAction,
+} from "../../Redux/Actions/AffirmationAction";
 import Methods, { navigationRef } from "../../Support/Methods";
 import { getSongsWithAlbumIds } from "../../Support/NapsterApi";
 import AppConstants from "../../Theme/AppConstants";
@@ -49,16 +52,16 @@ const AllAffirmations = (props) => {
 
   useEffect(() => {
     getSongsWithAlbumIds()
-      .then((res) => {                
-        if (res.tracks.length > 0) {          
-          dispatch(setSongsInReducerAction(res.tracks))
+      .then((res) => {
+        if (res.tracks.length > 0) {
+          dispatch(setSongsInReducerAction(res.tracks));
         }
       })
-      .catch((err) => {        
+      .catch((err) => {
         console.log("errrs", err);
       });
-  },[])
-  
+  }, []);
+
   function createAffirmation() {
     Methods.navigate(props.navigation, "CreateAffirmation");
   }

@@ -38,6 +38,7 @@ import { setQuestionIdStateAction } from "../Redux/Actions/AuthActions";
 const Tab = createBottomTabNavigator();
 
 const BottomTabNavigator = () => {
+  const AuthReducerState = useSelector((state) => state.AuthReducer);
   const TabBarIcon = ({ image }) => (
     <Image source={image} resizeMode="contain" style={styles.tabIcon} />
   );
@@ -52,7 +53,15 @@ const BottomTabNavigator = () => {
         keyboardHidesTabBar: true,
         // safeAreaInsets:{bottom:10}           // will be use for iphone 12
       }}
-      initialRouteName="AffirmationStack"
+      initialRouteName={
+        AuthReducerState?.userState
+          ? AuthReducerState?.questionId == "1"
+            ? "DiagnoseStack"
+            : AuthReducerState?.questionId == "2"
+            ? "WellbeingStack"
+            : "AffirmationStack"
+          : "AffirmationStack"
+      }
       tabBar={(props) => <TabBarComponent {...props} />}
     >
       <Tab.Screen name="AffirmationStack" component={AffirmationStack} />

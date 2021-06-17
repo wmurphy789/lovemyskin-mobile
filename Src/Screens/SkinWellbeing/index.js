@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -12,33 +12,33 @@ import {
   Keyboard,
   ActivityIndicator,
   Linking,
-} from 'react-native';
-import {AppColors} from '../../Theme/AppColors';
-import AppConstants from '../../Theme/AppConstants';
-import {AppImages} from '../../Theme/AppImages';
+} from "react-native";
+import { AppColors } from "../../Theme/AppColors";
+import AppConstants from "../../Theme/AppConstants";
+import { AppImages } from "../../Theme/AppImages";
 import {
   responsiveFontSize,
   responsiveHeight,
   responsiveWidth,
-} from '../../Theme/ResponsiveDimensions';
-import styles from './styles';
-import WellbeingTabs from '../../Components/WellbeingTopTab';
-import {useDispatch, useSelector} from 'react-redux';
+} from "../../Theme/ResponsiveDimensions";
+import styles from "./styles";
+import WellbeingTabs from "../../Components/WellbeingTopTab";
+import { useDispatch, useSelector } from "react-redux";
 import {
   getCategoriesPosts,
   getWellbeingCategories,
   getPostsComments,
   likeUnlikePost,
   setPostComments,
-} from '../../Redux/Actions/WellbeingActions';
-import Loader from '../../Components/Loader';
-import {NavigationContainer, TabActions} from '@react-navigation/native';
-import PostComponent from '../../Components/PostComponent';
-import CommentInput from '../../Components/CommentInput';
-import CommentComponent from '../../Components/CommentComponent';
-import {Container, Header, Tab, Tabs, TabHeading} from 'native-base';
-import {AppFonts} from '../../Theme/AppFonts';
-import {showmessage} from '../../Support/Validations';
+} from "../../Redux/Actions/WellbeingActions";
+import Loader from "../../Components/Loader";
+import { NavigationContainer, TabActions } from "@react-navigation/native";
+import PostComponent from "../../Components/PostComponent";
+import CommentInput from "../../Components/CommentInput";
+import CommentComponent from "../../Components/CommentComponent";
+import { Container, Header, Tab, Tabs, TabHeading } from "native-base";
+import { AppFonts } from "../../Theme/AppFonts";
+import { showmessage } from "../../Support/Validations";
 
 let Articles = null,
   Videos = null,
@@ -48,20 +48,20 @@ let TabContent = null; // initialized TabContent Component
 
 const dummyComments = [
   {
-    userName: 'Lisa Ray',
+    userName: "Lisa Ray",
     image:
-      'https://www.imagediamond.com/blog/wp-content/uploads/2019/07/girls-dpz6.jpg',
+      "https://www.imagediamond.com/blog/wp-content/uploads/2019/07/girls-dpz6.jpg",
     comment: AppConstants.loremIpsum,
-    likes: '12K',
-    comments: '4K',
+    likes: "12K",
+    comments: "4K",
   },
   {
-    userName: 'Lee Wong',
+    userName: "Lee Wong",
     image:
-      'https://i.pinimg.com/600x315/3f/e0/c6/3fe0c626f3330adb28c6b2d20b973d52.jpg',
+      "https://i.pinimg.com/600x315/3f/e0/c6/3fe0c626f3330adb28c6b2d20b973d52.jpg",
     comment: AppConstants.loremIpsum,
-    likes: '5K',
-    comments: '1K',
+    likes: "5K",
+    comments: "1K",
   },
 ];
 const HeaderComponent = () => (
@@ -70,7 +70,8 @@ const HeaderComponent = () => (
     <ImageBackground
       resizeMode="stretch"
       source={AppImages.curveBigHeaderImage}
-      style={styles.curveHeaderImage}>
+      style={styles.curveHeaderImage}
+    >
       <Text style={styles.title}>{AppConstants.skinWellbeing}</Text>
       <Text style={styles.infoText}>
         {AppConstants.chooseFromOurPillarsOfWellness}
@@ -89,7 +90,7 @@ const LineHiderComponent = () => {
   );
 };
 
-const SkinWellbeing = ({navigation}) => {
+const SkinWellbeing = ({ navigation }) => {
   const [expandedComments, setExpandedComments] = useState([]);
   const [KeyBoardVisible, setKeyBoardVisible] = useState(false);
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
@@ -97,10 +98,10 @@ const SkinWellbeing = ({navigation}) => {
 
   const [selectedCategoryType, setSelectedCategoryType] = useState(null);
   const [commentView, setExtendedViewId] = useState(null);
-  const [comment, setCommentText] = useState('');
+  const [comment, setCommentText] = useState("");
   const [postsData, setPostsData] = useState(null);
   const dispatch = useDispatch();
-  const state = useSelector(state => state.WellbeingReducer);
+  const state = useSelector((state) => state.WellbeingReducer);
   const isLoading = state.isLoading;
 
   useEffect(() => {
@@ -110,9 +111,9 @@ const SkinWellbeing = ({navigation}) => {
   useEffect(() => {
     // navigation focus listener
     const unsubscribe = navigation.addListener("focus", () => {
-    dispatch(getWellbeingCategories());
-    setExtendedViewId(null);
-    setCommentText('')
+      dispatch(getWellbeingCategories());
+      setExtendedViewId(null);
+      setCommentText("");
     });
     return unsubscribe;
   }, []);
@@ -121,17 +122,17 @@ const SkinWellbeing = ({navigation}) => {
 
   // },[])
   useEffect(() => {
-    console.log('wellbeing api success', state.wellBeingApiSucess)
+    console.log("wellbeing api success", state.wellBeingApiSucess);
     var apiStatus = state.wellBeingApiSucess;
     var id;
     if (state.wellBeingCategories.length != 0) {
       id = state.wellBeingCategories[0].id;
     }
     setSelectedCategoryId(id);
-    setSelectedCategoryType('article');
+    setSelectedCategoryType("article");
     var infoData = {
       id: id,
-      type: 'article',
+      type: "article",
     };
     setTimeout(() => {
       apiStatus && dispatch(getCategoriesPosts(infoData));
@@ -139,11 +140,11 @@ const SkinWellbeing = ({navigation}) => {
   }, [state.wellBeingApiSucess]);
   useEffect(() => {
     // keyboard handeler
-    Keyboard.addListener('keyboardDidShow', () => setKeyBoardVisible(true));
-    Keyboard.addListener('keyboardDidHide', () => setKeyBoardVisible(false));
+    Keyboard.addListener("keyboardDidShow", () => setKeyBoardVisible(true));
+    Keyboard.addListener("keyboardDidHide", () => setKeyBoardVisible(false));
     return () => {
-      Keyboard.removeAllListeners('keyboardDidShow');
-      Keyboard.removeAllListeners('keyboardDidHide');
+      Keyboard.removeAllListeners("keyboardDidShow");
+      Keyboard.removeAllListeners("keyboardDidHide");
     };
   }, [KeyBoardVisible]);
   // useEffect(() => {
@@ -179,19 +180,19 @@ const SkinWellbeing = ({navigation}) => {
 
   // article, video, podcast, story
   const articleFocusEvent = () => {
-    setSelectedCategoryType('article');
+    setSelectedCategoryType("article");
     setExpandedComments([]);
   };
   const videosFocusEvent = () => {
-    setSelectedCategoryType('video');
+    setSelectedCategoryType("video");
     setExpandedComments([]);
   };
   const podcastsFocusEvent = () => {
-    setSelectedCategoryType('podcast');
+    setSelectedCategoryType("podcast");
     setExpandedComments([]);
   };
   const storiesFocusEvent = () => {
-    setSelectedCategoryType('story');
+    setSelectedCategoryType("story");
     setExpandedComments([]);
   };
 
@@ -201,7 +202,7 @@ const SkinWellbeing = ({navigation}) => {
     // TEMP.push(postId);
     // setExpandedComments(TEMP);
     // setKeyBoardVisible(true);
-    console.log('postId--->', postId);
+    console.log("postId--->", postId);
     // if (commentView == postId) {
     //   setExtendedViewId(null);
     // }
@@ -209,9 +210,9 @@ const SkinWellbeing = ({navigation}) => {
   }
 
   const WellbeingCategories = (
-    {data}, // Wellbeing Component View
+    { data } // Wellbeing Component View
   ) => (
-    <View style={{marginBottom: 20}}>
+    <View style={{ marginBottom: 20 }}>
       <FlatList
         data={data}
         extraData={data}
@@ -225,7 +226,7 @@ const SkinWellbeing = ({navigation}) => {
       />
     </View>
   );
-  const renderWellbeingCategories = ({item, index}) => {
+  const renderWellbeingCategories = ({ item, index }) => {
     // renderItem of Wellbeing Component View
     return (
       <TouchableOpacity
@@ -240,18 +241,20 @@ const SkinWellbeing = ({navigation}) => {
           }, 10);
           setSelectedCategoryId(item.id);
           setSelectedCategoryIndex(index);
-        }}>
+        }}
+      >
         <View
           style={
             selectedCategoryId == item.id
               ? styles.selectedItemView
               : styles.itemView
-          }>
+          }
+        >
           <Image
             source={
-              item?.attributes?.icon_url != '' ||
+              item?.attributes?.icon_url != "" ||
               item?.attributes?.icon_url != null
-                ? {uri: item?.attributes?.icon_url}
+                ? { uri: item?.attributes?.icon_url }
                 : AppImages.userDummy
             }
             style={styles.itemImage}
@@ -262,7 +265,7 @@ const SkinWellbeing = ({navigation}) => {
     );
   };
 
-  const postCommentAction = id => {
+  const postCommentAction = (id) => {
     //  alert('comment',comment);
     if (comment?.trim().length > 0) {
       let data = {
@@ -271,11 +274,11 @@ const SkinWellbeing = ({navigation}) => {
       };
 
       dispatch(setPostComments(data));
-      setCommentText('');
+      setCommentText("");
       setKeyBoardVisible(false);
       Keyboard.dismiss();
     } else {
-      showmessage('Please enter comment');
+      showmessage("Please enter comment");
     }
   };
   function renderPosts() {
@@ -295,7 +298,7 @@ const SkinWellbeing = ({navigation}) => {
       />
     );
   }
-  const renderTabContent = ({item, index}) => (
+  const renderTabContent = ({ item, index }) => (
     <View style={styles.pillerMainContainer}>
       <PostComponent // View Post Component
         item={item}
@@ -308,12 +311,12 @@ const SkinWellbeing = ({navigation}) => {
         }}
         commentPress={() => {
           if (commentView == item.id) {
-            console.log('Already open');
+            console.log("Already open");
             handleCommentClick(item?.id);
             setExtendedViewId(null);
             return true;
           }
-          console.log('Already closed');
+          console.log("Already closed");
           let data = {
             postId: item?.id,
           };
@@ -326,13 +329,14 @@ const SkinWellbeing = ({navigation}) => {
         style={{
           flex: 1,
           paddingTop: 10,
-        }}>
+        }}
+      >
         {/* {expandedComments.includes(item.id) && ( */}
         {commentView == item.id && (
           <CommentInput // Input comment component
-            onChangeText={t => {
+            onChangeText={(t) => {
               setCommentText(t);
-              console.log('comment text', t);
+              console.log("comment text", t);
             }}
             value={comment}
             onSendPress={() => {
@@ -361,31 +365,25 @@ const SkinWellbeing = ({navigation}) => {
   );
 
   function onChangeTabAction(t) {
-    console.log('tab change', t);
-    Keyboard.dismiss()
-    setCommentText('')
+    console.log("tab change", t);
+    Keyboard.dismiss();
+    setCommentText("");
     setExtendedViewId(null);
 
     if (t.i == 0) {
-
-      setSelectedCategoryType('article');
+      setSelectedCategoryType("article");
     }
     if (t.i == 1) {
-      setSelectedCategoryType('video');
+      setSelectedCategoryType("video");
       setExpandedComments([]);
-     
-
     }
     if (t.i == 2) {
-      setSelectedCategoryType('podcast');
+      setSelectedCategoryType("podcast");
       setExpandedComments([]);
-      
-
     }
     if (t.i == 3) {
-      setSelectedCategoryType('story');
+      setSelectedCategoryType("story");
       setExpandedComments([]);
-
     }
   }
 
@@ -397,19 +395,21 @@ const SkinWellbeing = ({navigation}) => {
         {/* {!KeyBoardVisible && (
           <WellbeingCategories data={state.wellBeingCategories} />
         )} */}
-{!KeyBoardVisible && (  <View style={{marginBottom: 20}}>
-          <FlatList
-            data={state.wellBeingCategories}
-            extraData={state.wellBeingCategories}
-            // initialScrollIndex={selectedCategoryIndex}
-            // onScrollToIndexFailed={()=>console.log(selectedCategoryIndex)}
-            renderItem={renderWellbeingCategories}
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.pillarsFlatlistStyle}
-            horizontal
-            keyExtractor={(item, index) => index.toString()}
-          />
-        </View>)}
+        {!KeyBoardVisible && (
+          <View style={{ marginBottom: 20 }}>
+            <FlatList
+              data={state.wellBeingCategories}
+              extraData={state.wellBeingCategories}
+              // initialScrollIndex={selectedCategoryIndex}
+              // onScrollToIndexFailed={()=>console.log(selectedCategoryIndex)}
+              renderItem={renderWellbeingCategories}
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.pillarsFlatlistStyle}
+              horizontal
+              keyExtractor={(item, index) => index.toString()}
+            />
+          </View>
+        )}
         <View style={styles.tabsContainer}>
           {/* <LineHiderComponent /> */}
 
@@ -417,39 +417,40 @@ const SkinWellbeing = ({navigation}) => {
             tabContainerStyle={{
               elevation: 0,
               // alignItems:'center',
-              alignSelf: 'center',
-              justifyContent: 'center',
+              alignSelf: "center",
+              justifyContent: "center",
               // borderBottomColor:'red'
             }}
             locked={true}
-            onChangeTab={t => onChangeTabAction(t)}
+            onChangeTab={(t) => onChangeTabAction(t)}
             tabBarUnderlineStyle={{
               borderBottomWidth: 4,
-              borderBottomColor: '#00CDA9',
+              borderBottomColor: "#00CDA9",
               width: responsiveWidth(8),
               marginHorizontal: responsiveWidth(9),
               marginVertical: responsiveWidth(3),
               borderRadius: 300,
 
-              alignItems: 'center',
-              alignSelf: 'center',
-              justifyContent: 'center',
+              alignItems: "center",
+              alignSelf: "center",
+              justifyContent: "center",
             }}
             style={{
-              alignSelf: 'center',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
+              alignSelf: "center",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
             <Tab
               heading="Articles"
-              tabStyle={{backgroundColor: '#fff'}}
+              tabStyle={{ backgroundColor: "#fff" }}
               textStyle={styles.notSelected}
-              activeTabStyle={{backgroundColor: '#fff'}}
-              activeTextStyle={styles.selected}>
-              <ScrollView 
-              showsVerticalScrollIndicator={false}
-              keyboardShouldPersistTaps="always"
-
+              activeTabStyle={{ backgroundColor: "#fff" }}
+              activeTextStyle={styles.selected}
+            >
+              <ScrollView
+                showsVerticalScrollIndicator={false}
+                keyboardShouldPersistTaps="always"
               >
                 {state.wellbeingPosts.length > 0 ? (
                   <FlatList
@@ -465,21 +466,25 @@ const SkinWellbeing = ({navigation}) => {
                     renderItem={renderTabContent}
                   />
                 ) : (
-                  <Text style={styles.info}>{state.postsLoading ? '':'No data found.'}</Text>
+                  <Text style={styles.info}>
+                    {state.postsLoading ? "" : "No data found."}
+                  </Text>
                 )}
-              {state.wellbeingPosts.length > 0 && KeyBoardVisible &&<View style={{marginBottom:responsiveHeight(25)}}></View>}
+                {state.wellbeingPosts.length > 0 && KeyBoardVisible && (
+                  <View style={{ marginBottom: responsiveHeight(25) }}></View>
+                )}
               </ScrollView>
             </Tab>
             <Tab
               heading="Videos"
-              tabStyle={{backgroundColor: '#fff'}}
+              tabStyle={{ backgroundColor: "#fff" }}
               textStyle={styles.notSelected}
-              activeTabStyle={{backgroundColor: '#fff'}}
-              activeTextStyle={styles.selected}>
+              activeTabStyle={{ backgroundColor: "#fff" }}
+              activeTextStyle={styles.selected}
+            >
               <ScrollView
-                            showsVerticalScrollIndicator={false}
-                            keyboardShouldPersistTaps="always"
-
+                showsVerticalScrollIndicator={false}
+                keyboardShouldPersistTaps="always"
               >
                 {state.wellbeingPosts.length > 0 ? (
                   <FlatList
@@ -495,22 +500,25 @@ const SkinWellbeing = ({navigation}) => {
                     renderItem={renderTabContent}
                   />
                 ) : (
-                  <Text style={styles.info}>{state.postsLoading ? '':'No data found.'}</Text>
+                  <Text style={styles.info}>
+                    {state.postsLoading ? "" : "No data found."}
+                  </Text>
                 )}
-                              {state.wellbeingPosts.length > 0 && KeyBoardVisible &&<View style={{marginBottom:responsiveHeight(25)}}></View>}
-
+                {state.wellbeingPosts.length > 0 && KeyBoardVisible && (
+                  <View style={{ marginBottom: responsiveHeight(25) }}></View>
+                )}
               </ScrollView>
             </Tab>
             <Tab
               heading="Podcasts"
-              tabStyle={{backgroundColor: '#fff'}}
+              tabStyle={{ backgroundColor: "#fff" }}
               textStyle={styles.notSelected}
-              activeTabStyle={{backgroundColor: '#fff'}}
-              activeTextStyle={styles.selected}>
+              activeTabStyle={{ backgroundColor: "#fff" }}
+              activeTextStyle={styles.selected}
+            >
               <ScrollView
-                            showsVerticalScrollIndicator={false}
-                            keyboardShouldPersistTaps="always"
-
+                showsVerticalScrollIndicator={false}
+                keyboardShouldPersistTaps="always"
               >
                 {state.wellbeingPosts.length > 0 ? (
                   <FlatList
@@ -525,22 +533,25 @@ const SkinWellbeing = ({navigation}) => {
                     renderItem={renderTabContent}
                   />
                 ) : (
-                  <Text style={styles.info}>{state.postsLoading ? '':'No data found.'}</Text>
+                  <Text style={styles.info}>
+                    {state.postsLoading ? "" : "No data found."}
+                  </Text>
                 )}
-                              {state.wellbeingPosts.length > 0 && KeyBoardVisible &&<View style={{marginBottom:responsiveHeight(25)}}></View>}
-
+                {state.wellbeingPosts.length > 0 && KeyBoardVisible && (
+                  <View style={{ marginBottom: responsiveHeight(25) }}></View>
+                )}
               </ScrollView>
             </Tab>
             <Tab
               heading="Stories"
-              tabStyle={{backgroundColor: '#fff'}}
+              tabStyle={{ backgroundColor: "#fff" }}
               textStyle={styles.notSelected}
-              activeTabStyle={{backgroundColor: '#fff'}}
-              activeTextStyle={styles.selected}>
+              activeTabStyle={{ backgroundColor: "#fff" }}
+              activeTextStyle={styles.selected}
+            >
               <ScrollView
-                            showsVerticalScrollIndicator={false}
-                            keyboardShouldPersistTaps="always"
-
+                showsVerticalScrollIndicator={false}
+                keyboardShouldPersistTaps="always"
               >
                 {state.wellbeingPosts.length > 0 ? (
                   <FlatList
@@ -556,10 +567,13 @@ const SkinWellbeing = ({navigation}) => {
                     renderItem={renderTabContent}
                   />
                 ) : (
-                  <Text style={styles.info}>{state.postsLoading ? '':'No data found.'}</Text>
+                  <Text style={styles.info}>
+                    {state.postsLoading ? "" : "No data found."}
+                  </Text>
                 )}
-                              {state.wellbeingPosts.length > 0 && KeyBoardVisible &&<View style={{marginBottom:responsiveHeight(25)}}></View>}
-
+                {state.wellbeingPosts.length > 0 && KeyBoardVisible && (
+                  <View style={{ marginBottom: responsiveHeight(25) }}></View>
+                )}
               </ScrollView>
             </Tab>
           </Tabs>
@@ -578,7 +592,6 @@ const SkinWellbeing = ({navigation}) => {
               storiesFocusEvent()
             }}
           />} */}
-          
         </View>
       </View>
     </View>

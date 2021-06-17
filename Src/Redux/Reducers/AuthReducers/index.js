@@ -5,6 +5,7 @@ const initialState = {
   isDisable: false,
   isLogin: false,
   questionId: null,
+  userState: false,
 };
 
 export const AuthReducer = (state = initialState, action) => {
@@ -38,6 +39,20 @@ export const AuthReducer = (state = initialState, action) => {
     case types.API_LOGIN_ERROR:
       return { ...state, isDisable: false, onLoad: false };
 
+    //Omniauth
+    case types.API_OMNIAUTH_START:
+      return { ...state, isDisable: true, onLoad: true };
+    case types.API_OMNIAUTH_SUCCESS:
+      return {
+        ...state,
+        isDisable: false,
+        onLoad: false,
+        isLogin: true,
+        questionId: action.questionId,
+      };
+    case types.API_OMNIAUTH_ERROR:
+      return { ...state, isDisable: false, onLoad: false };
+
     //Signup
     case types.API_SIGNUP_START:
       return { ...state, isDisable: true, onLoad: true };
@@ -55,6 +70,7 @@ export const AuthReducer = (state = initialState, action) => {
         isDisable: false,
         onLoad: false,
         questionId: action.questionId,
+        userState: true,
       };
     case types.API_UPDATE_QUESTION_ID_ERROR:
       return { ...state, isDisable: false, onLoad: false };

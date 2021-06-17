@@ -162,7 +162,7 @@ const SkinDiagnosis = ({ navigation }) => {
         title={AppConstants.skinDiagnosis}
         leftIcon={AppImages.backIcon}
         leftPress={() => {
-          Methods.navigate(navigation, "AllAffirmations");
+          Methods.navigate(navigation, "AffirmationStack");
         }}
       />
       <Loader load={SkinDiagonseState?.onLoad} />
