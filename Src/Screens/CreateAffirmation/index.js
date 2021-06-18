@@ -17,6 +17,7 @@ import {
   Alert,
   StatusBar,
   SafeAreaView,
+  Platform,
 } from "react-native";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
@@ -57,7 +58,7 @@ const CreateAffirmation = (props) => {
   var isPlaying = false;
   const [songs, setSongs] = useState([]);
   const [filterSongs, setFilterSongs] = useState([]);
-  const [sound, setSound] = React.useState();
+  const [sound, setSound] = React.useState(null);
   const [selectedSong, setSelectedSongId] = useState(
     props?.route?.params?.item?.attributes?.song_id || null
   );
@@ -127,6 +128,12 @@ const CreateAffirmation = (props) => {
 
   useEffect(() => {
     Audio.setIsEnabledAsync(true);
+    const unsubscribe = props.navigation.addListener("focus", () => {
+      setSound(null);
+    });
+    return unsubscribe;
+  }, []);
+  useEffect(() => {
     setLoader(true);
     getSongsWithAlbumIds()
       .then((res) => {
@@ -148,8 +155,10 @@ const CreateAffirmation = (props) => {
       setSearchText(t);
       if (t.length > 0) {
         let arr = [];
-        let filter = songs.filter((i) =>
-          i.name.toLowerCase().includes(t.toLowerCase())
+        let filter = songs.filter(
+          (i) =>
+            i.name.toLowerCase().includes(t.toLowerCase()) ||
+            i.albumName.toLowerCase().includes(t.toLowerCase())
         );
         console.log("filter songs", filter);
         setFilterSongs(filter);
@@ -163,6 +172,7 @@ const CreateAffirmation = (props) => {
 
   useEffect(() => {
     const unsubscribe1 = props.navigation.addListener("blur", () => {
+      Audio.setIsEnabledAsync(false);
       if (sound != null) {
         sound.unloadAsync();
       }
@@ -187,6 +197,7 @@ const CreateAffirmation = (props) => {
     //  isPlaying=status?.isPlaying==true ? true : false;
   }
   async function playSong(i) {
+    Audio.setIsEnabledAsync(true);
     setSong(i);
     const initialStatus = {
       shouldPlay: true,
@@ -214,6 +225,7 @@ const CreateAffirmation = (props) => {
   }, [sound]);
 
   const stopSound = () => {
+    Audio.setIsEnabledAsync(false);
     if (sound != null) {
       sound.unloadAsync();
       setSong("");
@@ -238,8 +250,8 @@ const CreateAffirmation = (props) => {
     setModalVisible(false);
     setSearch("");
   };
-  return (
-    <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+  const mainView = () => {
+    return (
       <View style={styles.container}>
         <Loader load={AffirmationState.onLoad} />
 
@@ -316,19 +328,19 @@ const CreateAffirmation = (props) => {
               onPress={() => {
                 setModalVisible(true), stopSound();
                 setTimeout(() => {
-                  textinputref.current.focus();
+                  textinputref?.current?.focus();
                 }, 1000);
               }}
               style={styles.addMusicView}
             >
               {/* <Text style={styles.addMusicText}>{}</Text> */}
               {/* <TextInput
-              style={styles.addMusicText}
-              editable={false}
-              onPress={() => setModalVisible(true)}
-              placeholder={AppConstants.addMusicToYourAffirmation}
-              // onChangeText={(t)=>setSearch(t)}
-            /> */}
+          style={styles.addMusicText}
+          editable={false}
+          onPress={() => setModalVisible(true)}
+          placeholder={AppConstants.addMusicToYourAffirmation}
+          // onChangeText={(t)=>setSearch(t)}
+        /> */}
               <Text style={([styles.addMusicText], { color: "#ccc" })}>
                 {AppConstants.addMusicToYourAffirmation}
               </Text>
@@ -405,7 +417,7 @@ const CreateAffirmation = (props) => {
               visible={modalVisible}
               onRequestClose={() => {
                 // Alert.alert("Modal has been closed.");
-                setModalVisible(!modalVisible);
+                closeModal();
               }}
             >
               <StatusBar barStyle={"dark-content"} />
@@ -530,7 +542,14 @@ const CreateAffirmation = (props) => {
         </ScrollView>
         {/* </View> */}
       </View>
+    );
+  };
+  return Platform.OS == "ios" ? (
+    <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+      {mainView()}
     </KeyboardAvoidingView>
+  ) : (
+    mainView()
   );
 };
 

@@ -10,6 +10,7 @@ import {
   Linking,
   Alert,
   KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { FullButton } from "../../Components/Button";
@@ -72,9 +73,12 @@ const EditProfile = ({ navigation, route }) => {
   const openGallery = async () => {
     setImagePickerModal(false);
     setTimeout(async () => {
-      const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync(
-        Permissions.MEDIA_LIBRARY
-      );
+      const permissionResult =
+        Platform.OS == "ios"
+          ? await ImagePicker.requestMediaLibraryPermissionsAsync(
+              Permissions.MEDIA_LIBRARY
+            )
+          : await ImagePicker.requestMediaLibraryPermissionsAsync();
       console.log("permission--->>", permissionResult);
       if (permissionResult.granted === false) {
         Alert.alert(
@@ -121,9 +125,9 @@ const EditProfile = ({ navigation, route }) => {
 
     setTimeout(async () => {
       // Ask the user for the permission to access the camera
-      const permissionResult = await ImagePicker.requestCameraPermissionsAsync(
-        Permissions.CAMERA
-      );
+      const permissionResult = (Platform.OS = "ios"
+        ? await ImagePicker.requestCameraPermissionsAsync(Permissions.CAMERA)
+        : await ImagePicker.requestCameraPermissionsAsync());
       console.log("permission--->>", permissionResult);
       if (permissionResult.granted === false) {
         Alert.alert(
@@ -200,10 +204,12 @@ const EditProfile = ({ navigation, route }) => {
       updateProfileImageAction({ data: data, update: true }, navigation)
     );
   }
-  return (
-    <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
-      <Loader load={profileState?.isLoading || profileState?.isImageUpdated} />
+  const mainView = () => {
+    return (
       <View style={styles.container}>
+        <Loader
+          load={profileState?.isLoading || profileState?.isImageUpdated}
+        />
         <ImagePickerModal
           load={imagePickerModal}
           onClose={() => {
@@ -220,16 +226,15 @@ const EditProfile = ({ navigation, route }) => {
           }}
         />
         <View style={styles.container}>
-          {/* <KeyboardAvoidingView
-          style={{ flex: 1, backgroundColor: "#fff" }}
-          behavior="padding"
-        > */}
           <View style={{ flex: 1, backgroundColor: "#fff" }}>
             <ScrollView
               bounces={false}
               keyboardShouldPersistTaps="always"
               showsVerticalScrollIndicator={false}
               contentContainerStyle={{ paddingTop: 20, paddingBottom: 50 }}
+              onScrollBeginDrag={() => {
+                Keyboard.dismiss();
+              }}
             >
               <View style={styles.profileImageContainer}>
                 <Image
@@ -321,10 +326,16 @@ const EditProfile = ({ navigation, route }) => {
               />
             </ScrollView>
           </View>
-          {/* </KeyboardAvoidingView> */}
         </View>
       </View>
+    );
+  };
+  return Platform.OS == "ios" ? (
+    <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+      {mainView()}
     </KeyboardAvoidingView>
+  ) : (
+    mainView()
   );
 };
 

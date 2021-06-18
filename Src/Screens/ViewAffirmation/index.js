@@ -10,6 +10,7 @@ import {
   ScrollView,
   Share,
   Alert,
+  AppState,
 } from "react-native";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
@@ -38,7 +39,7 @@ const ViewAffirmation = ({ navigation, route }) => {
   const [Item, setItem] = useState({});
   const [openShare, setOpenShare] = useState(false);
   const [stopAudio, setStopAudio] = useState(false);
-  const [playIndex,setPlayIndex] = useState(null)
+  const [playIndex, setPlayIndex] = useState(null);
 
   const dispatch = useDispatch();
   const AffirmationState = useSelector((state) => state.AffirmationReducer);
@@ -50,7 +51,8 @@ const ViewAffirmation = ({ navigation, route }) => {
     return unsubscribe;
   }, []);
   useEffect(() => {
-    const unsubscribe = navigation.addListener("blur", () => {      
+    const unsubscribe = navigation.addListener("blur", () => {
+      Audio.setIsEnabledAsync(false);
       dispatch(cleardataDetailsReducerAction({ id }, navigation));
     });
     return unsubscribe;
@@ -59,18 +61,40 @@ const ViewAffirmation = ({ navigation, route }) => {
     if (AffirmationState?.isDeleted || AffirmationState?.isEdited)
       dispatch(getAffirmationByIdAction({ id }, navigation));
   }, [AffirmationState?.isDeleted, AffirmationState?.isEdited]);
-  
+
   useEffect(() => {
     getSongsWithAlbumIds()
-      .then((res) => {                
-        if (res.tracks.length > 0) {          
-          dispatch(setSongsInReducerAction(res.tracks))
+      .then((res) => {
+        if (res.tracks.length > 0) {
+          dispatch(setSongsInReducerAction(res.tracks));
         }
       })
-      .catch((err) => {        
+      .catch((err) => {
         console.log("errrs", err);
       });
-  },[])
+  }, []);
+  // useEffect(() => {
+  //   AppState.addEventListener("change", _handleAppStateChange);
+
+  //   return () => {
+  //     AppState.removeEventListener("change", _handleAppStateChange);
+  //   };
+  // }, []);
+  // const _handleAppStateChange = (nextAppState) => {
+  //   // if (
+  //   //   appState.current.match(/inactive|background/) &&
+  //   //   nextAppState === "active"
+  //   // ) {
+  //   //   console.log("App has come to the foreground!");
+  //   // }
+  //   if (nextAppState === "background") {
+  //     setStopAudio(true);
+  //   } else {
+  //     setStopAudio(false);
+  //   }
+
+  //   console.log("AppState", nextAppState);
+  // };
 
   function goBack() {
     Methods.goBack(navigation);
@@ -78,6 +102,8 @@ const ViewAffirmation = ({ navigation, route }) => {
     Audio.setIsEnabledAsync(false);
   }
   const onShare = async (item) => {
+    setStopAudio(true);
+    // Audio.setIsEnabledAsync(false);
     try {
       const result = await Share.share({
         message: `${item?.attributes?.category_name}
@@ -95,10 +121,11 @@ const ViewAffirmation = ({ navigation, route }) => {
     } catch (error) {
       alert(error.message);
     }
+    setStopAudio(false);
   };
   const deleteAffirmation = () => {
     setShowDeleteModal(false);
-    
+
     dispatch(deleteAffirmationAction({ id: Item.id, itemId: id }, navigation));
   };
 
@@ -142,9 +169,8 @@ const ViewAffirmation = ({ navigation, route }) => {
   );
 
   const mainView = () => {
-
     return AffirmationState?.dataDetails?.length > 0 ? (
-      <FlatList       
+      <FlatList
         data={AffirmationState.dataDetails}
         extraData={AffirmationState}
         bounces={false}
@@ -152,28 +178,37 @@ const ViewAffirmation = ({ navigation, route }) => {
         stickyHeaderIndices={[0]}
         style={{
           flex: 1,
-        }}    
+        }}
         ListHeaderComponent={() => <Header />}
         keyExtractor={(item, index) => index.toString()}
-        renderItem={({item, index}) => {
-          return <AffirmationCard item={item} 
-                                  screenColor={screenColor} 
-                                  AffirmationState={AffirmationState}
-                                  index={index}
-                                  onPlay={(i) => setPlayIndex(i)}                                        
-                                  playedIndex={playIndex}
-                                  onShare={() => onShare(item)}
-                                  deleteAffirmation={() => {
-                                    setShowDeleteModal(true)
-                                    setItem(item);
-                                  }}
-                                  editAffirmation={() => {                          
-                                      Audio.setIsEnabledAsync(false);
-                                      navigation.navigate('CreateAffirmation', { item: item });
-                                  }}
-                                  navigation={navigation}
-                                  stopAudio={stopAudio}
-                                  />}}
+        renderItem={({ item, index }) => {
+          return (
+            <AffirmationCard
+              item={item}
+              screenColor={screenColor}
+              AffirmationState={AffirmationState}
+              index={index}
+              onPlay={(i) => setPlayIndex(i)}
+              playedIndex={playIndex}
+              onShare={() => onShare(item)}
+              deleteAffirmation={() => {
+                setStopAudio(true);
+                setShowDeleteModal(true);
+                setItem(item);
+                setTimeout(() => {
+                  setStopAudio(false);
+                }, 100);
+                // setStopAudio(false);
+              }}
+              editAffirmation={() => {
+                Audio.setIsEnabledAsync(false);
+                navigation.navigate("CreateAffirmation", { item: item });
+              }}
+              navigation={navigation}
+              stopAudio={stopAudio}
+            />
+          );
+        }}
       />
     ) : (
       <>

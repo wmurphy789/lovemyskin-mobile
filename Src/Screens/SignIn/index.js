@@ -190,9 +190,8 @@ const SignIn = ({ navigation }) => {
       return { error: true };
     }
   }
-
-  return (
-    <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+  const mainView = () => {
+    return (
       <View style={{ flex: 1, backgroundColor: "#fff" }}>
         <Loader load={authState.onLoad} />
         <ScrollView
@@ -299,7 +298,15 @@ const SignIn = ({ navigation }) => {
           )}
         </ScrollView>
       </View>
+    );
+  };
+
+  return Platform.OS == "ios" ? (
+    <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+      {mainView()}
     </KeyboardAvoidingView>
+  ) : (
+    mainView()
   );
 };
 

@@ -178,9 +178,12 @@ const CreateJournalEntry = (props) => {
 
     setTimeout(async () => {
       // Ask the user for the permission to access the media library
-      const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync(
-        Permissions.MEDIA_LIBRARY
-      );
+      const permissionResult =
+        Platform.OS == "ios"
+          ? await ImagePicker.requestMediaLibraryPermissionsAsync(
+              Permissions.MEDIA_LIBRARY
+            )
+          : await ImagePicker.requestMediaLibraryPermissionsAsync();
 
       if (permissionResult.granted === false) {
         Alert.alert(
@@ -222,9 +225,9 @@ const CreateJournalEntry = (props) => {
     setImagePickerModal(false);
     setTimeout(async () => {
       // Ask the user for the permission to access the camera
-      const permissionResult = await ImagePicker.requestCameraPermissionsAsync(
-        Permissions.CAMERA
-      );
+      const permissionResult = (Platform.OS = "ios"
+        ? await ImagePicker.requestCameraPermissionsAsync(Permissions.CAMERA)
+        : await ImagePicker.requestCameraPermissionsAsync());
 
       if (permissionResult.granted === false) {
         Alert.alert(
@@ -289,49 +292,6 @@ const CreateJournalEntry = (props) => {
             />
           </View>
         </TouchableOpacity>
-        {dropDrownOpen && Platform.OS == "android" && (
-          <View
-            style={{
-              position: "absolute",
-              top: 65,
-              height: 150,
-              backgroundColor: "#F0F9F7",
-              width: "90%",
-              alignSelf: "center",
-              borderBottomLeftRadius: 10,
-              borderBottomRightRadius: 10,
-              zIndex: 99999,
-              // borderTopWidth: 0.2,
-              // paddingHorizontal: responsiveWidth(8),
-              // display: "none",
-            }}
-          >
-            {dropDownoption.map((item) => {
-              return (
-                <TouchableOpacity
-                  activeOpacity={1}
-                  onPress={() => {
-                    setDropDrownOpen(false);
-                    setFelling(item.feeling);
-                  }}
-                  key={item.id}
-                >
-                  <View
-                    key={item.id}
-                    style={{
-                      paddingVertical: responsiveWidth(3.5),
-                      borderTopWidth: 0.25,
-                      borderColor: AppColors.mediumGrey,
-                      paddingHorizontal: responsiveWidth(8),
-                    }}
-                  >
-                    <Text style={styles.dropDownText}>{item.title}</Text>
-                  </View>
-                </TouchableOpacity>
-              );
-            })}
-          </View>
-        )}
       </View>
       <View>
         {/* <TextInput
@@ -393,13 +353,13 @@ const CreateJournalEntry = (props) => {
         customStyles={styles.button}
         onPress={() => (id ? updateEntry() : createEntry())}
       />
-      {dropDrownOpen && Platform.OS == "ios" && (
+      {dropDrownOpen && (
         <View
           style={{
             position: "absolute",
             top: height > 800 ? responsiveHeight(13) : responsiveHeight(14),
-            height:
-              height > 800 ? responsiveHeight(16.8) : responsiveHeight(20.5),
+            // height:
+            //   height > 800 ? responsiveHeight(16.8) : responsiveHeight(20.5),
             backgroundColor: "#F0F9F7",
             width: "90%",
             alignSelf: "center",
@@ -439,36 +399,47 @@ const CreateJournalEntry = (props) => {
       )}
     </View>
   );
-  return (
-    // <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+  const renderView = () => {
+    return (
+      <View style={{ flex: 1, backgroundColor: "#fff" }}>
+        <CurvedHeader
+          title={id ? "Update Journal Entry" : "Create Journal Entry"}
+          leftIcon={AppImages.backIcon}
+          leftPress={() => {
+            props.navigation.goBack();
+          }}
+        />
+        <Loader load={TrackerState.onLoad} />
+        <ImagePickerModal
+          load={imagePickerModal}
+          onClose={() => {
+            setImagePickerModal(false);
+          }}
+          openCamera={() => openCamera()}
+          openGallery={() => openGallery()}
+        />
+        <ScrollView
+          bounces={false}
+          keyboardShouldPersistTaps="always"
+          showsVerticalScrollIndicator={false}
+          onScrollBeginDrag={() => {
+            Keyboard.dismiss();
+            // setDropDrownOpen(false);
+          }}
+        >
+          <TouchableWithoutFeedback onPress={() => setDropDrownOpen(false)}>
+            {mainView()}
+          </TouchableWithoutFeedback>
+        </ScrollView>
+      </View>
+    );
+  };
+  return Platform.OS == "ios" ? (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
-      <CurvedHeader
-        title={id ? "Update Journal Entry" : "Create Journal Entry"}
-        leftIcon={AppImages.backIcon}
-        leftPress={() => {
-          props.navigation.goBack();
-        }}
-      />
-      <Loader load={TrackerState.onLoad} />
-      <ImagePickerModal
-        load={imagePickerModal}
-        onClose={() => {
-          setImagePickerModal(false);
-        }}
-        openCamera={() => openCamera()}
-        openGallery={() => openGallery()}
-      />
-      <ScrollView
-        bounces={false}
-        // keyboardShouldPersistTaps="always"
-        showsVerticalScrollIndicator={false}
-      >
-        <TouchableWithoutFeedback onPress={() => setDropDrownOpen(false)}>
-          {mainView()}
-        </TouchableWithoutFeedback>
-      </ScrollView>
+      {renderView()}
     </KeyboardAvoidingView>
-    // </TouchableWithoutFeedback>
+  ) : (
+    renderView()
   );
 };
 

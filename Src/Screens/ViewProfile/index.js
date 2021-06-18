@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
   Alert,
   RefreshControl,
+  Linking,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../../Components/Loader";
@@ -78,6 +79,8 @@ const ViewProfile = ({ navigation, route }) => {
   const ItemPressed = (item) => {
     if (item.title == AppConstants.logout) {
       setShowLogoutModal(true);
+    } else if (item.title == AppConstants.contactUs) {
+      Linking.openURL("mailto:lovemyskin@lovemyskin.app?subject=&body=");
     } else {
       Methods.navigate(navigation, item.navigate);
     }

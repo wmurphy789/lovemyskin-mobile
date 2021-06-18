@@ -71,10 +71,13 @@ const SkinPriorities = ({ navigation }) => {
       "hardwareBackPress",
       () => {
         let route = navigationRef.current.getCurrentRoute();
+        console.log("route", route);
         if (route.name == "SkinPriorities") {
+          // alert("bjhbv");
           dispatch(setQuestionIdStateAction("5"));
-          // return true
+          return true;
         }
+        return false;
         // return backHandler.remove();
       }
     );

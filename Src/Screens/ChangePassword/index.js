@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { View, ScrollView, Keyboard, KeyboardAvoidingView } from "react-native";
+import {
+  View,
+  ScrollView,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import { FullButton } from "../../Components/Button";
 import { CurvedHeader } from "../../Components/Header";
 import { SimpleInput } from "../../Components/Input/Input";
@@ -53,8 +59,8 @@ const ChangePassword = ({ navigation }) => {
 
     return unsubscribe;
   }, []);
-  return (
-    <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+  const mainView = () => {
+    return (
       <View style={{ flex: 1, backgroundColor: AppColors.white }}>
         <CurvedHeader
           title={AppConstants.changePassword}
@@ -64,8 +70,11 @@ const ChangePassword = ({ navigation }) => {
           }}
         />
         <ScrollView
-          keyboardShouldPersistTaps="always"
+          // keyboardShouldPersistTaps="always"
           showsVerticalScrollIndicator={false}
+          onScrollBeginDrag={() => {
+            Keyboard.dismiss();
+          }}
         >
           <View style={styles.container}>
             <SimpleInput
@@ -104,7 +113,14 @@ const ChangePassword = ({ navigation }) => {
           </View>
         </ScrollView>
       </View>
+    );
+  };
+  return Platform.OS == "ios" ? (
+    <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+      {mainView()}
     </KeyboardAvoidingView>
+  ) : (
+    mainView()
   );
 };
 

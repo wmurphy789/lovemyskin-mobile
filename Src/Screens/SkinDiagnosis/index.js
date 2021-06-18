@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   Linking,
   Alert,
+  Platform,
 } from "react-native";
 import { FullButton } from "../../Components/Button";
 import { CurvedHeader } from "../../Components/Header";
@@ -55,9 +56,12 @@ const SkinDiagnosis = ({ navigation }) => {
 
     setTimeout(async () => {
       // Ask the user for the permission to access the media library
-      const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync(
-        Permissions.MEDIA_LIBRARY
-      );
+      const permissionResult =
+        Platform.OS == "ios"
+          ? await ImagePicker.requestMediaLibraryPermissionsAsync(
+              Permissions.MEDIA_LIBRARY
+            )
+          : await ImagePicker.requestMediaLibraryPermissionsAsync();
 
       if (permissionResult.granted === false) {
         Alert.alert(
@@ -99,9 +103,9 @@ const SkinDiagnosis = ({ navigation }) => {
     setImagePickerModal(false);
     setTimeout(async () => {
       // Ask the user for the permission to access the camera
-      const permissionResult = await ImagePicker.requestCameraPermissionsAsync(
-        Permissions.CAMERA
-      );
+      const permissionResult = (Platform.OS = "ios"
+        ? await ImagePicker.requestCameraPermissionsAsync(Permissions.CAMERA)
+        : await ImagePicker.requestCameraPermissionsAsync());
 
       if (permissionResult.granted === false) {
         Alert.alert(

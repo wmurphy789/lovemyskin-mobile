@@ -495,6 +495,7 @@ const MyTracker = (props) => {
                   ? {
                       alignItems: "flex-end",
                       justifyContent: "center",
+                      // position: "absolute",
                       // position: Platform.OS == "ios" ? "absolute" : "relative",
                       // zIndex: Platform.OS == "ios" ? 99999 : 0,
                       // right: Platform.OS == "ios" ? 5 : 0,
@@ -524,7 +525,7 @@ const MyTracker = (props) => {
                   resizeMode="contain"
                 />
               </TouchableOpacity>
-              {showPopUp && (
+              {showPopUp && Platform.OS == "ios" && (
                 <View
                   style={{
                     position: "absolute",
@@ -533,7 +534,7 @@ const MyTracker = (props) => {
                     right: responsiveWidth(1),
                     width: responsiveWidth(24),
                     borderRadius: responsiveWidth(2),
-                    zIndex: 9999,
+                    zIndex: 999999,
                   }}
                 >
                   <TouchableOpacity
@@ -753,6 +754,77 @@ const MyTracker = (props) => {
             >
               No entry found
             </Text>
+          </View>
+        )}
+        {showPopUp && (
+          <View
+            style={{
+              position: "absolute",
+              backgroundColor: "#F0F9F7",
+              top: 170,
+              right: responsiveWidth(3),
+              width: responsiveWidth(24),
+              borderRadius: responsiveWidth(2),
+              zIndex: 999999,
+            }}
+          >
+            <TouchableOpacity
+              style={{
+                paddingHorizontal: responsiveWidth(4),
+                paddingVertical: responsiveHeight(1.5),
+              }}
+              onPress={() => {
+                editEntry(TrackerState?.entry, 0);
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: responsiveFontSize(2),
+                  fontFamily: AppFonts.regular,
+                }}
+              >
+                Edit
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                paddingHorizontal: responsiveWidth(4),
+                paddingTop: responsiveHeight(0.5),
+                paddingVertical: responsiveHeight(2),
+              }}
+              onPress={() => {
+                setShowDeleteModal(true);
+                setDeleteItem({
+                  id: TrackerState?.entry?.id,
+                  index: 0,
+                });
+                // Alert.alert(
+                //   "",
+                //   "Are you sure you want to delete this entry?",
+                //   [
+                //     {
+                //       text: "No",
+                //       onPress: () => setShowPopUp(false),
+                //       style: "cancel",
+                //     },
+                //     {
+                //       text: "Yes",
+                //       onPress: () =>
+                //         deleteEntry({ id: TrackerState?.entry?.id }, 0),
+                //     },
+                //   ]
+                // );
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: responsiveFontSize(2),
+                  fontFamily: AppFonts.regular,
+                }}
+              >
+                Delete
+              </Text>
+            </TouchableOpacity>
           </View>
         )}
       </>

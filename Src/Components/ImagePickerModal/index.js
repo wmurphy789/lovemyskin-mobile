@@ -29,7 +29,7 @@ const ImagePickerModal = (props) => {
         <View
           style={{
             backgroundColor: AppColors.white,
-            height: 135,
+            // height: Platform.OS == "ios" ? 135 : "auto",
             width: 250,
             borderRadius: 10,
           }}

@@ -10,6 +10,7 @@ import {
   Image,
   TouchableOpacity,
   KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
@@ -160,9 +161,8 @@ const SignUp = ({ navigation }) => {
       return { error: true };
     }
   }
-
-  return (
-    <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+  const mainView = () => {
+    return (
       <View style={{ flex: 1, backgroundColor: "#fff" }}>
         <Loader load={authState.onLoad} />
         <ScrollView
@@ -268,7 +268,14 @@ const SignUp = ({ navigation }) => {
           )}
         </ScrollView>
       </View>
+    );
+  };
+  return Platform.OS == "ios" ? (
+    <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+      {mainView()}
     </KeyboardAvoidingView>
+  ) : (
+    mainView()
   );
 };
 
