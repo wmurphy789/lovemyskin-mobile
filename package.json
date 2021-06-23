@@ -31,8 +31,8 @@
     "expo-google-app-auth": "^8.1.7",
     "expo-image-picker": "^10.1.4",
     "expo-intent-launcher": "^9.0.0",
-    "expo-permissions": "^12.0.1",
     "expo-notifications": "^0.11.6",
+    "expo-permissions": "^12.0.1",
     "expo-status-bar": "^1.0.4",
     "expo-tracking-transparency": "~1.0.1",
     "formik": "^2.2.9",
@@ -51,6 +51,7 @@
     "react-native-status-bar-height": "^2.6.0",
     "react-native-tab-view": "^3.0.1",
     "react-native-web": "~0.13.12",
+    "react-native-webview": "^11.6.4",
     "react-redux": "^7.2.4",
     "redux": "^4.1.0",
     "redux-saga": "^1.1.3"

@@ -1,5 +1,7 @@
 export default AppConstants = {
   SERVER_URL: "https://lovemyskin-dev.herokuapp.com/api/v1/",
+  PRIVACY_POLICY_URL : 'https://www.iubenda.com/privacy-policy/66447165',
+  TERMS_AND_CONDITION_URL : 'https://www.iubenda.com/terms-and-conditions/21947392',
   ANDROID_GOOGLE_CLIENT_ID: "872639005284-j6jjpgti3qsa5q61tvun5i5ttvaht9tj.apps.googleusercontent.com",
   ANDROID_GOOGLE_PROD_CLIENT_ID: "872639005284-8msv0j7oa8paost8m9d26pp2v1437quo.apps.googleusercontent.com",
   APPLE_GOOGLE_CLIENT_ID: "872639005284-i3rl9lomm2c3o93r4vrvl1vduoiq5ac5.apps.googleusercontent.com",

@@ -7,6 +7,7 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
+import { WebView } from 'react-native-webview';
 import { FullButton } from "../../Components/Button";
 import { CurvedHeader } from "../../Components/Header";
 import { SimpleInput } from "../../Components/Input/Input";
@@ -25,23 +26,12 @@ const PrivacyPolicy = ({ navigation }) => {
           Methods.goBack(navigation);
         }}
       />
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingHorizontal: 25 }}
-      >
-        <Text style={styles.paragraph}>{AppConstants.loremIpsum}</Text>
-        <Text style={styles.paragraph}>{AppConstants.loremIpsum}</Text>
-        <Text style={styles.paragraph}>{AppConstants.loremIpsum}</Text>
-        <Text style={styles.paragraph}>{AppConstants.loremIpsum}</Text>
-        <Text style={styles.paragraph}>{AppConstants.loremIpsum}</Text>
-        <Text style={styles.paragraph}>{AppConstants.loremIpsum}</Text>
-        <Text style={styles.paragraph}>{AppConstants.loremIpsum}</Text>
-        <Text style={styles.paragraph}>{AppConstants.loremIpsum}</Text>
-        <Text style={styles.paragraph}>{AppConstants.loremIpsum}</Text>
-        <Text style={[styles.paragraph, styles.customStyles]}>
-          {AppConstants.loremIpsum}
-        </Text>
-      </ScrollView>
+      <WebView
+                source={{uri : AppConstants.PRIVACY_POLICY_URL}}
+                style={{
+                    width : '100%',                                          
+                }}
+            />
     </View>
   );
 };
