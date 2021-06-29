@@ -18,11 +18,12 @@
     "facebookAppId":"582287613161347",
     "facebookDisplayName":"LoveMySkin",
     "ios": {
-      "usesAppleSignIn": true,
-      "supportsTablet": true,
+      "usesAppleSignIn": true,      
+      "supportsTablet":false,
+      "isTabletOnly":false,      
       "bundleIdentifier": "dev.lovemyskin",
       "buildNumber": "0.9.1",
-      "userInterfaceStyle" : "light",
+      "userInterfaceStyle" : "light",      
       "infoPlist": {
         "NSUserTrackingUsageDescription": "Tracking for Facebook login"
       },
