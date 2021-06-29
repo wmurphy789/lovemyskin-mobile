@@ -192,6 +192,28 @@ export const WellbeingReducer = (state = INITIAL_STATE, action) => {
         isLoading: false,
       };
     }
+    case Actiontypes.SET_FLAG_USER_LOAD: {
+      //  GET PROFILE DETAILS SUCESS
+      return {
+        ...state,
+        loader: true,
+      };
+    }
+    case Actiontypes.SET_FLAG_USER_SUCESS: {
+      //  GET PROFILE DETAILS SUCESS
+
+      return {
+        ...state,
+        loader: false,
+      };
+    }
+    case Actiontypes.SET_FLAG_USER_FAIL: {
+      //  GET PROFILE DETAILS SUCESS
+      return {
+        ...state,
+        loader: false,
+      };
+    }
     default: {
       return state;
     }

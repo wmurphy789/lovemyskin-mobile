@@ -6,7 +6,6 @@ import {
 import SignIn from "../Screens/SignIn";
 import SignUp from "../Screens/SignUp";
 import ForgotPassword from "../Screens/ForgotPassword";
-import SkinPriorities from "../Screens/SkinPriorities";
 
 const Stack = createStackNavigator();
 const AuthStack = () => {
@@ -34,11 +33,6 @@ const AuthStack = () => {
         component={ForgotPassword}
         options={{ headerShown: false }}
       />
-      {/* <Stack.Screen
-        name="SkinPriorities"
-        component={SkinPriorities}
-        options={{ headerShown: false }}
-      /> */}
     </Stack.Navigator>
   );
 };

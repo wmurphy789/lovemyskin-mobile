@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { isDeviceTablet } from "../../Support/DeviceInfo";
 
 import { AppColors } from "../../Theme/AppColors";
 import AppConstants from "../../Theme/AppConstants";
@@ -9,6 +10,7 @@ import {
   responsiveHeight,
   responsiveWidth,
 } from "../../Theme/ResponsiveDimensions";
+
 export default StyleSheet.create({
   container: {
     width: "100%",
@@ -17,12 +19,12 @@ export default StyleSheet.create({
   },
   headerContainer: {
     width: responsiveWidth(100),
-    height: 250,
+    // height: 250,
     backgroundColor: AppColors.white,
   },
   headerImage: {
     width: responsiveWidth(100),
-    height: 250,
+    height: responsiveHeight(27),
     justifyContent: "space-between",
     paddingBottom: 50,
     backgroundColor: AppColors.white,
@@ -31,13 +33,13 @@ export default StyleSheet.create({
     height: responsiveWidth(18),
     width: responsiveWidth(18),
     alignSelf: "center",
-    marginTop: responsiveHeight(6.5),
+    marginTop: responsiveHeight(1.5),
   },
   welcomeBackText: {
     marginLeft: responsiveWidth(5),
     fontFamily: AppFonts.regular,
     fontSize: responsiveFontSize(3),
-    marginTop: 0,
+    marginTop: responsiveHeight(6.5),
     color: AppColors.darkGrey,
   },
   introText: {
@@ -46,8 +48,19 @@ export default StyleSheet.create({
     fontSize: responsiveFontSize(1.5),
     width: responsiveWidth(90),
     // alignSelf: "center",
-    lineHeight: 18,
-    marginTop: -30,
+    // lineHeight: 18,
+    // marginTop: -30,
+    marginBottom: responsiveHeight(3.2),
+
+  },
+  introTextTab: {
+    color: AppColors.darkGrey,
+    fontFamily: AppFonts.light,
+    fontSize: responsiveFontSize(1.5),
+    width: responsiveWidth(90),
+    // alignSelf: "center",
+    // lineHeight: 18,
+    // marginTop: responsiveHeight(-5),
     marginBottom: responsiveHeight(3.2),
   },
   input: {
@@ -105,7 +118,7 @@ export default StyleSheet.create({
     marginLeft: responsiveWidth(5),
     fontSize: responsiveFontSize(1.7),
   },
-  fullButton: { marginTop: responsiveHeight(8) },
+  fullButton: { marginTop: responsiveHeight(4) },
   socialLoginView: {
     marginTop: responsiveHeight(3),
     alignItems: "center",

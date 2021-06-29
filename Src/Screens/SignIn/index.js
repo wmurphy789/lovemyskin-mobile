@@ -208,9 +208,6 @@ const SignIn = ({ navigation }) => {
                 source={AppImages.curveBigHeaderImage}
               >
                 <Image source={AppImages.logoIcon} style={styles.logoImage} />
-                <Text style={styles.welcomeBackText}>
-                  {AppConstants.welcomeBack}
-                </Text>
               </ImageBackground>
             </View>
             <View style={styles.mainView}>

@@ -45,6 +45,9 @@ export const updtaeQuestionIdApi = (info) => {
   };
   return ApiMethod.PATCH("users/answer_question", body);
 };
+export const updateTocApi = () => {
+  return ApiMethod.GET("users/terms_agreed", null);
+};
 export const getAffirmationApi = (info) => {
   return ApiMethod.GET("affirmations", null);
 };
@@ -163,7 +166,7 @@ export const likeUnlikePostApi = (info) => {
 };
 export const getPostsCommentsApi = (info) => {
   let url =
-    "https://lovemyskin-dev.herokuapp.com/api/v1/resources/" +
+    "https://lovemyskin.herokuapp.com/api/v1/resources/" +
     info.postId +
     "/comments";
   return ApiMethod.GET(url);
@@ -180,6 +183,19 @@ export const setPostCommentsApi = (info) => {
     },
   };
   return ApiMethod.POST(url, body);
+};
+
+export const setFlagUserApi = (info) => {
+  let url = "users/flag";
+  let body = {
+    data: {
+      type: "users",
+      attributes: {
+        flagged_user_id: info
+      },
+    },
+  };
+  return ApiMethod.PATCH(url, body);
 };
 
 // Push Notification

@@ -23,6 +23,7 @@ import CreateJournalEntry from "../Screens/CreateJournalEntry";
 import CreateAffirmation from "../Screens/CreateAffirmation";
 import ViewAffirmation from "../Screens/ViewAffirmation";
 import SkinPriorities from "../Screens/SkinPriorities";
+import TOC from "../Screens/TOC";
 import {
   CardStyleInterpolators,
   createStackNavigator,
@@ -92,7 +93,6 @@ const Main = () => {
     setIntial(true);
   };
 
-  // console.log("AuthReducerState?.questionId ", AuthReducerState?.questionId);
   return Intial ? (
     <Stack.Navigator
       screenOptions={{
@@ -100,10 +100,6 @@ const Main = () => {
         animationEnabled: true,
         cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
       }}
-      // initialRouteName={
-      //   AuthReducerState?.questionId ? "Tabs" : "SkinPriorities"
-      // }
-      // initialRouteName={"SkinPriorities"}
     >
       {AuthReducerState?.questionId ? (
         <Stack.Screen
@@ -112,11 +108,19 @@ const Main = () => {
           options={{ headerShown: false }}
         />
       ) : (
-        <Stack.Screen
+        AuthReducerState?.terms_agreed ? (
+          <Stack.Screen
           name="SkinPriorities"
           component={SkinPriorities}
           options={{ headerShown: false }}
         />
+        ) : (
+          <Stack.Screen
+          name="TOC"
+          component={TOC}
+          options={{ headerShown: false }}
+        />
+        )
       )}
       <Stack.Screen
         name="TermsCondition"

@@ -30,6 +30,7 @@ import {
   getPostsComments,
   likeUnlikePost,
   setPostComments,
+  setFlagUser
 } from "../../Redux/Actions/WellbeingActions";
 import Loader from "../../Components/Loader";
 import { NavigationContainer, TabActions } from "@react-navigation/native";
@@ -147,25 +148,6 @@ const SkinWellbeing = ({ navigation }) => {
       Keyboard.removeAllListeners("keyboardDidHide");
     };
   }, [KeyBoardVisible]);
-  // useEffect(() => {
-  //   let data = state.wellbeingPosts;
-  //   console.log("useffect well being posts", data);
-  //   data.length != 0 && setPostsData(data);
-  // }, [state.wellbeingPosts]);
-  // useEffect(() => {
-  //   var apiStatus = state.likeApiSucess;
-  //   var id;
-  //   if (state.wellBeingCategories.length != 0) {
-  //     id = state.wellBeingCategories[0].id;
-  //   }
-  //   var infoData = {
-  //     id: selectedCategoryId,
-  //     type: selectedCategoryType,
-  //   };
-  //   setTimeout(() => {
-  //     apiStatus && dispatch(getCategoriesPosts(infoData));
-  //   }, 200);
-  // }, [state.likeApiSucess]);
 
   useEffect(() => {
     var infoData = {
@@ -198,15 +180,7 @@ const SkinWellbeing = ({ navigation }) => {
 
   //----------------------------------------------------Functions
   function handleCommentClick(postId) {
-    // let TEMP = [];
-    // TEMP.push(postId);
-    // setExpandedComments(TEMP);
-    // setKeyBoardVisible(true);
-    console.log("postId--->", postId);
-    // if (commentView == postId) {
-    //   setExtendedViewId(null);
-    // }
-    // setExtendedViewId(postId);
+
   }
 
   const WellbeingCategories = (
@@ -281,6 +255,13 @@ const SkinWellbeing = ({ navigation }) => {
       showmessage("Please enter comment");
     }
   };
+
+  const postFlagAction = (id) => {
+    //  alert('comment',comment);
+    dispatch(setFlagUser(id));
+    showmessage("User Flagged");
+  };
+
   function renderPosts() {
     return (
       <FlatList
@@ -356,6 +337,7 @@ const SkinWellbeing = ({ navigation }) => {
                   index={index}
                   likePress={() => {}}
                   commentPress={() => {}}
+                  flagUser={() => postFlagAction(item.id)}
                 />
               ))}
           </View>
@@ -577,74 +559,11 @@ const SkinWellbeing = ({ navigation }) => {
               </ScrollView>
             </Tab>
           </Tabs>
-          {/* {<WellbeingTabs
-            tabData={postsData != null ? postsData : []}
-            articleEvent={() => {
-              articleFocusEvent()
-            }}
-            videosEvent={() => {
-              videosFocusEvent()
-            }}
-            podcastsEvent={() => {
-              podcastsFocusEvent()
-            }}
-            storiesEvent={() => {
-              storiesFocusEvent()
-            }}
-          />} */}
+
         </View>
       </View>
     </View>
   );
 };
 
-// pages for material top tabnav
-// tabs
-// Articles = ({route}) => {
-//   // render Article Tab data
-//   // console.log(route.params.tabData, "DATA");
-//   let tabData = route.params.tabData;
-//   const state = useSelector(state => state?.WellbeingReducer?.wellbeingPosts);
-
-//   return (
-//     <View style={styles.container}>
-//       <TabContent
-//        data={state}
-//       />
-//     </View>
-//   );
-// };
-// Videos = ({route}) => {
-//   // render Videos Tab data
-
-//   let tabData = route.params.tabData;
-//   const state = useSelector(state => state?.WellbeingReducer?.wellbeingPosts);
-//   return (
-//     <View style={styles.container}>
-//       <TabContent data={state} />
-//     </View>
-//   );
-// };
-// Podcasts = ({route}) => {
-//   // render Podcasts Tab data
-//   let tabData = route.params.tabData;
-//   // const state = useSelector(state => state?.WellbeingReducer?.wellbeingPosts);
-//   return (
-//     <View style={styles.container}>
-//       <TabContent />
-//     </View>
-//   );
-// };
-// Stories = ({route}) => {
-//   // render Stories Tab data
-//   let tabData = route.params.tabData;
-//   // const state = useSelector(state => state?.WellbeingReducer?.wellbeingPosts);
-
-//   return (
-//     <View style={styles.container}>
-//       <TabContent data={tabData} />
-//     </View>
-//   );
-// };
-// export const Tabs1 = {Articles, Videos, Podcasts, Stories}; // exported to materialTabBar navigator
 export default SkinWellbeing;

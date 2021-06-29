@@ -102,6 +102,11 @@ export default StyleSheet.create({
     color: "#565656",
     fontSize: responsiveFontSize(1.6),
   },
+  commentFlag: {
+    marginLeft: 150,
+    color: "#FF0000",
+    fontSize: responsiveFontSize(1.6),
+  },
   commentStyle: {
     marginTop: -3,
     fontSize: responsiveFontSize(1.4),
