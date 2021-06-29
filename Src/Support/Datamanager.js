@@ -50,10 +50,23 @@ export const DataManager = {
     await AsyncStorage.setItem(localKey.questionId, id?.toString());
   },
 
+  async setTermsAgreed(id) {
+    await AsyncStorage.setItem(localKey.termsAgreed, true);
+  },
+
   async getQuestionId() {
     try {
       const questionId = await AsyncStorage.getItem(localKey.questionId);
       return questionId;
+    } catch (error) {
+      console.log("error----", error);
+    }
+  },
+
+  async getTermsAgreed() {
+    try {
+      const termsAgreed = await AsyncStorage.getItem(localKey.termsAgreed);
+      return termsAgreed;
     } catch (error) {
       console.log("error----", error);
     }

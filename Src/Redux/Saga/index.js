@@ -7,7 +7,7 @@ import {
   getAffirmationSaga,
   updateAffirmationSaga,
 } from "./AffirmationSaga";
-import { loginSaga, signupSaga, updateQuestionIdSaga, updateMobileToken, omniauthSaga } from "./AuthSaga";
+import { loginSaga, signupSaga, updateQuestionIdSaga, updateMobileToken, omniauthSaga, updateTocSaga } from "./AuthSaga";
 import { submitFeedbackAutodrumSaga } from "./SkinDiagonseSaga";
 import {
   createTrackerEntrySaga,
@@ -28,7 +28,8 @@ import {
   fetchWellbeingCategoriesPosts,
   fetchSetLikeUnlikePost,
   fetchGetPostsComments,
-  fetchSetPostComments
+  fetchSetPostComments,
+  fetchSetFlagUser
 } from "./WellbeingSaga";
 
 function* rootSaga() {
@@ -38,6 +39,7 @@ function* rootSaga() {
   yield takeEvery(types.API_SIGNUP_LOAD, signupSaga);
   yield takeEvery(types.API_UPDATE_MOBILE_TOKEN, updateMobileToken)
   yield takeEvery(types.API_UPDATE_QUESTION_ID_LOAD, updateQuestionIdSaga);
+  yield takeEvery(types.API_UPDATE_TOC_LOAD, updateTocSaga);
 
   //affirmations
   yield takeEvery(types.API_GETAFFIRMATION_LOAD, getAffirmationSaga);
@@ -70,6 +72,7 @@ function* rootSaga() {
   yield takeEvery(types.WELLBEING_CATEGORIES_POSTS_LOAD, fetchWellbeingCategoriesPosts);
   yield takeEvery(types.LIKE_POST_LOAD, fetchSetLikeUnlikePost);
   yield takeEvery(types.SET_COMMENT_LOAD, fetchSetPostComments);
+  yield takeEvery(types.SET_FLAG_USER_LOAD, fetchSetFlagUser);
   yield takeEvery(types.GET_COMMENTS_LOAD, fetchGetPostsComments);
 }
 export default rootSaga;

@@ -3,4 +3,5 @@ export const localKey = {
   userId: "userId",
   deviceToken: "deviceToken",
   questionId: "questionId",
+  termsAgreed: "termsAgreed"
 };

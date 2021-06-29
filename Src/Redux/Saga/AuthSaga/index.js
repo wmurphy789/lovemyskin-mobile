@@ -1,10 +1,11 @@
 import { put, call } from "redux-saga/effects";
 import { DataManager } from "../../../Support/Datamanager";
 import * as types from "../../ActionTypes";
-import { loginApi, signupApi, updtaeQuestionIdApi, createTokenApi, omniauthApi } from "../../Api";
+import { loginApi, signupApi, updtaeQuestionIdApi, createTokenApi, omniauthApi, updateTocApi } from "../../Api";
 import jwt_decode from "jwt-decode";
 import { showmessage } from "../../../Support/Validations";
 import { setLoginStateAction } from "../../Actions/AuthActions";
+
 // LOGIN SAGA
 export function* loginSaga(action) {
   yield put({ type: types.API_LOGIN_START });
@@ -17,17 +18,13 @@ export function* loginSaga(action) {
       DataManager.setAccessToken(result?.jwt);
       DataManager.setUserId(decoded?.id);
       decoded?.question_id && DataManager.setQuestionId(decoded?.question_id);
+
       yield put({
         type: types.API_LOGIN_SUCCESS,
         questionId: decoded.question_id?.toString(),
+        terms_agreed: decoded.terms_agreed === 'true'
       });
       showmessage("Login successfully");
-      // if (decoded.question_id) {
-      //   action.navigation.navigate("SkinPriorities");
-      // }
-      // else {
-      //
-      // }
     } else {
       yield put({ type: types.API_LOGIN_ERROR });
     }
@@ -48,9 +45,11 @@ export function* omniauthSaga(action) {
       DataManager.setAccessToken(result?.jwt);
       DataManager.setUserId(decoded?.id);
       decoded?.question_id && DataManager.setQuestionId(decoded?.question_id);
+
       yield put({
         type: types.API_OMNIAUTH_SUCCESS,
         questionId: decoded.question_id?.toString(),
+        terms_agreed: decoded.terms_agreed === 'true'
       });
       showmessage("Login successfully");
     } else {
@@ -106,6 +105,31 @@ export function* updateQuestionIdSaga(action) {
     }
   } catch (error) {
     yield put({ type: types.API_UPDATE_QUESTION_ID_ERROR });
+  }
+}
+
+// update TOC
+export function* updateTocSaga(action) {
+  yield put({ type: types.API_UPDATE_TOC_START });
+  try {
+    let response = yield call(updateTocApi);
+    let { result, status } = response;
+    console.log("response--->", response);
+    if (status === 1) {
+      yield put({
+        type: types.API_UPDATE_TOC_SUCCESS,
+        terms_agreed: true
+      });
+    } else if (status === 3) {
+      yield put({ type: types.API_UPDATE_TOC_ERROR });
+      DataManager.clearLocalStorage();
+      yield put(setLoginStateAction(false));
+    } else {
+      yield put({ type: types.API_UPDATE_TOC_ERROR });
+    }
+  } catch (error) {
+    console.log(error)
+    yield put({ type: types.API_UPDATE_TOC_ERROR });
   }
 }
 

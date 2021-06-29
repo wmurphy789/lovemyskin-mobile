@@ -19,3 +19,7 @@ export const setPostComments = (param) => ({
     type: types.SET_COMMENT_LOAD,
     param
 })
+export const setFlagUser = (param) => ({
+    type: types.SET_FLAG_USER_LOAD,
+    param
+})

@@ -1,5 +1,5 @@
 export default AppConstants = {
-  SERVER_URL: "https://lovemyskin-dev.herokuapp.com/api/v1/",
+  SERVER_URL: "https://lovemyskin.herokuapp.com/api/v1/",
   PRIVACY_POLICY_URL : 'https://www.iubenda.com/privacy-policy/66447165',
   TERMS_AND_CONDITION_URL : 'https://www.iubenda.com/terms-and-conditions/21947392',
   ANDROID_GOOGLE_CLIENT_ID: "872639005284-j6jjpgti3qsa5q61tvun5i5ttvaht9tj.apps.googleusercontent.com",
@@ -269,8 +269,8 @@ export default AppConstants = {
     },
   ],
   loremIpsum:
-    "Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia, molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum numquam blanditiis harum quisquam eius sed odit fugiat iusto fuga praesentium optio, eaque rerum! Provident similique accusantium nemo autem.",
-  welcomeBack: "Welcome Back!",
+    "Your mind, Your skin, Your wellbeing. Enter your info, answer a few questions, and get ready to explore all that LoveMySkin has to offer.",
+  welcomeBack: "Your mind, Your skin, Your wellbeing. Enter your info, answer a few questions, and get ready to explore all that LoveMySkin has to offer.",
   welcome: "Welcome!",
   signIn: "Sign In",
   signUp: "sign Up",

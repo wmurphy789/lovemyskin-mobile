@@ -127,3 +127,26 @@ export function* fetchSetPostComments({ param }) {
     });
   }
 }
+
+export function* fetchSetFlagUser({ param }) {
+  // set posts comments
+  try {
+    let response = yield call(ApiMethods.setFlagUserApi, param);
+    if (response.status == 1) {
+      yield put({
+        type: ActionType.SET_FLAG_USER_SUCESS,
+        Result: { msg: "User flagged" }
+      });
+    } else {
+      yield put({
+        type: ActionType.SET_FLAG_USER_FAIL,
+        Result: { msg: "User not found!" },
+      });
+    }
+  } catch (e) {
+    yield put({
+      type: ActionType.UNKNOWN_ERROR,
+      message: "unknown error!",
+    });
+  }
+}

@@ -179,9 +179,6 @@ const SignUp = ({ navigation }) => {
                 source={AppImages.curveBigHeaderImage}
               >
                 <Image source={AppImages.logoIcon} style={styles.logoImage} />
-                <Text style={styles.welcomeBackText}>
-                  {AppConstants.welcome}
-                </Text>
               </ImageBackground>
             </View>
             <View style={styles.mainView}>

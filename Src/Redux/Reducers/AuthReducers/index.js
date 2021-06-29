@@ -6,6 +6,7 @@ const initialState = {
   isLogin: false,
   questionId: null,
   userState: false,
+  terms_agreed: false
 };
 
 export const AuthReducer = (state = initialState, action) => {
@@ -35,6 +36,7 @@ export const AuthReducer = (state = initialState, action) => {
         onLoad: false,
         isLogin: true,
         questionId: action.questionId,
+        terms_agreed: action.terms_agreed
       };
     case types.API_LOGIN_ERROR:
       return { ...state, isDisable: false, onLoad: false };
@@ -49,6 +51,7 @@ export const AuthReducer = (state = initialState, action) => {
         onLoad: false,
         isLogin: true,
         questionId: action.questionId,
+        terms_agreed: action.terms_agreed
       };
     case types.API_OMNIAUTH_ERROR:
       return { ...state, isDisable: false, onLoad: false };
@@ -73,6 +76,20 @@ export const AuthReducer = (state = initialState, action) => {
         userState: true,
       };
     case types.API_UPDATE_QUESTION_ID_ERROR:
+      return { ...state, isDisable: false, onLoad: false };
+    
+    //update toc
+    case types.API_UPDATE_TOC_START:
+      return { ...state, isDisable: true, onLoad: true };
+    case types.API_UPDATE_TOC_SUCCESS:
+      return {
+        ...state,
+        isDisable: false,
+        onLoad: false,
+        terms_agreed: action.terms_agreed,
+        userState: true,
+      };
+    case types.API_UPDATE_TOC_ERROR:
       return { ...state, isDisable: false, onLoad: false };
 
     default:

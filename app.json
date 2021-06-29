@@ -2,7 +2,7 @@
   "expo": {
     "name": "Love My Skin",
     "slug": "lovemyskin",
-    "version": "0.9.1",
+    "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -19,12 +19,13 @@
     "facebookDisplayName":"LoveMySkin",
     "ios": {
       "usesAppleSignIn": true,
-      "supportsTablet": true,
+      "supportsTablet": false,
       "bundleIdentifier": "dev.lovemyskin",
-      "buildNumber": "0.9.1",
+      "buildNumber": "1.0.0",
       "userInterfaceStyle" : "light",
       "infoPlist": {
-        "NSUserTrackingUsageDescription": "Tracking for Facebook login"
+        "NSUserTrackingUsageDescription": "Tracking for Facebook login",
+        "NSCameraUsageDescription": "This app uses the camera to post a prrofile picture to be used in the comment section of wellbeing"
       },
       "config": {
         "googleSignIn": {

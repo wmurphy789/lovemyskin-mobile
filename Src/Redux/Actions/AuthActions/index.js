@@ -33,6 +33,14 @@ export const updateQuestionIdAction = (info, navigation) => {
   return action;
 };
 
+export const updateToc = (navigation) => {
+  const action = {
+    type: types.API_UPDATE_TOC_LOAD,
+    navigation,
+  };
+  return action;
+};
+
 export const setLoginStateAction = (info) => {
   const action = {
     type: types.SET_LOGIN_REDUCER_NAVIGATION,
